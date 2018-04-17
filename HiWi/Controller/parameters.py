@@ -44,4 +44,5 @@ r_min = 3.0							# Minimum turning radius
 # Other
 reset_distance = 0.2				# Reset distance
 rate = 20.							# ROS publication rate motor speed
-training_length = 1000			# Lenth of training procedure (1 step ~ 50 ms)
+training_length = 1000				# Lenth of training procedure (1 step ~ 50 ms)
+	
