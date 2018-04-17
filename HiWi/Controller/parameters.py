@@ -2,7 +2,8 @@
 
 import numpy as np
 
-path = "../../data/session_xyz"			# Path for saving data
+path = "../../data/session_001"		# Path for saving data from our scence
+#path = "../data/session_011"			# Path for saving data from HiWi scee
 
 # Input image
 img_resolution = [32,32]			# Original DVS frame resolution
@@ -22,8 +23,8 @@ max_spikes = 15.					# number of events during each step for maximum poisson fre
 # R-STDP parameters
 w_min = 0.							# Minimum weight value
 w_max = 3000.						# Maximum weight value
-w0_min = 150.						# Minimum initial random value
-w0_max = 151.						# Maximum initial random value
+w0_min = 200.						# Minimum initial random value
+w0_max = 201.						# Maximum initial random value
 tau_n = 200.						# Time constant of reward signal
 tau_c = 1000.						# Time constant of eligibility trace
 reward_factor = 0.01				# Reward factor modulating reward signal strength
@@ -43,4 +44,4 @@ r_min = 3.0							# Minimum turning radius
 # Other
 reset_distance = 0.2				# Reset distance
 rate = 20.							# ROS publication rate motor speed
-training_length = 90000			# Lenth of training procedure (1 step ~ 50 ms)
+training_length = 1000			# Lenth of training procedure (1 step ~ 50 ms)

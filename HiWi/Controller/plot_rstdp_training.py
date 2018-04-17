@@ -3,6 +3,7 @@
 import numpy as np
 import h5py
 from environment import *
+from parameters import *
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
 
@@ -11,7 +12,6 @@ from matplotlib import gridspec
 
 env = VrepEnvironment()
 
-path = "../../data/session_xyz"
 h5f = h5py.File(path + '/rstdp_data.h5', 'r')
 
 steps = np.array(h5f['steps'], dtype = float)
