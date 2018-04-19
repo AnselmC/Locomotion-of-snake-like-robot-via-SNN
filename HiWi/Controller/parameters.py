@@ -2,13 +2,13 @@
 
 import numpy as np
 
-path = "../../data/session_001"		# Path for saving data from our scence
-#path = "../data/session_011"			# Path for saving data from HiWi scee
+path = "../../data/session_002"		# Path for saving data from our scence
+#path = "../data/session_011"		# Path for saving data from HiWi scee
 
 # Input image
 img_resolution = [32,32]			# Original DVS frame resolution
 crop_top = 8						# Crop at the top
-crop_bottom = 8					# Crop at the bottom
+crop_bottom = 8						# Crop at the bottom
 resolution = [8,4]					# Resolution of reduced image
 
 # Network parameters
@@ -44,5 +44,5 @@ r_min = 3.0							# Minimum turning radius
 # Other
 reset_distance = 0.2				# Reset distance
 rate = 20.							# ROS publication rate motor speed
-training_length = 70000				# Lenth of training procedure (1 step ~ 50 ms)
+training_length = 50000				# Lenth of training procedure (1 step ~ 50 ms)
 	
