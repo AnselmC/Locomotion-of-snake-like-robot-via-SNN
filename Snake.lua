@@ -15,12 +15,12 @@ function resetRobot_cb(msg)
     print("--------------------------------")
 
      -- get all objects in the model
-    allModelObjects=simGetObjectsInTree(robotHandle) -- get all objects in the model
+    allModelObjects=simGetObjectsInTree(robotHandle) 
     simSetThreadAutomaticSwitch(false)
   
     -- reset all objects in the model
     for i=1,#allModelObjects,1 do
-        simResetDynamicObject(allModelObjects[i]) -- reset all objects in the model
+        simResetDynamicObject(allModelObjects[i])
     end
 
     for i=1,K,1 do
@@ -98,26 +98,34 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         resetRobotSub=simExtRosInterface_subscribe('/resetRobot','std_msgs/Bool','resetRobot_cb')
     end
 
-    t=0
-    step=0
+    step = 0
+    t = 0
+
+    mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
+    print("mod:\t", mod)
+
     K = 8
-    local m = 0.18
+    
+    local m = simGetScriptSimulationParameter(sim_handle_self, "m", true)
+    print("m:\t", m)
 
     -- linear reduction parameters (set y = 0 and z = 1 for disabling)
-    y = 0.5
+    y = simGetScriptSimulationParameter(sim_handle_self, "y", true)
+    print("y:\t", y)
+
     z = 1 - y
 
     -- set of control Parameters:
     -- frequency
-    w = math.pi*0.5
+    w = math.pi*simGetScriptSimulationParameter(sim_handle_self, "w", true)
     print("w:\t", w)
 
     -- amplitude
-    a = math.pi*40/180
+    a = math.pi*simGetScriptSimulationParameter(sim_handle_self, "a", true)/180
     print("a:\t", a)
 
     -- wavelength
-    lambda = math.pi*4000/180
+    lambda = math.pi*simGetScriptSimulationParameter(sim_handle_self, "lambda", true)/180
     print("lambda:\t", lambda)
 
     p = -1
@@ -132,11 +140,9 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         head_dir = head_dir + theta[i+1]
     end
 
-    print("amp:\t", amp)
-    print("head_dir:", head_dir)
-
     head_dir = head_dir/(K+1)
     print("amp:\t", amp)
+    print("head_dir:", head_dir)
 
     l = 0;
     for i=1,K+1,1 do
@@ -182,7 +188,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     head_dir = head_dir/(K+1)
     
     -- Print parameters every 10 steps
-    if(math.fmod(step,10)==0) then
+    if(math.fmod(step,mod)==0) then
         print("--------------------------------")
         print("--------Snake step: "..(step).."----------")
         print("--------------------------------")
