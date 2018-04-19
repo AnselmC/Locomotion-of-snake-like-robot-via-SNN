@@ -3,11 +3,11 @@
 import numpy as np
 import h5py
 import matplotlib.pyplot as plt
+from parameters import *
 
 # R-STDP weights learned
 # Fig. 5.7, Fig. 5.8, Fig. 5.10
 
-path = "../../data/session_xyz"
 h5f = h5py.File(path + '/rstdp_data.h5', 'r')
 
 w_l = np.array(h5f['w_l'], dtype=float)
