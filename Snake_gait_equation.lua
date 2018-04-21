@@ -109,6 +109,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     N = 8
     
     -- l0 is the length of each module --> m
+    -- [TODO] Check m for our snake
     local m = simGetScriptSimulationParameter(sim_handle_self, "m", true)
     
     -- linear reduction parameters (set y = 0 and z = 1 for disabling)
@@ -160,6 +161,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         - θk: joint angle --> theta[i]
         - Ω: spatial frequency: cycle number of the wave --> lambda
         - [Question] Why cos instead of sin?
+        - [Question] Why amp instead of a (see equation 8)
         ]]
         theta[i+1] = theta[i] + amp * math.cos(lambda * (i-1))
         
@@ -234,19 +236,20 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         - The amplitude for each joint is defined as a linear function dependent 
             on the module number n
         - The linear coefficient starts at y = 0.3 for the head module and ends 
-            at z = 0.7 for the tail moduleThe linear coefficient starts at 
-            y = 0.3 for the head module and ends at z = 0.7 for the tail module
+            at z = 0.7 for the tail module
         ]]
         amp = a * ((i-1)*y/N + z)
 
         --[[
         - φ(n,t) = C + P*A*sin(Ω*n+ω*t)
         - C: Body shape offset, bias value --> b
-        - P: Linear dependency, linear reduction equation P (see above) \__ P*A
+        - P: Linear dependency, linear reduction equation P (see above) \__ P*A = amp
         - A: Amplitude                                                  /
         - Ω: spatial frequency: cycle number of the wave --> lambda
         - ω: temporal frequency: traveling speed of the wave --> w
         - [Question] Why cos instead of sin?
+        - [Question] Why i-1 ?
+        - [Question] Why - instead of +?
         ]]
         phi = b + amp*math.cos(w*t - lambda*(i-1))
         
@@ -292,4 +295,4 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         print("theta:\t", theta)
         print("head_dir:", head_dir)
     end
-end 
+end
