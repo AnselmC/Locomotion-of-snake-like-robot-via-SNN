@@ -57,8 +57,8 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 
     vOffset = 0
     
-    amp = simGetScriptSimulationParameter(sim_handle_self, "amp", true)
-    print("amp:\t", amp)
+    A = simGetScriptSimulationParameter(sim_handle_self, "A", true)
+    print("A:\t", A)
 
     w = simGetScriptSimulationParameter(sim_handle_self, "w", true)
     print("w:\t", w)
@@ -80,7 +80,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     step=step+1
     t=t+simGetSimulationTimeStep()
 
-    vOffset = amp*math.sin(w*t)
+    vOffset = A*math.sin(w*t)
 
     vLeft=v0+vOffset
     vRight=v0-vOffset

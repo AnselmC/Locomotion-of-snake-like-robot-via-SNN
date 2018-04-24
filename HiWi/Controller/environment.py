@@ -19,7 +19,7 @@ def normpdf(x, mean=0, sd=0.10):
     var = float(sd)**2
     denom = (2*math.pi*var)**.5
     num = math.exp(-(float(x)-float(mean))**2/(2*var))
-    return num/denom
+    return 3*(num/denom)-2
 
 class VrepEnvironment():
 	def __init__(self):

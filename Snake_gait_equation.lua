@@ -2,11 +2,11 @@ function setTurningRadius_cb(msg)
     -- Turning Radius subscriber callback
     radius = msg.data
     
-    -- C: Body shape offset, bias value --> b
+    -- C: Body shape offset, bias value
     -- C = l/(N*r)
-    b = 0
+    C = 0
     if (radius >= 1 or radius <= -1) then
-        b = l / (N*radius) 
+        C = l/(N*radius) 
     end
 end
 
@@ -110,7 +110,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     
     -- l0 is the length of each module --> m
     -- [TODO] Check m for our snake
-    local m = simGetScriptSimulationParameter(sim_handle_self, "m", true)
+    local l0 = simGetScriptSimulationParameter(sim_handle_self, "l0", true)
     
     -- linear reduction parameters (set y = 0 and z = 1 for disabling)
     y = simGetScriptSimulationParameter(sim_handle_self, "y", true)
@@ -123,12 +123,12 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     print("w:\t", w)
 
     -- A: Amplitude
-    a = math.pi*simGetScriptSimulationParameter(sim_handle_self, "a", true)/180
-    print("a:\t", a)
+    A = math.pi*simGetScriptSimulationParameter(sim_handle_self, "A", true)/180
+    print("A:\t", A)
 
-    -- Ω: spatial frequency: cycle number of the wave --> lambda
-    lambda = math.pi*simGetScriptSimulationParameter(sim_handle_self, "lambda", true)/180
-    print("lambda:\t", lambda)
+    -- Ω: spatial frequency: cycle number of the wave
+    Omega = math.pi*simGetScriptSimulationParameter(sim_handle_self, "Omega", true)/180
+    print("Omega:\t", Omega)
 
     -- [Question] What is p?
     p = -1
@@ -153,17 +153,19 @@ if (sim_call_type==sim_childscriptcall_initialization) then
             ...
             i=N: ...           = 7*y/N + z = 7/16 + 0,5 = 15/16
         ]]
-        amp = a * ((i-1)*y/N + z)
+        P = ((i-1)/N)*y + z
 
-        --[[
+        --[[.
         - The joint angle θk is the result of concatenated local joint angles, 
             which is calculated as: Equation 8 from the Slithering Gait Paper
         - θk: joint angle --> theta[i]
-        - Ω: spatial frequency: cycle number of the wave --> lambda
+        - Ω: spatial frequency: cycle number of the wave
         - [Question] Why cos instead of sin?
         - [Question] Why amp instead of a (see equation 8)
         ]]
-        theta[i+1] = theta[i] + amp * math.cos(lambda * (i-1))
+        -- [Comment]
+        -- theta[i+1] = theta[i] + P*A*math.cos(Omega * (i-1))
+        theta[i+1] = theta[i] + A*math.sin(Omega * (i-1))
         
         -- θsnake: global angle of the snake robot --> head_dir
         -- θk: joint angle --> theta[i]
@@ -177,7 +179,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     -- Possible answer: head_dir is the average value of the joint angles
     head_dir = head_dir/(N+1)
 
-    print("amp:\t", amp)
+    print("P*A:\t", P*A)
     print("head_dir:", head_dir)
 
     --[[
@@ -194,12 +196,12 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     for i=1,N+1,1 do
         l = l + math.cos(theta[i] - head_dir)
     end
-    l = m * l;
+    l = l0 * l;
     print("l:\t", l)
 
     -- C: Body shape offset, bias value --> b
     -- C = l/(N*r)
-    b = 0
+    C = 0
 end 
 
 if (sim_call_type==sim_childscriptcall_cleanup) then 
@@ -238,23 +240,28 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         - The linear coefficient starts at y = 0.3 for the head module and ends 
             at z = 0.7 for the tail module
         ]]
-        amp = a * ((i-1)*y/N + z)
+        P = ((i-1)/N)*y + z
 
         --[[
         - φ(n,t) = C + P*A*sin(Ω*n+ω*t)
-        - C: Body shape offset, bias value --> b
-        - P: Linear dependency, linear reduction equation P (see above) \__ P*A = amp
+        - C: Body shape offset, bias value
+        - P: Linear dependency, linear reduction equation P (see above) \__ P*A 
         - A: Amplitude                                                  /
-        - Ω: spatial frequency: cycle number of the wave --> lambda
+        - Ω: spatial frequency: cycle number of the wave
         - ω: temporal frequency: traveling speed of the wave --> w
         - [Question] Why cos instead of sin?
         - [Question] Why i-1 ?
-        - [Question] Why - instead of +?
+        - [Question] Why - instead of +? --> so that the snake moves forward
         ]]
-        phi = b + amp*math.cos(w*t - lambda*(i-1))
+        -- [Comment]
+        -- phi = C + P*A*math.cos(w*t - Omega*(i-1))
+        phi = C + P*A*math.sin(Omega*(i-1) - w*t)
         
         -- [Question] Why -phi*(1-math.exp(p*t)) ?
-        simSetJointTargetPosition(joints_v[i], -phi*(1-math.exp(p*t)))
+        -- [Comment]
+        -- simSetJointTargetPosition(joints_v[i], -phi*(1-math.exp(p*t)))
+        -- simSetJointTargetPosition(joints_v[i], phi*(1-math.exp(p*t)))
+        simSetJointTargetPosition(joints_v[i], phi)
         
         phi = simGetJointPosition(joints_v[i])
 
@@ -280,7 +287,9 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     
     -- Head Compensation
     -- [Question] Why *(1-math.exp(p*t))?
-    simSetJointTargetPosition(joints_v[1], -head_dir*(1-math.exp(p*t)))
+    -- [Comment]
+    -- simSetJointTargetPosition(joints_v[1], -head_dir*(1-math.exp(p*t)))
+    simSetJointTargetPosition(joints_v[1], -head_dir)
 
     -- Print parameters every 10 steps
     if(math.fmod(step,mod)==0) then
@@ -289,8 +298,8 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         print("--------------------------------")
         print("t:\t", t)
         print("radius:\t", radius)
-        print("b:\t", b)
-        print("amp:\t", amp)
+        print("C:\t", C)
+        print("P*A:\t", P*A)
         print("phi:\t", phi)
         print("theta:\t", theta)
         print("head_dir:", head_dir)

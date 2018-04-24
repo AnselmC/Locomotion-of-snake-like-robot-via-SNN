@@ -2,7 +2,7 @@
 
 import numpy as np
 
-path = "../../data/session_001"		# Path for saving data from our scence
+path = "../../data/session_003"		# Path for saving data from our scence
 #path = "../data/session_011"		# Path for saving data from HiWi scee
 
 # Input image
