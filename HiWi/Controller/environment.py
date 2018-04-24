@@ -15,14 +15,14 @@ from sensor_msgs.msg import Image
 
 from parameters import *
 
-def normpdf(x, mean=0, sd=0.10):
+def normpdf(x):
     var = float(sd)**2
     denom = (2*math.pi*var)**.5
     num = math.exp(-(float(x)-float(mean))**2/(2*var))
-    return 3*(num/denom)-2
+    return scaling_factor*(num/denom)+y_offset
 
 class VrepEnvironment():
-	def __init__(self):
+	def _init_(self):
 		self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
 		self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
 		self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
@@ -76,8 +76,10 @@ class VrepEnvironment():
 		m_l = n_l/n_max
 		m_r = n_r/n_max
 		a = m_r - m_l
-		c = math.sqrt((m_l**2 + m_r**2)/2.0)
-		self.turn_pre = c*0.5*a + (1-c)*self.turn_pre
+		c = math.sqrt((m_l*2 + m_r*2)/2.0)
+		# Master thesis equation 4.7
+		# [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s 
+		self.turn_pre = c*a*(v_max-v_min) + (1-c)*self.turn_pre
 		if abs(self.turn_pre) < 0.001:
 			radius = 0
 		else:
@@ -87,13 +89,16 @@ class VrepEnvironment():
 		self.radius_pub.publish(radius)
 		self.rate.sleep()
 
-
 		# Set reward signal
 		r = normpdf(abs(self.cx))
 
 		s = self.getState()
 		n = self.steps
 		lane = self.startLeft
+
+		# Terminate episode given max. step amount
+		if self.steps > max_steps:
+			self.terminate = True
 
 		# Terminate episode of robot reaches start position again
 		# or reset distance

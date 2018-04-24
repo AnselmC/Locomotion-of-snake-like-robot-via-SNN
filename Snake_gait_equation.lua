@@ -164,8 +164,8 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         - [Question] Why amp instead of a (see equation 8)
         ]]
         -- [Comment]
-        -- theta[i+1] = theta[i] + P*A*math.cos(Omega * (i-1))
-        theta[i+1] = theta[i] + A*math.sin(Omega * (i-1))
+        theta[i+1] = theta[i] + P*A*math.cos(Omega * (i-1))
+        -- theta[i+1] = theta[i] + A*math.sin(Omega * (i-1))
         
         -- θsnake: global angle of the snake robot --> head_dir
         -- θk: joint angle --> theta[i]
@@ -254,14 +254,13 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         - [Question] Why - instead of +? --> so that the snake moves forward
         ]]
         -- [Comment]
-        -- phi = C + P*A*math.cos(w*t - Omega*(i-1))
-        phi = C + P*A*math.sin(Omega*(i-1) - w*t)
+        phi = C + P*A*math.cos(w*t - Omega*(i-1))
+        -- phi = C + P*A*math.sin(Omega*(i-1) - w*t)
         
         -- [Question] Why -phi*(1-math.exp(p*t)) ?
         -- [Comment]
-        -- simSetJointTargetPosition(joints_v[i], -phi*(1-math.exp(p*t)))
-        -- simSetJointTargetPosition(joints_v[i], phi*(1-math.exp(p*t)))
-        simSetJointTargetPosition(joints_v[i], phi)
+        simSetJointTargetPosition(joints_v[i], -phi*(1-math.exp(p*t)))
+        -- simSetJointTargetPosition(joints_v[i], phi)
         
         phi = simGetJointPosition(joints_v[i])
 
@@ -288,8 +287,8 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     -- Head Compensation
     -- [Question] Why *(1-math.exp(p*t))?
     -- [Comment]
-    -- simSetJointTargetPosition(joints_v[1], -head_dir*(1-math.exp(p*t)))
-    simSetJointTargetPosition(joints_v[1], -head_dir)
+    simSetJointTargetPosition(joints_v[1], -head_dir*(1-math.exp(p*t)))
+    -- simSetJointTargetPosition(joints_v[1], -head_dir)
 
     -- Print parameters every 10 steps
     if(math.fmod(step,mod)==0) then

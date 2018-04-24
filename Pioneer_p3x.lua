@@ -90,8 +90,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
 
     pos = simGetObjectPosition(robotHandle, -1)
     ori = simGetObjectOrientation(robotHandle, -1)
-    
-    
+        
     if(math.fmod(step,mod)==0) then
         print("--------------------------------")
         print("--------Pioneer step: "..(step).."--------")
@@ -105,7 +104,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
             print("pos["..(i).."]:\t", pos[i])
         end
         for i=1,#ori,1 do
-            print("pos["..(i).."]:\t", pos[i])
+            print("ori["..(i).."]:\t", ori[i])
         end
     end
 end 
