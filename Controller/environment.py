@@ -22,7 +22,7 @@ def normpdf(x):
     return scaling_factor*(num/denom)+y_offset
 
 class VrepEnvironment():
-	def _init_(self):
+	def __init__(self):
 		self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
 		self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
 		self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
