@@ -11,7 +11,6 @@ env = VrepEnvironment()
 weights_r = []
 weights_l = []
 weights_i = []
-steps = []
 episode_position_o = []
 episode_i_o = []
 episode_position_i = []
@@ -19,6 +18,7 @@ episode_i_i = []
 
 # Initialize environment, get initial state, initial reward
 s,r = env.reset()
+
 for i in range(training_length):
 	
 	# Simulate network for 50 ms
@@ -35,10 +35,6 @@ for i in range(training_length):
 		weights_r.append(w_r)
 		weights_i.append(i)
 
-    # Save no. of steps every episode
-	if t:
- 		steps.append(n)
-        
 	# Save last position if episode is terminated
 	#if t:
 	#	if o:
@@ -54,7 +50,6 @@ h5f = h5py.File(path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)
-h5f.create_dataset('steps', data = steps)
 h5f.create_dataset('e_o', data=episode_position_o)
 h5f.create_dataset('e_i_o', data=episode_i_o)
 h5f.create_dataset('e_i', data=episode_position_i)

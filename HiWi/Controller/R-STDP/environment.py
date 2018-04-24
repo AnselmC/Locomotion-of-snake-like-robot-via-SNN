@@ -15,13 +15,6 @@ from sensor_msgs.msg import Image
 
 from parameters import *
 
-# def normpdf(x, mean=0, sd=0.15):
-def normpdf(x, mean=0, sd=0.10):
-    var = float(sd)**2
-    denom = (2*math.pi*var)**.5
-    num = math.exp(-(float(x)-float(mean))**2/(2*var))
-    return num/denom
-
 class VrepEnvironment():
 	def __init__(self):
 		self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
@@ -32,7 +25,7 @@ class VrepEnvironment():
 		self.cx = 0.0
 		self.terminate = False
 		self.startLeft = True
-		self.steps = 02
+		self.steps = 0
 		self.turn_pre = 0.0
 		self.bridge = CvBridge()
 		rospy.init_node('rstdp_controller')
@@ -90,11 +83,7 @@ class VrepEnvironment():
 
 
 		# Set reward signal
-		# r= 1-abs(self.cx)		# original
-		# r = normpdf(1-abs(self.cx)) 	# doesn't work
-		r = normpdf(abs(self.cx)) 	# works better
-		# r = 0.5-abs(self.cx)
-
+		r = 1 - abs(self.cx)
 
 		s = self.getState()
 		n = self.steps
