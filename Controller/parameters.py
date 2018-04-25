@@ -2,7 +2,7 @@
 
 import numpy as np
 
-path = "../data/session_001"		# Path for saving data
+path = "../data/session_002"		# Path for saving data
 
 # Input image
 img_resolution = [32,32]			# Original DVS frame resolution
@@ -30,11 +30,11 @@ reward_factor = 0.01				# Reward factor modulating reward signal strength
 A_plus = 1.							# Constant scaling strength of potentiaion
 A_minus = 1.						# Constant scaling strength of depression				
 
-# Reward function parameters
+# Reward signal parameters
 mean = 0							# Mean of norm pdf
-sd = 0.1							# Standard deviation of norm pdf
+sd = 0.33							# Standard deviation of norm pdf
 scaling_factor = 1					# Scaling of function in y-direction
-y_offset = -0.4						# Offset of function in y-axis
+y_offset = -0.5						# Offset of function in y-axis
 
 # Steering wheel model
 v_max = 1.5							# Maximum speed
@@ -47,7 +47,7 @@ n_max = sim_time//t_refrac - 10.	# Maximum input activity [Question] Why -10?
 r_min = 3.0							# Minimum turning radius
 
 # Other
-max_steps = 1200					# Maximum amount of steps per episode before the simulation is reset
+max_steps = 2000					# Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2				# Reset distance
 rate = 20.							# ROS publication rate motor speed
-training_length = 25000				# Lenth of training procedure (1 step ~ 50 ms)
+training_length = 20000				# Lenth of training procedure (1 step ~ 50 ms)

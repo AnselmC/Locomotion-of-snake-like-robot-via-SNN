@@ -15,12 +15,6 @@ from sensor_msgs.msg import Image
 
 from parameters import *
 
-def normpdf(x):
-    var = float(sd)**2
-    denom = (2*math.pi*var)**.5
-    num = math.exp(-(float(x)-float(mean))**2/(2*var))
-    return scaling_factor*(num/denom)+y_offset
-
 class VrepEnvironment():
 	def __init__(self):
 		self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
@@ -38,17 +32,22 @@ class VrepEnvironment():
 		self.rate = rospy.Rate(rate)
 
 	def image_callback(self, msg):
-		# Process incoming image data
+	# Process incoming image data
 
-    # Get an OpenCV image
+    	# Get an OpenCV image
 		cv_image = self.bridge.imgmsg_to_cv2(msg, "rgb8")
-		self.img = cv_image[:,:,2]					# get red channel
+		self.img = cv_image[:,:,2]				# get red channel
 		M = cv.moments(self.img, True)			# compute image moments for centroid
 		if M['m00'] == 0:
 			self.terminate = True
 			self.cx = 1.0
 		else:
 			self.terminate = False
+			# https://www.youtube.com/watch?v=AAbUfZD_09s
+			# Assumption: Origin of coordinate system is in the bottom left of the picture
+			# M['m10']/M['m00'] = x_mean (between 0 and 32)
+			# M['m10']/(M['m00']*img_resolution[1]) = x_mean_normalized (between 0 and 1)
+			# 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 = cx (between -1 and 1, 0 in the middle)
 			self.cx = 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 # normalized centroid position
 
 		cv.imshow('image',self.img)
@@ -73,24 +72,29 @@ class VrepEnvironment():
 		self.steps += 1
 
 		# Snake turning model
-		m_l = n_l/n_max
-		m_r = n_r/n_max
-		a = m_r - m_l
-		c = math.sqrt((m_l*2 + m_r*2)/2.0)
-		# Master thesis equation 4.7
-		# [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s 
-		self.turn_pre = c*a*(v_max-v_min) + (1-c)*self.turn_pre
+		m_l = n_l/n_max						# MT 4.4
+		m_r = n_r/n_max						# MT 4.4
+		a = m_l - m_r						# MT 4.5
+		c = math.sqrt((m_l*2 + m_r*2)/2.0)	# MT 4.9
+
+		self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre # MT 4.8
+
 		if abs(self.turn_pre) < 0.001:
 			radius = 0
 		else:
+			# [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s
 			radius = r_min/self.turn_pre
-		
+
 		# Publish turning radius
 		self.radius_pub.publish(radius)
 		self.rate.sleep()
 
 		# Set reward signal
-		r = normpdf(abs(self.cx))
+		# Reward 
+		if (self.cx > 0):
+			r = -abs(self.cx)
+		else:
+			r = abs(self.cx)
 
 		s = self.getState()
 		n = self.steps
@@ -110,6 +114,16 @@ class VrepEnvironment():
 
 		# Return state, distance, reward, termination, steps, lane
 		return s,self.cx,r,t,n,lane
+
+		if (self.steps%10 == 0):
+			print "steps: ", self.steps
+			print "m_l: ", m_l
+			print "m_r: ", m_r
+			print "a: ", a
+			print "c: ", c
+			print "turn_pre: ", self.turn_pre
+			print "radius: ", radius
+
 
 	def getState(self):
 		new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4
