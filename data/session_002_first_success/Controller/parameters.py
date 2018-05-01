@@ -2,7 +2,7 @@
 
 import numpy as np
 
-path = "../data/session_002_first_success"		# Path for saving data
+path = "../data/session_002"		# Path for saving data
 
 modulo = 100000
 
