@@ -105,6 +105,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 
     mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
     
+    r = simGetScriptSimulationParameter(sim_handle_self, "r", true)
     -- Module numbers N?
     N = 8
     
@@ -118,7 +119,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 
     -- set of control Parameters:
 
-    -- ω: temporal frequency: traveling speed of the wave --> w
+    -- w: temporal frequency: traveling speed of the wave --> w
     w = math.pi*simGetScriptSimulationParameter(sim_handle_self, "w", true)
     print("w:\t", w)
 
@@ -126,17 +127,17 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     A = math.pi*simGetScriptSimulationParameter(sim_handle_self, "A", true)/180
     print("A:\t", A)
 
-    -- Ω: spatial frequency: cycle number of the wave
+    -- Omega: spatial frequency: cycle number of the wave
     Omega = math.pi*simGetScriptSimulationParameter(sim_handle_self, "Omega", true)/180
     print("Omega:\t", Omega)
 
     -- [Question] What is p?
     p = -1
 
-    -- θk: joint angle --> theta[i]
+    -- theta k: joint angle --> theta[i]
     local theta = {0,-1,-1,-1,-1,-1,-1,-1,-1}
     
-    -- θsnake: global angle of the snake robot --> head_dir
+    -- theta snake: global angle of the snake robot --> head_dir
     local head_dir = 0
 
     for i=1,N,1 do
@@ -156,25 +157,25 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         P = ((i-1)/N)*y + z
 
         --[[.
-        - The joint angle θk is the result of concatenated local joint angles, 
+        - The joint angle ?k is the result of concatenated local joint angles, 
             which is calculated as: Equation 8 from the Slithering Gait Paper
-        - θk: joint angle --> theta[i]
-        - Ω: spatial frequency: cycle number of the wave
+        - ?k: joint angle --> theta[i]
+        - ?: spatial frequency: cycle number of the wave
         - [Question] Why cos instead of sin?
         - [Question] Why amp instead of a (see equation 8)
         ]]
         -- [Comment]
-        theta[i+1] = theta[i] + P*A*math.cos(Omega * (i-1))
-        -- theta[i+1] = theta[i] + A*math.sin(Omega * (i-1))
+        -- theta[i+1] = theta[i] + P*A*math.(Omega * (i-1))
+        theta[i+1] = theta[i] + A*math.sin(Omega * (i-1))
         
-        -- θsnake: global angle of the snake robot --> head_dir
-        -- θk: joint angle --> theta[i]
+        -- ?snake: global angle of the snake robot --> head_dir
+        -- ?k: joint angle --> theta[i]
         -- [Question] What is going on here?
         -- Possible answer: head_dir is sum over all joint angles
         head_dir = head_dir + theta[i+1]
     end
 
-    -- θsnake: global angle of the snake robot --> head_dir
+    -- ?snake: global angle of the snake robot --> head_dir
     -- [Question] What is going on here?
     -- Possible answer: head_dir is the average value of the joint angles
     head_dir = head_dir/(N+1)
@@ -183,14 +184,14 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     print("head_dir:", head_dir)
 
     --[[
-    - Body length l = (sum from k=1 to N of lk) = (sum from k=1 to N of l0*cos(θk−θsnake))
-        = l0*(sum from k=1 to N of cos(θk−θsnake))
+    - Body length l = (sum from k=1 to N of lk) = (sum from k=1 to N of l0*cos(?k??snake))
+        = l0*(sum from k=1 to N of cos(?k??snake))
     - Each module contributes an effective length that is parallel to the forward 
         direction
-    - lk = l0*cos(θk−θsnake)
-    - θsnake: global angle of the snake robot --> head_dir
+    - lk = l0*cos(?k??snake)
+    - ?snake: global angle of the snake robot --> head_dir
     - l0 is the length of each module --> m
-    - θk: joint angle --> theta[i]
+    - ?k: joint angle --> theta[i]
     ]] 
     l = 0;
     for i=1,N+1,1 do
@@ -200,6 +201,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     print("l:\t", l)
 
     -- C: Body shape offset, bias value --> b
+    -- C = l/(N*r)
     -- C = l/(N*r)
     C = 0
 end 
@@ -223,12 +225,12 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     step=step+1
     t=t+simGetSimulationTimeStep()
     
-    -- θk: joint angle --> theta[i] 
+    -- ?k: joint angle --> theta[i] 
     -- [Question] Why is theta not an array any more?   
     local theta = 0
 
-    -- θsnake: global angle of the snake robot --> head_dir
-    -- θk: joint angle --> theta[i]
+    -- ?snake: global angle of the snake robot --> head_dir
+    -- ?k: joint angle --> theta[i]
     local head_dir = theta
 
     for i=2,N,1 do
@@ -243,19 +245,19 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         P = ((i-1)/N)*y + z
 
         --[[
-        - φ(n,t) = C + P*A*sin(Ω*n+ω*t)
+        - ?(n,t) = C + P*A*sin(?*n+?*t)
         - C: Body shape offset, bias value
         - P: Linear dependency, linear reduction equation P (see above) \__ P*A 
         - A: Amplitude                                                  /
-        - Ω: spatial frequency: cycle number of the wave
-        - ω: temporal frequency: traveling speed of the wave --> w
+        - ?: spatial frequency: cycle number of the wave
+        - ?: temporal frequency: traveling speed of the wave --> w
         - [Question] Why cos instead of sin?
         - [Question] Why i-1 ?
         - [Question] Why - instead of +? --> so that the snake moves forward
         ]]
         -- [Comment]
-        phi = C + P*A*math.cos(w*t - Omega*(i-1))
-        -- phi = C + P*A*math.sin(Omega*(i-1) - w*t)
+        -- phi = C + P*A*math.cos(w*t - Omega*(i-1))
+        phi = C + P*A*math.sin(Omega*(i-1) - w*t)
         
         -- [Question] Why -phi*(1-math.exp(p*t)) ?
         -- [Comment]
@@ -265,23 +267,23 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         phi = simGetJointPosition(joints_v[i])
 
         --[[
-        The joint angle θk is the result of concatenated local joint angles, 
+        The joint angle ?k is the result of concatenated local joint angles, 
             which is calculated as: Equation 8 from the Slithering Gait Paper
         ]]
         theta = theta + phi
 
         --[[
-        - The compensation angle for the joint module is β, the joint angle for the 
-            kth module is θk. Therefore, in the global coordinates, the ith module 
+        - The compensation angle for the joint module is ?, the joint angle for the 
+            kth module is ?k. Therefore, in the global coordinates, the ith module 
             angle can be calculated as: Equation 11 from the Slithering Gait Paper
-        - θsnake: global angle of the snake robot --> head_dir
-        - θk: joint angle --> theta[i]
+        - ?snake: global angle of the snake robot --> head_dir
+        - ?k: joint angle --> theta[i]
         ]]
         head_dir = head_dir + theta
     end
 
-    -- Then we can derive the compensation angle β as: Equation 14 from the Slithering Gait Paper
-    -- θsnake: global angle of the snake robot --> head_dir
+    -- Then we can derive the compensation angle ? as: Equation 14 from the Slithering Gait Paper
+    -- ?snake: global angle of the snake robot --> head_dir
     head_dir = head_dir/(N+1)
     
     -- Head Compensation

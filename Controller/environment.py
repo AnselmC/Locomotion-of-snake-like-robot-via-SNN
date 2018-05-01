@@ -33,7 +33,6 @@ class VrepEnvironment():
 
 	def image_callback(self, msg):
 	# Process incoming image data
-
     	# Get an OpenCV image
 		cv_image = self.bridge.imgmsg_to_cv2(msg, "rgb8")
 		self.img = cv_image[:,:,2]				# get red channel
@@ -59,6 +58,7 @@ class VrepEnvironment():
 
 	def reset(self):
 		# Reset model
+		print "-------------reset--------------"
 		self.turn_pre = 0.0
 		self.radius_pub.publish(0.0)
 		# Change lane
@@ -74,7 +74,7 @@ class VrepEnvironment():
 		# Snake turning model
 		m_l = n_l/n_max						# MT 4.4
 		m_r = n_r/n_max						# MT 4.4
-		a = m_l - m_r						# MT 4.5
+		a = m_r - m_l						# MT 4.5
 		c = math.sqrt((m_l*2 + m_r*2)/2.0)	# MT 4.9
 
 		self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre # MT 4.8
@@ -112,18 +112,24 @@ class VrepEnvironment():
 			self.reset()
 			self.terminate = False
 
+		if (self.steps%10 == 0):
+			print "--------------------------------"
+			print "-----------step: ", self.steps, "-----------"
+			print "--------------------------------"
+			print "n_max: \t\t", n_max
+			print "n_l: \t\t", n_l
+			print "m_l: \t\t", m_l
+			print "n_r: \t\t", n_r
+			print "m_r: \t\t", m_r
+			print "a: \t\t", a
+			print "c: \t\t", c
+			print "turn_pre: \t", self.turn_pre
+			print "radius: \t", radius
+			print "cx: \t\t", self.cx
+			print "reward: \t", r
+
 		# Return state, distance, reward, termination, steps, lane
 		return s,self.cx,r,t,n,lane
-
-		if (self.steps%10 == 0):
-			print "steps: ", self.steps
-			print "m_l: ", m_l
-			print "m_r: ", m_r
-			print "a: ", a
-			print "c: ", c
-			print "turn_pre: ", self.turn_pre
-			print "radius: ", radius
-
 
 	def getState(self):
 		new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4
