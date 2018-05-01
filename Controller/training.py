@@ -12,10 +12,11 @@ weights_r = []
 weights_l = []
 weights_i = []
 steps = []
-episode_position_o = []
-episode_i_o = []
-episode_position_i = []
-episode_i_i = []
+
+#episode_position_o = []
+#episode_i_o = []
+#episode_position_i = []
+#episode_i_i = []
 
 # Initialize environment, get initial state, initial reward
 s,r = env.reset()
@@ -26,8 +27,8 @@ for i in range(training_length):
 	n_l, n_r, w_l, w_r = snn.simulate(s,r)
 
 	# Feed output spikes in steering wheel model
-	# Get state, distance, reward, termination, step, lane
-	s,d,r,t,n,o = env.step(n_l, n_r)
+	# Get state, distance, reward, termination, step
+	s,d,r,t,n = env.step(n_l, n_r)
 
 	# Save weights every 100 simulation steps
 	if i % 100 == 0:
@@ -55,8 +56,8 @@ h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
-h5f.create_dataset('e_o', data=episode_position_o)
-h5f.create_dataset('e_i_o', data=episode_i_o)
-h5f.create_dataset('e_i', data=episode_position_i)
-h5f.create_dataset('e_i_i', data=episode_i_i)
+#h5f.create_dataset('e_o', data=episode_position_o)
+#h5f.create_dataset('e_i_o', data=episode_i_o)
+#h5f.create_dataset('e_i', data=episode_position_i)
+#h5f.create_dataset('e_i_i', data=episode_i_i)
 h5f.close()

@@ -24,7 +24,7 @@ class VrepEnvironment():
 		self.imgFlag = False
 		self.cx = 0.0
 		self.terminate = False
-		self.startLeft = True
+		#self.startLeft = True
 		self.steps = 0
 		self.turn_pre = 0.0
 		self.bridge = CvBridge()
@@ -62,8 +62,8 @@ class VrepEnvironment():
 		self.turn_pre = 0.0
 		self.radius_pub.publish(0.0)
 		# Change lane
-		self.startLeft = not self.startLeft
-		self.reset_pub.publish(Bool(self.startLeft))
+		#self.startLeft = not self.startLeft
+		self.reset_pub.publish(Bool(True))
 		time.sleep(1)
 		return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
 
@@ -98,7 +98,7 @@ class VrepEnvironment():
 
 		s = self.getState()
 		n = self.steps
-		lane = self.startLeft
+		#lane = self.startLeft
 
 		# Terminate episode given max. step amount
 		if self.steps > max_steps:
@@ -128,8 +128,8 @@ class VrepEnvironment():
 			print "cx: \t\t", self.cx
 			print "reward: \t", r
 
-		# Return state, distance, reward, termination, steps, lane
-		return s,self.cx,r,t,n,lane
+		# Return state, distance, reward, termination, steps
+		return s,self.cx,r,t,n
 
 	def getState(self):
 		new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4

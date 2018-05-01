@@ -13,6 +13,7 @@ env = VrepEnvironment()
 h5f = h5py.File(path + '/rstdp_data.h5', 'r')
 w_l = np.array(h5f['w_l'], dtype=float)[-1]
 w_r = np.array(h5f['w_r'], dtype=float)[-1]
+
 # Set network weights
 snn.set_weights(w_l,w_r)
 
@@ -30,8 +31,8 @@ for i in range(50000):
 	n_l, n_r, w_l, w_r = snn.simulate(s,r)
 
 	# Feed output spikes into steering wheel model
-	# Get state, distance, position, reward, termination, step, lane
-	s,d,r,t,n,o = env.step(n_l, n_r)
+	# Get state, distance, position, reward, termination, step
+	s,d,r,t,n = env.step(n_l, n_r)
 
 	# Break episode if robot reaches starting position again
 	#if p == env.d_outer or p == env.d_inner:
