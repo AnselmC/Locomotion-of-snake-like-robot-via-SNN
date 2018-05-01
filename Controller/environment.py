@@ -137,6 +137,6 @@ class VrepEnvironment():
 		if self.imgFlag == True:
 			for y in range(img_resolution[1] - crop_top - crop_bottom):
 				for x in range(img_resolution[0]):				
-					if self.img[y + crop_top,x] > 0:
+					if self.img[x, y + crop_bottom] > 0:
 						new_state[x//(img_resolution[0]//resolution[0]), y//(img_resolution[1]//resolution[1])] += 4
 		return new_state
