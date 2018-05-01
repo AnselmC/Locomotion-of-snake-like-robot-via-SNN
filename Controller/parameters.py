@@ -52,4 +52,4 @@ r_min = 3.0							# Minimum turning radius
 max_steps = 2000					# Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2				# Reset distance
 rate = 20.							# ROS publication rate motor speed
-training_length = 500				# Lenth of training procedure (1 step ~ 50 ms)
+training_length = 50000				# Lenth of training procedure (1 step ~ 50 ms)
