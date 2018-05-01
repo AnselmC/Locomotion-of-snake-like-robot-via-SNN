@@ -135,8 +135,8 @@ class VrepEnvironment():
 		new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4
 		# bring the red filtered image in the form of the state
 		if self.imgFlag == True:
-			for y in range(img_resolution[0] - crop_top - crop_bottom):
-				for x in range(img_resolution[1]):				
+			for y in range(img_resolution[1] - crop_top - crop_bottom):
+				for x in range(img_resolution[0]):				
 					if self.img[y + crop_top,x] > 0:
-						new_state[x//(img_resolution[1]//resolution[0]), y//(img_resolution[0]//resolution[1])] += 4
+						new_state[x//(img_resolution[0]//resolution[0]), y//(img_resolution[1]//resolution[1])] += 4
 		return new_state
