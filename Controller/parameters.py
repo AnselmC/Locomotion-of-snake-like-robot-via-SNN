@@ -2,7 +2,7 @@
 
 import numpy as np
 
-path = "../data/session_002_first_success"		# Path for saving data
+path = "../data/session_003"		# Path for saving data
 
 modulo = 100000
 
@@ -52,4 +52,4 @@ r_min = 3.0							# Minimum turning radius
 max_steps = 2000					# Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2				# Reset distance
 rate = 20.							# ROS publication rate motor speed
-training_length = 1000				# Lenth of training procedure (1 step ~ 50 ms)
+training_length = 500				# Lenth of training procedure (1 step ~ 50 ms)

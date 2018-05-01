@@ -52,6 +52,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     print("--------------------------------") 
 
     robotHandle=simGetObjectAssociatedWithScript(sim_handle_self)
+    proxSensor=simGetObjectHandle("Snake_proxSensor")
     
     init_pos = simGetObjectPosition(robotHandle, -1)
     for i=1,#init_pos,1 do
@@ -100,12 +101,16 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         simAdjustView(floatingView,cameraHandle,64)
     end
 
+
     step = 0
     t = 0
 
     mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
     
     r = simGetScriptSimulationParameter(sim_handle_self, "r", true)
+    
+    speedChange = simGetScriptSimulationParameter(sim_handle_self, "speedChange", true)
+    
     -- Module numbers N?
     N = 8
     
@@ -202,7 +207,6 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 
     -- C: Body shape offset, bias value --> b
     -- C = l/(N*r)
-    -- C = l/(N*r)
     C = 0
 end 
 
@@ -225,6 +229,18 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     step=step+1
     t=t+simGetSimulationTimeStep()
     
+    res, dist = simReadProximitySensor(proxSensor)
+    
+    if (math.fmod(step,1)==0) then
+        if (res == 1) then
+            if(dist < 1.5) then
+                w = w - speedChange
+            elseif(dist > 3) then
+                w = w + speedChange
+            end
+        end
+    end
+
     -- ?k: joint angle --> theta[i] 
     -- [Question] Why is theta not an array any more?   
     local theta = 0
@@ -297,12 +313,14 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         print("--------------------------------")
         print("--------Snake step: "..(step).."----------")
         print("--------------------------------")
-        print("t:\t", t)
+        print("dist:\t", dist)
+        print("w:\t", w)
+       --[[ print("t:\t", t)
         print("radius:\t", radius)
         print("C:\t", C)
         print("P*A:\t", P*A)
         print("phi:\t", phi)
         print("theta:\t", theta)
-        print("head_dir:", head_dir)
+        print("head_dir:", head_dir)    ]]--
     end
 end
