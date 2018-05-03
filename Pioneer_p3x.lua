@@ -1,11 +1,25 @@
+function turn()
+    if(turnRight == true) then
+        print("Right motor speed is " .. v0+speedIncrease)
+        simSetJointTargetVelocity(motorRight,v0+speedIncrease)
+        simSetJointTargetVelocity(motorLeft,0)
+    else
+        print("Left motor speed is " .. v0+speedIncrease)
+        simSetJointTargetVelocity(motorLeft,v0+speedIncrease)
+        simSetJointTargetVelocity(motorRight,0)
+    end
+end
+
+function endTurn()
+    simSetJointTargetVelocity(motorRight,v0)
+    simSetJointTargetVelocity(motorLeft,v0)
+end
+
 function resetRobot_cb(msg)
     -- Reset robot subscriber callback
-    print("--------------------------------")
-    print("-------Reset Pioneer_p3dx-------")
-    print("--------------------------------")
-    
     -- get all objects in the model
     allModelObjects=simGetObjectsInTree(robotHandle) 
+    
     simSetThreadAutomaticSwitch(false)
     
     -- reset all objects in the model
@@ -14,65 +28,85 @@ function resetRobot_cb(msg)
     end
 
     simSetObjectPosition(robotHandle,-1,init_pos)
-    for i=1,#init_pos,1 do
-        print("init_pos["..(i).."]:", init_pos[i])
-    end
-
     simSetObjectOrientation(robotHandle,-1,init_ori)
-    for i=1,#init_ori,1 do
-        print("init_ori["..(i).."]:", init_ori[i])
-    end
 
     simSetThreadAutomaticSwitch(true)
     
-    -- reset t
+    -- reset t, turnRight and step
     t = 0
-end
+    turnRight = true
+    step = 0
 
-if (sim_call_type==sim_childscriptcall_initialization) then 
     print("--------------------------------")
-    print("-----Pioneer initialization-----")
-    print("--------------------------------") 
-
-    robotHandle=simGetObjectAssociatedWithScript(sim_handle_self)
-    
-    init_pos = simGetObjectPosition(robotHandle, -1)
+    print("-------Reset Pioneer_p3dx-------")
+    print("--------------------------------")
     for i=1,#init_pos,1 do
         print("init_pos["..(i).."]:", init_pos[i])
     end
-
-    init_ori = simGetObjectOrientation(robotHandle, -1)
     for i=1,#init_ori,1 do
         print("init_ori["..(i).."]:", init_ori[i])
     end
+end
 
+if (sim_call_type==sim_childscriptcall_initialization) then 
+ 
+    -- Get object handles
+    robotHandle=simGetObjectAssociatedWithScript(sim_handle_self)
     motorLeft=simGetObjectHandle("Pioneer_p3dx_leftMotor")
     motorRight=simGetObjectHandle("Pioneer_p3dx_rightMotor")
-   
-    step = 0
-    t = 0
-    
-    mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
-    print("mod:\t", mod)
 
-    vOffset = 0
-    
-    A = simGetScriptSimulationParameter(sim_handle_self, "A", true)
-    print("A:\t", A)
+    -- Get init position and orientation
+    init_pos = simGetObjectPosition(robotHandle, -1)
+    init_ori = simGetObjectOrientation(robotHandle, -1)
 
-    w = simGetScriptSimulationParameter(sim_handle_self, "w", true)
-    print("w:\t", w)
+    -- Check if the required ROS plugin is there:
+    moduleName=0
+    moduleVersion=0
+    index=0
+    pluginNotFound=true
 
-    v0 = simGetScriptSimulationParameter(sim_handle_self, "v0", true)
-    print("v0:\t", v0)
+    while moduleName do
+        moduleName,moduleVersion=simGetModuleName(index)
+        if (moduleName=='RosInterface') then
+            pluginNotFound=false
+        end
+        index=index+1
+    end
 
     if (not pluginNotFound) then
+        -- Prepare the sensor publisher and the motor speed subscribers:
         resetRobotSub=simExtRosInterface_subscribe('/resetRobot','std_msgs/Bool','resetRobot_cb')
     end
-end 
 
-if (sim_call_type==sim_childscriptcall_cleanup) then 
- 
+    -- Initialize parameters
+    randomNumber = 0
+    turning = false
+    turnRight = true
+    turnLength = simGetScriptSimulationParameter(sim_handle_self, "turnLength", true)
+    stepsLeft = turnLength
+    turnFrequency = simGetScriptSimulationParameter(sim_handle_self, "turnFrequency", true)
+    speedIncrease = 0
+    step = 0
+    t = 0
+    mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
+    v0 = simGetScriptSimulationParameter(sim_handle_self, "v0", true)
+    
+    -- Start movement
+    simSetJointTargetVelocity(motorRight,v0)
+    simSetJointTargetVelocity(motorLeft,v0)
+
+    print("--------------------------------")
+    print("-----Pioneer initialization-----")
+    print("--------------------------------")
+    for i=1,#init_pos,1 do
+        print("init_pos["..(i).."]:", init_pos[i])
+    end
+    for i=1,#init_ori,1 do
+        print("init_ori["..(i).."]:", init_ori[i])
+    end
+    print("mod:\t", mod)
+    print("v0:\t", v0)
+
 end 
 
 if (sim_call_type==sim_childscriptcall_actuation) then 
@@ -80,16 +114,42 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     step=step+1
     t=t+simGetSimulationTimeStep()
 
-    vOffset = A*math.sin(w*t)
-
-    vLeft=v0+vOffset
-    vRight=v0-vOffset
-       
-    simSetJointTargetVelocity(motorLeft,vLeft)
-    simSetJointTargetVelocity(motorRight,vRight)
-
     pos = simGetObjectPosition(robotHandle, -1)
     ori = simGetObjectOrientation(robotHandle, -1)
+    
+    -- Turning functionality: every turnFrequency steps the right or  
+    -- left motor speed is increasedby speedIncrease for turnLength steps
+   
+    -- Turn every turnFrequency steps
+    if(math.fmod(step,turnFrequency)==0) then
+        turning = true
+        math.randomseed(os.time())
+        randomNumber = math.random()
+        -- speedIncrease = math.fmod(randomNumber * 100, v0/2)
+        speedIncrease = v0/4
+    end
+    
+    -- As long as turning is true
+    if(turning == true) then
+        -- If stepsLeft equals turnLength, call turn function
+        if(stepsLeft == turnLength)) then 
+            turn()
+        end
+        -- Decrease stepsLeft
+        stepsLeft = stepsLeft - 1
+    end
+    
+    -- If stepsLeft equals 0
+    if(stepsLeft == 0) then
+        -- turning is set to false
+        turning = false
+        -- turnRight is set to the opposite, so the next turn goes in opposite direction
+        turnRight = not turnRight
+        -- stepsLeft is resetted to turnLength
+        stepsLeft = turnLength
+        -- endTurn function is called
+        endTurn()
+    end
         
     if(math.fmod(step,mod)==0) then
         print("--------------------------------")
@@ -107,4 +167,4 @@ if (sim_call_type==sim_childscriptcall_actuation) then
             print("ori["..(i).."]:\t", ori[i])
         end
     end
-end 
+end

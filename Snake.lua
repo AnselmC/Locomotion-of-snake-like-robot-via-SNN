@@ -12,12 +12,9 @@ end
 
 function resetRobot_cb(msg)
     -- Reset robot subscriber callback
-    print("--------------------------------")
-    print("----------Reset Snake-----------")
-    print("--------------------------------")
-
-     -- get all objects in the model
+    -- get all objects in the model
     allModelObjects=simGetObjectsInTree(robotHandle) 
+
     simSetThreadAutomaticSwitch(false)
   
     -- reset all objects in the model
@@ -31,44 +28,39 @@ function resetRobot_cb(msg)
     end
 
     simSetObjectPosition(robotHandle,-1,init_pos)
-    for i=1,#init_pos,1 do
-        print("init_pos["..(i).."]:", init_pos[i])
-    end
-
     simSetObjectOrientation(robotHandle,-1,init_ori)
-    for i=1,#init_ori,1 do
-        print("init_ori["..(i).."]:", init_ori[i])
-    end
 
     simSetThreadAutomaticSwitch(true)
 
     -- reset t
     t = 0
-end
 
-if (sim_call_type==sim_childscriptcall_initialization) then
     print("--------------------------------")
-    print("------Snake initialization------")
-    print("--------------------------------") 
-
-    robotHandle=simGetObjectAssociatedWithScript(sim_handle_self)
-    proxSensor=simGetObjectHandle("Snake_proxSensor")
-    
-    init_pos = simGetObjectPosition(robotHandle, -1)
+    print("----------Reset Snake-----------")
+    print("--------------------------------")
     for i=1,#init_pos,1 do
         print("init_pos["..(i).."]:", init_pos[i])
     end
-
-    init_ori = simGetObjectOrientation(robotHandle, -1)
     for i=1,#init_ori,1 do
         print("init_ori["..(i).."]:", init_ori[i])
     end
+end
+
+if (sim_call_type==sim_childscriptcall_initialization) then
+
+    -- Get object handles
+    robotHandle=simGetObjectAssociatedWithScript(sim_handle_self)
+    proxSensor=simGetObjectHandle("Snake_proxSensor")
 
     joints_v={-1,-1,-1,-1,-1,-1,-1,-1}
 
     for i=1,8,1 do
         joints_v[i]=simGetObjectHandle('Snake_vJoint_'..(i))
     end
+    
+    -- Get init position and orientation
+    init_pos = simGetObjectPosition(robotHandle, -1)
+    init_ori = simGetObjectOrientation(robotHandle, -1)
 
     -- Check if the required ROS plugin is there:
     moduleName=0
@@ -93,7 +85,6 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     -- Prepare Camera handle
     cameraHandle=simGetObjectHandle('DVS_128')
     showCameraView=simGetScriptSimulationParameter(sim_handle_self,'showCameraView')
-    --print(showCameraView)
 
     if (showCameraView) then
         --print("Camera view activated")
@@ -101,21 +92,17 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         simAdjustView(floatingView,cameraHandle,64)
     end
 
-
+    -- Initialize parameters
     step = 0
     t = 0
-
     mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
-    
     r = simGetScriptSimulationParameter(sim_handle_self, "r", true)
-    
     speedChange = simGetScriptSimulationParameter(sim_handle_self, "speedChange", true)
     
     -- Module numbers N?
     N = 8
     
-    -- l0 is the length of each module --> m
-    -- [TODO] Check m for our snake
+    -- l0 is the length of each module
     local l0 = simGetScriptSimulationParameter(sim_handle_self, "l0", true)
     
     -- linear reduction parameters (set y = 0 and z = 1 for disabling)
@@ -124,19 +111,16 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 
     -- set of control Parameters:
 
-    -- w: temporal frequency: traveling speed of the wave --> w
+    -- w: temporal frequency: traveling speed of the wave
     w = math.pi*simGetScriptSimulationParameter(sim_handle_self, "w", true)
-    print("w:\t", w)
 
     -- A: Amplitude
     A = math.pi*simGetScriptSimulationParameter(sim_handle_self, "A", true)/180
-    print("A:\t", A)
 
     -- Omega: spatial frequency: cycle number of the wave
     Omega = math.pi*simGetScriptSimulationParameter(sim_handle_self, "Omega", true)/180
-    print("Omega:\t", Omega)
 
-    -- [Question] What is p?
+    -- [Question] What is p? --> for damping
     p = -1
 
     -- theta k: joint angle --> theta[i]
@@ -145,6 +129,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     -- theta snake: global angle of the snake robot --> head_dir
     local head_dir = 0
 
+    -- Snake locomotion
     for i=1,N,1 do
         --[[
         - Linear reduction equation P = ((n/N)*z+y) e [0,1], for all n e [0,N]
@@ -161,7 +146,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         ]]
         P = ((i-1)/N)*y + z
 
-        --[[.
+        --[[
         - The joint angle ?k is the result of concatenated local joint angles, 
             which is calculated as: Equation 8 from the Slithering Gait Paper
         - ?k: joint angle --> theta[i]
@@ -185,9 +170,6 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     -- Possible answer: head_dir is the average value of the joint angles
     head_dir = head_dir/(N+1)
 
-    print("P*A:\t", P*A)
-    print("head_dir:", head_dir)
-
     --[[
     - Body length l = (sum from k=1 to N of lk) = (sum from k=1 to N of l0*cos(?k??snake))
         = l0*(sum from k=1 to N of cos(?k??snake))
@@ -203,11 +185,27 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         l = l + math.cos(theta[i] - head_dir)
     end
     l = l0 * l;
-    print("l:\t", l)
 
     -- C: Body shape offset, bias value --> b
     -- C = l/(N*r)
     C = 0
+
+    print("--------------------------------")
+    print("------Snake initialization------")
+    print("--------------------------------")     
+    for i=1,#init_pos,1 do
+        print("init_pos["..(i).."]:", init_pos[i])
+    end
+    for i=1,#init_ori,1 do
+        print("init_ori["..(i).."]:", init_ori[i])
+    end
+    print("showCameraView:\t", showCameraView)
+    print("w:\t", w)
+    print("A:\t", A)
+    print("Omega:\t", Omega)
+    print("P*A:\t", P*A)
+    print("head_dir:", head_dir)
+    print("l:\t", l)
 end 
 
 if (sim_call_type==sim_childscriptcall_cleanup) then 
@@ -223,23 +221,27 @@ if (sim_call_type==sim_childscriptcall_cleanup) then
     end
 end
 
-
 if (sim_call_type==sim_childscriptcall_actuation) then
     
     step=step+1
     t=t+simGetSimulationTimeStep()
     
+    -- Read res (-1, 0 or 1) and dist from proxSensor
     res, dist = simReadProximitySensor(proxSensor)
     
-    if (math.fmod(step,1)==0) then
-        if (res == 1) then
-            if(dist < 1.5) then
-                w = w - speedChange
-            elseif(dist > 3) then
-                w = w + speedChange
-            end
+    -- Proximity functionality
+    -- If proxSensor senses an object
+    if (res == 1) then
+        -- If distance below 1.5, slow down
+        if(dist < 1.5) then
+            w = w - speedChange
+        -- If distance above 3, speed up
+        elseif(dist > 3) then
+            w = w + speedChange
         end
     end
+
+    -- Snake locomotion
 
     -- ?k: joint angle --> theta[i] 
     -- [Question] Why is theta not an array any more?   
@@ -250,7 +252,6 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     local head_dir = theta
 
     for i=2,N,1 do
-        
         --[[
         - Linear reduction equation P = ((n/N)*z+y) e [0,1], for all n e [0,N]
         - The amplitude for each joint is defined as a linear function dependent 
@@ -303,24 +304,24 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     head_dir = head_dir/(N+1)
     
     -- Head Compensation
-    -- [Question] Why *(1-math.exp(p*t))?
+    -- [Question] Why *(1-math.exp(p*t))? --> damping
     -- [Comment]
     simSetJointTargetPosition(joints_v[1], -head_dir*(1-math.exp(p*t)))
     -- simSetJointTargetPosition(joints_v[1], -head_dir)
 
-    -- Print parameters every 10 steps
+    -- Print parameters every mod steps
     if(math.fmod(step,mod)==0) then
         print("--------------------------------")
         print("--------Snake step: "..(step).."----------")
         print("--------------------------------")
         print("dist:\t", dist)
         print("w:\t", w)
-       --[[ print("t:\t", t)
+        print("t:\t", t)
         print("radius:\t", radius)
         print("C:\t", C)
         print("P*A:\t", P*A)
         print("phi:\t", phi)
         print("theta:\t", theta)
-        print("head_dir:", head_dir)    ]]--
+        print("head_dir:", head_dir)
     end
 end
