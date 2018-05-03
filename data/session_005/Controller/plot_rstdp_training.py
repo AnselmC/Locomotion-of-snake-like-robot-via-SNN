@@ -17,7 +17,7 @@ xlim = steps.size
 ylim = steps.max(axis=0)*1.1
 
 fig = plt.figure(figsize=(7,8))
-gs = gridspec.GridSpec(1, 1)
+gs = gridspec.GridSpec(1, 1) 
 
 ax = plt.subplot(gs[0])
 ax.set_ylabel('No. of steps')

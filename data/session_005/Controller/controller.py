@@ -24,16 +24,16 @@ s,r = env.reset()
 
 for i in range(50000):
 
-    # Simulate network for 50 ms
-    # Get left and right output spikes, get weights
-    n_l, n_r, w_l, w_r = snn.simulate(s,r)
+	# Simulate network for 50 ms
+	# Get left and right output spikes, get weights
+	n_l, n_r, w_l, w_r = snn.simulate(s,r)
 
-    # Feed output spikes into steering wheel model
-    # Get state, distance, position, reward, termination, step
-    s,d,r,t,n = env.step(n_l,n_r)
+	# Feed output spikes into steering wheel model
+	# Get state, distance, position, reward, termination, step
+	s,d,r,t,n = env.step(n_l,n_r)
 
-    # Store position, distance
-    distance.append(d)
+	# Store position, distance
+	distance.append(d)
 
 # Save performance data
 h5f = h5py.File(path + '/rstdp_performance_data.h5', 'w')
