@@ -35,14 +35,16 @@ function resetRobot_cb(msg)
     -- reset t
     t = 0
 
-    print("--------------------------------")
-    print("----------Reset Snake-----------")
-    print("--------------------------------")
-    for i=1,#init_pos,1 do
-        print("init_pos["..(i).."]:", init_pos[i])
-    end
-    for i=1,#init_ori,1 do
-        print("init_ori["..(i).."]:", init_ori[i])
+    if (comments == true) then
+        print("--------------------------------")
+        print("----------Reset Snake-----------")
+        print("--------------------------------")
+        for i=1,#init_pos,1 do
+            print("init_pos["..(i).."]:", init_pos[i])
+        end
+        for i=1,#init_ori,1 do
+            print("init_ori["..(i).."]:", init_ori[i])
+        end
     end
 end
 
@@ -93,6 +95,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     end
 
     -- Initialize parameters
+    comments = simGetScriptSimulationParameter(sim_handle_self, "comments", true)
     step = 0
     t = 0
     mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
@@ -190,22 +193,24 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     -- C = l/(N*r)
     C = 0
 
-    print("--------------------------------")
-    print("------Snake initialization------")
-    print("--------------------------------")     
-    for i=1,#init_pos,1 do
-        print("init_pos["..(i).."]:", init_pos[i])
+    if (comments == true) then
+        print("--------------------------------")
+        print("------Snake initialization------")
+        print("--------------------------------")     
+        for i=1,#init_pos,1 do
+            print("init_pos["..(i).."]:", init_pos[i])
+        end
+        for i=1,#init_ori,1 do
+            print("init_ori["..(i).."]:", init_ori[i])
+        end
+        print("showCameraView:\t", showCameraView)
+        print("w:\t", w)
+        print("A:\t", A)
+        print("Omega:\t", Omega)
+        print("P*A:\t", P*A)
+        print("head_dir:", head_dir)
+        print("l:\t", l)
     end
-    for i=1,#init_ori,1 do
-        print("init_ori["..(i).."]:", init_ori[i])
-    end
-    print("showCameraView:\t", showCameraView)
-    print("w:\t", w)
-    print("A:\t", A)
-    print("Omega:\t", Omega)
-    print("P*A:\t", P*A)
-    print("head_dir:", head_dir)
-    print("l:\t", l)
 end 
 
 if (sim_call_type==sim_childscriptcall_cleanup) then 
@@ -310,7 +315,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     -- simSetJointTargetPosition(joints_v[1], -head_dir)
 
     -- Print parameters every mod steps
-    if(math.fmod(step,mod)==0) then
+    if((comments == true) and (math.fmod(step,mod)==0)) then
         print("--------------------------------")
         print("--------Snake step: "..(step).."----------")
         print("--------------------------------")

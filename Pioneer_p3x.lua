@@ -37,15 +37,17 @@ function resetRobot_cb(msg)
     turnRight = true
     step = 0
 
-    print("--------------------------------")
-    print("-------Reset Pioneer_p3dx-------")
-    print("--------------------------------")
-    for i=1,#init_pos,1 do
-        print("init_pos["..(i).."]:", init_pos[i])
-    end
-    for i=1,#init_ori,1 do
-        print("init_ori["..(i).."]:", init_ori[i])
-    end
+    if (comments == true) then
+        print("--------------------------------")
+        print("-------Reset Pioneer_p3dx-------")
+        print("--------------------------------")
+        for i=1,#init_pos,1 do
+            print("init_pos["..(i).."]:", init_pos[i])
+        end
+        for i=1,#init_ori,1 do
+            print("init_ori["..(i).."]:", init_ori[i])
+        end
+    end    
 end
 
 if (sim_call_type==sim_childscriptcall_initialization) then 
@@ -79,6 +81,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     end
 
     -- Initialize parameters
+    comments = simGetScriptSimulationParameter(sim_handle_self, "comments", true)
     randomNumber = 0
     turning = false
     turnRight = true
@@ -95,18 +98,19 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     simSetJointTargetVelocity(motorRight,v0)
     simSetJointTargetVelocity(motorLeft,v0)
 
-    print("--------------------------------")
-    print("-----Pioneer initialization-----")
-    print("--------------------------------")
-    for i=1,#init_pos,1 do
-        print("init_pos["..(i).."]:", init_pos[i])
-    end
-    for i=1,#init_ori,1 do
-        print("init_ori["..(i).."]:", init_ori[i])
-    end
-    print("mod:\t", mod)
-    print("v0:\t", v0)
-
+    if (comments == true) then
+        print("--------------------------------")
+        print("-----Pioneer initialization-----")
+        print("--------------------------------")
+        for i=1,#init_pos,1 do
+            print("init_pos["..(i).."]:", init_pos[i])
+        end
+        for i=1,#init_ori,1 do
+            print("init_ori["..(i).."]:", init_ori[i])
+        end
+        print("mod:\t", mod)
+        print("v0:\t", v0)
+    end    
 end 
 
 if (sim_call_type==sim_childscriptcall_actuation) then 
@@ -132,7 +136,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     -- As long as turning is true
     if(turning == true) then
         -- If stepsLeft equals turnLength, call turn function
-        if(stepsLeft == turnLength)) then 
+        if(stepsLeft == turnLength) then 
             turn()
         end
         -- Decrease stepsLeft
@@ -151,7 +155,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         endTurn()
     end
         
-    if(math.fmod(step,mod)==0) then
+    if((comments == true) and (math.fmod(step,mod)==0)) then
         print("--------------------------------")
         print("--------Pioneer step: "..(step).."--------")
         print("--------------------------------")
