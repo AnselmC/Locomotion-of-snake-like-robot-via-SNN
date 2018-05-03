@@ -73,13 +73,18 @@ class VrepEnvironment():
         self.steps += 1
 
         # Snake turning model
-        m_l = n_l/n_max                        # MT 4.4
-        m_r = n_r/n_max                        # MT 4.4
-#        a = m_r - m_l                        # MT 4.5
-        a = m_l - m_r                        # MT 4.5
-        c = math.sqrt((m_l*2 + m_r*2)/2.0)    # MT 4.9
-
-        self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre # MT 4.8
+        # MT 4.4
+        m_l = n_l/n_max
+        # MT 4.4
+        m_r = n_r/n_max
+        # MT 4.5
+#        a = m_r - m_l
+        a = m_l - m_r
+        # MT 4.9
+        c = math.sqrt((m_l*2 + m_r*2)/2.0)
+        
+        # MT 4.8
+        self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
 
         if abs(self.turn_pre) < 0.001:
             radius = 0
@@ -120,7 +125,6 @@ class VrepEnvironment():
             print "--------------------------------"
             print "-----------step: ", self.steps, "-----------"
             print "--------------------------------"
-            print "n_max: \t\t", n_max
             print "n_l: \t\t", n_l
             print "m_l: \t\t", m_l
             print "n_r: \t\t", n_r
