@@ -59,7 +59,7 @@ class VrepEnvironment():
 
     def reset(self):
         # Reset model
-        print "-------------reset--------------"
+#        print "-------------reset--------------"
         self.turn_pre = 0.0
         self.radius_pub.publish(0.0)
         # Change lane
@@ -125,16 +125,17 @@ class VrepEnvironment():
             print "--------------------------------"
             print "-----------step: ", self.steps, "-----------"
             print "--------------------------------"
-            print "n_l: \t\t", n_l
+#            print "n_l: \t\t", n_l
             print "m_l: \t\t", m_l
-            print "n_r: \t\t", n_r
+#            print "n_r: \t\t", n_r
             print "m_r: \t\t", m_r
             print "a: \t\t", a
             print "c: \t\t", c
             print "turn_pre: \t", self.turn_pre
             print "radius: \t", radius
             print "cx: \t\t", self.cx
-            print "reward: \t", r
+            print "reward left: \t", -r*reward_factor
+            print "reward right: \t", r*reward_factor
 
         # Return state, distance, reward, termination, steps
         return s,self.cx,r,t,n

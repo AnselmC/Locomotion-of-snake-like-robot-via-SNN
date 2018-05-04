@@ -29,11 +29,11 @@ for i in range(training_length):
 
     # Save weights every 100 simulation steps
     if i % 100 == 0:
-        print "--------------------------------"
+#        print "--------------------------------"
         print "-----------step: ", i, "-----------"
-        print "--------------------------------"
-        print "Left weights:\n", w_l
-        print "Right weights:\n", w_r
+#        print "--------------------------------"
+#        print "Left weights:\n", w_l
+#        print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_i.append(i)

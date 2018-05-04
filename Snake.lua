@@ -238,7 +238,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     -- If proxSensor senses an object
     if (res == 1) then
         -- If distance below 1.5, slow down
-        if(dist < 1.5) then
+        if(dist < 2) then
             w = w - speedChange
         -- If distance above 3, speed up
         elseif(dist > 3) then

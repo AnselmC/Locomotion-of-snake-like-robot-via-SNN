@@ -2,9 +2,14 @@
 
 import numpy as np
 
-path = "../data/session_006"        # Path for saving data
+path = "../data/session_008"        # Path for saving data
 
-modulo = 100000
+# Other
+training_length = 50000            # Lenth of training procedure (1 step ~ 50 ms)
+modulo = 1000
+max_steps = 2000                    # Maximum amount of steps per episode before the simulation is reset
+reset_distance = 0.2                # Reset distance
+rate = 20.                        # ROS publication rate motor speed
 
 # Input image
 img_resolution = [32,32]            # Original DVS frame resolution
@@ -32,24 +37,8 @@ reward_factor = 0.01                # Reward factor modulating reward signal str
 A_plus = 1.                            # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 
-# Reward signal parameters
-mean = 0                            # Mean of norm pdf
-sd = 0.33                            # Standard deviation of norm pdf
-scaling_factor = 1                    # Scaling of function in y-direction
-y_offset = -0.5                        # Offset of function in y-axis
-
 # Steering wheel model
-v_max = 1.5                            # Maximum speed
-v_min = 1.                            # Minimum speed
-turn_factor= 0.5                    # Factor controls turn radius
 turn_pre = 0                        # Initial turn speed
-v_pre = v_max                        # Initial speed
-n_max = sim_time//t_refrac - 10.    # Maximum input activity [Question] Why -10?
+n_max = sim_time//t_refrac    # Maximum input activity [Question] Why -10?
 
-r_min = 3.0                            # Minimum turning radius
-
-# Other
-training_length = 50000            # Lenth of training procedure (1 step ~ 50 ms)
-max_steps = 2000                    # Maximum amount of steps per episode before the simulation is reset
-reset_distance = 0.2                # Reset distance
-rate = 20.                        # ROS publication rate motor speed
+r_min = 1.0                            # Minimum turning radius
