@@ -2,10 +2,10 @@
 
 import numpy as np
 
-path = "../data/session_008"        # Path for saving data
+path = "../data/session_010"        # Path for saving data
 
 # Other
-training_length = 50000            # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 75000            # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 1000
 max_steps = 2000                    # Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2                # Reset distance
@@ -27,18 +27,17 @@ max_poisson_freq = 300.                # Maximum Poisson firing frequency for n_
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
-w_min = 0.                            # Minimum weight value
+w_min = -3500.                            # Minimum weight value
 w_max = 3500.                        # Maximum weight value
 w0_min = 200.                        # Minimum initial random value
 w0_max = 201.                        # Maximum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                        # Time constant of eligibility trace
 reward_factor = 0.01                # Reward factor modulating reward signal strength
-A_plus = 1.                            # Constant scaling strength of potentiaion
+A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 
 # Steering wheel model
 turn_pre = 0                        # Initial turn speed
-n_max = sim_time//t_refrac    # Maximum input activity [Question] Why -10?
-
-r_min = 1.0                            # Minimum turning radius
+n_max = sim_time//t_refrac          # Maximum input activity [Question] Why -10?
+r_min = 0.5                         # Minimum turning radius
