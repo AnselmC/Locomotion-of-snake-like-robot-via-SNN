@@ -10,6 +10,7 @@ modulo = 100000
 max_steps = 1500                    # Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
+blind_steps = 50
 
 # Input image
 img_resolution = [32,32]            # Original DVS frame resolution

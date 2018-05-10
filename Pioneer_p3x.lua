@@ -1,10 +1,8 @@
 function turn()
     if(turnRight == true) then
-        print("Right motor speed is " .. v0+speedIncrease)
         simSetJointTargetVelocity(motorRight,v0+speedIncrease)
         simSetJointTargetVelocity(motorLeft,0)
     else
-        print("Left motor speed is " .. v0+speedIncrease)
         simSetJointTargetVelocity(motorLeft,v0+speedIncrease)
         simSetJointTargetVelocity(motorRight,0)
     end
@@ -13,6 +11,13 @@ end
 function endTurn()
     simSetJointTargetVelocity(motorRight,v0)
     simSetJointTargetVelocity(motorLeft,v0)
+end
+
+function publishParameters()
+    data = {}
+    parameters = '{"Pioneer parameters":' .. '{' .. '"v0": ' .. v0 .. ', "turnLength": ' .. turnLength .. ', "turnFrequency": ' .. turnFrequency .. '}}'
+    data['data'] = parameters
+    simExtRosInterface_publish(paramsPub,data)
 end
 
 function resetRobot_cb(msg)
@@ -78,21 +83,22 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     if (not pluginNotFound) then
         -- Prepare the sensor publisher and the motor speed subscribers:
         resetRobotSub=simExtRosInterface_subscribe('/resetRobot','std_msgs/Bool','resetRobot_cb')
+        paramsPub=simExtRosInterface_advertise('/parameters', 'std_msgs/String')
     end
 
     -- Initialize parameters
-    comments = simGetScriptSimulationParameter(sim_handle_self, "comments", true)
+    comments = simGetScriptSimulationParameter(sim_handle_self, "comments")
     randomNumber = 0
     turning = false
     turnRight = true
-    turnLength = simGetScriptSimulationParameter(sim_handle_self, "turnLength", true)
+    turnLength = simGetScriptSimulationParameter(sim_handle_self, "turnLength")
     stepsLeft = turnLength
-    turnFrequency = simGetScriptSimulationParameter(sim_handle_self, "turnFrequency", true)
+    turnFrequency = simGetScriptSimulationParameter(sim_handle_self, "turnFrequency")
     speedIncrease = 0
     step = 0
     t = 0
-    mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
-    v0 = simGetScriptSimulationParameter(sim_handle_self, "v0", true)
+    mod = simGetScriptSimulationParameter(sim_handle_self, "mod")
+    v0 = simGetScriptSimulationParameter(sim_handle_self, "v0")
     
     -- Start movement
     simSetJointTargetVelocity(motorRight,v0)
@@ -114,7 +120,11 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 end 
 
 if (sim_call_type==sim_childscriptcall_actuation) then 
-    
+
+    if(step == 1) then
+        publishParameters()
+    end
+
     step=step+1
     t=t+simGetSimulationTimeStep()
 
@@ -160,10 +170,6 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         print("--------Pioneer step: "..(step).."--------")
         print("--------------------------------")
         print("t:\t", t)
-        print("w*t:\t", w*t)
-        print("vOffset:", vOffset)
-        print("vLeft:\t", vLeft)
-        print("vRight:\t", vRight)
         for i=1,#pos,1 do
             print("pos["..(i).."]:\t", pos[i])
         end

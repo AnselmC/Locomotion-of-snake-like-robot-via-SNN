@@ -10,7 +10,7 @@ import numpy as np
 import cv2 as cv
 from cv_bridge import CvBridge, CvBridgeError
 
-from std_msgs.msg import Float32, Bool
+from std_msgs.msg import Float32, Bool, String
 from sensor_msgs.msg import Image
 
 from parameters import *
@@ -18,18 +18,30 @@ from parameters import *
 class VrepEnvironment():
     def __init__(self):
         self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
+        self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
         self.img = None
         self.imgFlag = False
         self.cx = 0.0
         self.terminate = False
-        #self.startLeft = True
         self.steps = 0
         self.turn_pre = 0.0
         self.bridge = CvBridge()
         rospy.init_node('rstdp_controller')
         self.rate = rospy.Rate(rate)
+        self.snake_params = None
+        self.pioneer_params = None
+        self.first_cb = True
+        self.blind_steps_counter = 0
+
+    def params_callback(self, msg):
+        if(self.first_cb):
+            self.snake_params = msg.data
+            self.first_cb = False
+        else:
+            self.pioneer_params = msg.data
+        return
 
     def image_callback(self, msg):
     # Process incoming image data
@@ -38,10 +50,13 @@ class VrepEnvironment():
         self.img = cv_image[:,:,2]                # get red channel
         M = cv.moments(self.img, True)            # compute image moments for centroid
         if M['m00'] == 0:
-            self.terminate = True
-#           self.cx = 1.0
+            self.blind_steps_counter += 1
+            if self.blind_steps_counter == blind_steps:
+                self.terminate = True
+                self.blind_steps_counter = 0
             self.cx = 0.0
         else:
+            self.blind_steps_counter = 0
             self.terminate = False
             # https://www.youtube.com/watch?v=AAbUfZD_09s
             # Assumption: Origin of coordinate system is in the bottom left of the picture
@@ -59,7 +74,7 @@ class VrepEnvironment():
 
     def reset(self):
         # Reset model
-#        print "-------------reset--------------"
+        print "-------------reset--------------"
         self.turn_pre = 0.0
         self.radius_pub.publish(0.0)
         # Change lane
@@ -73,17 +88,11 @@ class VrepEnvironment():
         self.steps += 1
 
         # Snake turning model
-        # MT 4.4
         m_l = n_l/n_max
-        # MT 4.4
         m_r = n_r/n_max
-        # MT 4.5
-#        a = m_r - m_l
         a = m_l - m_r
-        # MT 4.9
         c = math.sqrt((m_l*2 + m_r*2)/2.0)
         
-        # MT 4.8
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
 
         if abs(self.turn_pre) < 0.001:
@@ -98,16 +107,10 @@ class VrepEnvironment():
 
         # Set reward signal
         # Reward
-#        if (self.cx > 0):
-#            r = -abs(self.cx)
-#        else:
-#            r = abs(self.cx)
-#       r = -(self.cx)
         r = self.cx
 
         s = self.getState()
         n = self.steps
-        #lane = self.startLeft
 
         # Terminate episode given max. step amount
         if self.steps > max_steps:
@@ -125,20 +128,22 @@ class VrepEnvironment():
             print "--------------------------------"
             print "-----------step: ", self.steps, "-----------"
             print "--------------------------------"
-#            print "n_l: \t\t", n_l
+            print "n_l: \t\t", n_l
             print "m_l: \t\t", m_l
-#            print "n_r: \t\t", n_r
+            print "n_r: \t\t", n_r
             print "m_r: \t\t", m_r
             print "a: \t\t", a
             print "c: \t\t", c
             print "turn_pre: \t", self.turn_pre
             print "radius: \t", radius
             print "cx: \t\t", self.cx
-            print "reward left: \t", -r*reward_factor
-            print "reward right: \t", r*reward_factor
+            print "reward: \t", r
 
         # Return state, distance, reward, termination, steps
         return s,self.cx,r,t,n
+
+    def getParams(self):
+        return self.snake_params, self.pioneer_params
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4

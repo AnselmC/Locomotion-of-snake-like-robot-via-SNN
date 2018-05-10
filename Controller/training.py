@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
-import numpy as np
 from network import *
 from environment import *
-from parameters import *
+import parameters as p
 import h5py
+import json
 
 snn = SpikingNeuralNetwork()
 env = VrepEnvironment()
@@ -15,11 +15,12 @@ weights_i = []
 steps = []
 cumulative_reward_per_episode = []
 cumulative_reward = 0
+params = {}
 
 # Initialize environment, get initial state, initial reward
 s,r = env.reset()
 
-for i in range(training_length):
+for i in range(p.training_length):
 
     # Simulate network for 50 ms
     # get number of output spikes and network weights
@@ -52,8 +53,30 @@ for i in range(training_length):
         print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
         cumulative_reward = 0
 
+# Save training parameters
+params['w_min'] = p.w_min
+params['w_max'] = p.w_max
+params['w0_min'] = p.w0_min
+params['w0_max'] = p.w0_max
+params['reward_factor'] = p.reward_factor
+params['training_length'] = p.training_length
+params['max_steps'] = p.max_steps
+
+snake_params, pioneer_params = env.getParams()
+
+# Save to separate json files
+json_data = json.dumps(params)
+with open(p.path+'/training_parameters.json','w') as file:
+    file.write(json_data)
+
+with open(p.path+'/snake_parameters.json','w') as file:
+    file.write(snake_params.__str__())
+
+with open(p.path+'/pioneer_parameters.json','w') as file:
+    file.write(pioneer_params.__str__())
+
 # Save data
-h5f = h5py.File(path + '/rstdp_data.h5', 'w')
+h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)

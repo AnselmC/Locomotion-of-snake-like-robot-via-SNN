@@ -2,12 +2,17 @@ function setTurningRadius_cb(msg)
     -- Turning Radius subscriber callback
     radius = msg.data
     
-    -- C: Body shape offset, bias value
-    -- C = l/(N*r)
     C = 0
     if (radius >= 1 or radius <= -1) then
         C = l/(N*radius) 
     end
+end
+
+function publishParameters()
+    data = {}
+    parameters = '{"Snake parameters":{' .. '"speedChange": ' .. speedChange .. '}}'
+    data['data'] = parameters
+    simExtRosInterface_publish(paramsPub,data)
 end
 
 function resetRobot_cb(msg)
@@ -82,6 +87,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         -- Prepare the sensor publisher and the motor speed subscribers:
         turnRadiusSub=simExtRosInterface_subscribe('/turningRadius','std_msgs/Float32','setTurningRadius_cb')
         resetRobotSub=simExtRosInterface_subscribe('/resetRobot','std_msgs/Bool','resetRobot_cb')
+        paramsPub=simExtRosInterface_advertise('/parameters', 'std_msgs/String')
     end
 
     -- Prepare Camera handle
@@ -89,112 +95,66 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     showCameraView=simGetScriptSimulationParameter(sim_handle_self,'showCameraView')
 
     if (showCameraView) then
-        --print("Camera view activated")
         floatingView=simFloatingViewAdd(0.2,0.8,0.4,0.4,0)
         simAdjustView(floatingView,cameraHandle,64)
     end
 
     -- Initialize parameters
-    comments = simGetScriptSimulationParameter(sim_handle_self, "comments", true)
+    comments = simGetScriptSimulationParameter(sim_handle_self, "comments")
     step = 0
     t = 0
-    mod = simGetScriptSimulationParameter(sim_handle_self, "mod", true)
-    r = simGetScriptSimulationParameter(sim_handle_self, "r", true)
-    speedChange = simGetScriptSimulationParameter(sim_handle_self, "speedChange", true)
+    mod = simGetScriptSimulationParameter(sim_handle_self, "mod")
+    speedChange = simGetScriptSimulationParameter(sim_handle_self, "speedChange")
     
-    -- Module numbers N?
     N = 8
     
-    -- l0 is the length of each module
-    local l0 = simGetScriptSimulationParameter(sim_handle_self, "l0", true)
+    local l0 = simGetScriptSimulationParameter(sim_handle_self, "l0")
     
     -- linear reduction parameters (set y = 0 and z = 1 for disabling)
-    y = simGetScriptSimulationParameter(sim_handle_self, "y", true)
+    y = simGetScriptSimulationParameter(sim_handle_self, "y")
     z = 1 - y
 
     -- set of control Parameters:
 
     -- w: temporal frequency: traveling speed of the wave
-    w = math.pi*simGetScriptSimulationParameter(sim_handle_self, "w", true)
-
+    w = math.pi*simGetScriptSimulationParameter(sim_handle_self, "w")
     -- A: Amplitude
-    A = math.pi*simGetScriptSimulationParameter(sim_handle_self, "A", true)/180
-
+    A = math.pi*simGetScriptSimulationParameter(sim_handle_self, "A")/180
     -- Omega: spatial frequency: cycle number of the wave
-    Omega = math.pi*simGetScriptSimulationParameter(sim_handle_self, "Omega", true)/180
-
-    -- [Question] What is p? --> for damping
+    Omega = math.pi*simGetScriptSimulationParameter(sim_handle_self, "Omega")/180
+    -- for damping
     p = -1
 
     -- theta k: joint angle --> theta[i]
     local theta = {0,-1,-1,-1,-1,-1,-1,-1,-1}
-    
     -- theta snake: global angle of the snake robot --> head_dir
     local head_dir = 0
 
     -- Snake locomotion
     for i=1,N,1 do
-        --[[
-        - Linear reduction equation P = ((n/N)*z+y) e [0,1], for all n e [0,N]
-        - The amplitude for each joint is defined as a linear function dependent 
-            on the module number n
-        - The linear coefficient starts at y = 0.3 for the head module and ends 
-            at z = 0.7 for the tail module
-        - [Question] The sentence above doesn't make a lot of sense to me
-            i=1: (1-1)*y/N + z = z =                      8/16
-            i=2: (2-1)*y/N + z = 1*y/N + z = 1/16 + 0,5 = 9/16
-            i=3: (3-1)*y/N + z = 2*y/N + z = 2/16 + 0,5 = 10/16
-            ...
-            i=N: ...           = 7*y/N + z = 7/16 + 0,5 = 15/16
-        ]]
+        -- Linear reduction equation P = ((n/N)*z+y) e [0,1], for all n e [0,N]
         P = ((i-1)/N)*y + z
 
-        --[[
-        - The joint angle ?k is the result of concatenated local joint angles, 
-            which is calculated as: Equation 8 from the Slithering Gait Paper
-        - ?k: joint angle --> theta[i]
-        - ?: spatial frequency: cycle number of the wave
-        - [Question] Why cos instead of sin?
-        - [Question] Why amp instead of a (see equation 8)
-        ]]
-        -- [Comment]
         -- theta[i+1] = theta[i] + P*A*math.(Omega * (i-1))
         theta[i+1] = theta[i] + A*math.sin(Omega * (i-1))
         
-        -- ?snake: global angle of the snake robot --> head_dir
-        -- ?k: joint angle --> theta[i]
-        -- [Question] What is going on here?
-        -- Possible answer: head_dir is sum over all joint angles
         head_dir = head_dir + theta[i+1]
     end
 
-    -- ?snake: global angle of the snake robot --> head_dir
     -- [Question] What is going on here?
     -- Possible answer: head_dir is the average value of the joint angles
     head_dir = head_dir/(N+1)
 
-    --[[
-    - Body length l = (sum from k=1 to N of lk) = (sum from k=1 to N of l0*cos(?k??snake))
-        = l0*(sum from k=1 to N of cos(?k??snake))
-    - Each module contributes an effective length that is parallel to the forward 
-        direction
-    - lk = l0*cos(?k??snake)
-    - ?snake: global angle of the snake robot --> head_dir
-    - l0 is the length of each module --> m
-    - ?k: joint angle --> theta[i]
-    ]] 
     l = 0;
     for i=1,N+1,1 do
         l = l + math.cos(theta[i] - head_dir)
     end
     l = l0 * l;
 
-    -- C: Body shape offset, bias value --> b
-    -- C = l/(N*r)
     C = 0
 
     if (comments == true) then
-    --[[print("--------------------------------")
+        print("--------------------------------")
         print("------Snake initialization------")
         print("--------------------------------")     
         for i=1,#init_pos,1 do
@@ -203,13 +163,12 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         for i=1,#init_ori,1 do
             print("init_ori["..(i).."]:", init_ori[i])
         end
-        print("showCameraView:\t", showCameraView)
         print("w:\t", w)
         print("A:\t", A)
         print("Omega:\t", Omega)
         print("P*A:\t", P*A)
         print("head_dir:", head_dir)
-        print("l:\t", l) ]]--
+        print("l:\t", l)
     end
 end 
 
@@ -227,7 +186,9 @@ if (sim_call_type==sim_childscriptcall_cleanup) then
 end
 
 if (sim_call_type==sim_childscriptcall_actuation) then
-    
+    if(step == 1) then 
+        publishParameters()
+    end
     step=step+1
     t=t+simGetSimulationTimeStep()
     
@@ -248,85 +209,40 @@ if (sim_call_type==sim_childscriptcall_actuation) then
 
     -- Snake locomotion
 
-    -- ?k: joint angle --> theta[i] 
     -- [Question] Why is theta not an array any more?   
     local theta = 0
 
-    -- ?snake: global angle of the snake robot --> head_dir
-    -- ?k: joint angle --> theta[i]
     local head_dir = theta
 
     for i=2,N,1 do
-        --[[
-        - Linear reduction equation P = ((n/N)*z+y) e [0,1], for all n e [0,N]
-        - The amplitude for each joint is defined as a linear function dependent 
-            on the module number n
-        - The linear coefficient starts at y = 0.3 for the head module and ends 
-            at z = 0.7 for the tail module
-        ]]
+
         P = ((i-1)/N)*y + z
 
-        --[[
-        - ?(n,t) = C + P*A*sin(?*n+?*t)
-        - C: Body shape offset, bias value
-        - P: Linear dependency, linear reduction equation P (see above) \__ P*A 
-        - A: Amplitude                                                  /
-        - ?: spatial frequency: cycle number of the wave
-        - ?: temporal frequency: traveling speed of the wave --> w
-        - [Question] Why cos instead of sin?
-        - [Question] Why i-1 ?
-        - [Question] Why - instead of +? --> so that the snake moves forward
-        ]]
-        -- [Comment]
         -- phi = C + P*A*math.cos(w*t - Omega*(i-1))
         phi = C + P*A*math.sin(Omega*(i-1) - w*t)
         
         -- [Question] Why -phi*(1-math.exp(p*t)) ?
         -- [Comment]
         simSetJointTargetPosition(joints_v[i], -phi*(1-math.exp(p*t)))
-        -- simSetJointTargetPosition(joints_v[i], phi)
         
         phi = simGetJointPosition(joints_v[i])
 
-        --[[
-        The joint angle ?k is the result of concatenated local joint angles, 
-            which is calculated as: Equation 8 from the Slithering Gait Paper
-        ]]
         theta = theta + phi
 
-        --[[
-        - The compensation angle for the joint module is ?, the joint angle for the 
-            kth module is ?k. Therefore, in the global coordinates, the ith module 
-            angle can be calculated as: Equation 11 from the Slithering Gait Paper
-        - ?snake: global angle of the snake robot --> head_dir
-        - ?k: joint angle --> theta[i]
-        ]]
         head_dir = head_dir + theta
     end
 
-    -- Then we can derive the compensation angle ? as: Equation 14 from the Slithering Gait Paper
-    -- ?snake: global angle of the snake robot --> head_dir
     head_dir = head_dir/(N+1)
     
-    -- Head Compensation
-    -- [Question] Why *(1-math.exp(p*t))? --> damping
-    -- [Comment]
     simSetJointTargetPosition(joints_v[1], -head_dir*(1-math.exp(p*t)))
-    -- simSetJointTargetPosition(joints_v[1], -head_dir)
 
     -- Print parameters every mod steps
-    if((comments == true) and (math.fmod(step,mod)==0)) then
+    if(comments==true and math.fmod(step,mod)==0) then
         print("--------------------------------")
         print("--------Snake step: "..(step).."----------")
         print("--------------------------------")
         print("dist:\t", dist)
         print("radius:\t", radius)
         print("w:\t", w)
-    --[[print("t:\t", t)
-        print("C:\t", C)
-        print("P*A:\t", P*A)
-        print("phi:\t", phi)
-        print("theta:\t", theta)
-        print("head_dir:", head_dir) ]]--
     end
 end
