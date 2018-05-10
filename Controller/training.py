@@ -13,6 +13,8 @@ weights_r = []
 weights_l = []
 weights_i = []
 steps = []
+cumulative_reward_per_episode = []
+cumulative_reward = 0
 
 # Initialize environment, get initial state, initial reward
 s,r = env.reset()
@@ -27,20 +29,28 @@ for i in range(training_length):
     # Get state, distance, reward, termination, step
     s,d,r,t,n = env.step(n_l, n_r)
 
+    cumulative_reward = cumulative_reward + abs(r)
+    
     # Save weights every 100 simulation steps
     if i % 100 == 0:
-#        print "--------------------------------"
+        print "--------------------------------"
         print "-----------step: ", i, "-----------"
-#        print "--------------------------------"
-#        print "Left weights:\n", w_l
-#        print "Right weights:\n", w_r
+        print "--------------------------------"
+        print "cumulative_reward:\t", cumulative_reward
+        print "Left weights:\n", w_l
+        print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_i.append(i)
 
     # Save no. of steps every episode
     if t:
-         steps.append(n)
+        print "-----------terminate-----------"
+        steps.append(n)
+        print "steps:\n", steps
+        cumulative_reward_per_episode.append(cumulative_reward)
+        print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
+        cumulative_reward = 0
 
 # Save data
 h5f = h5py.File(path + '/rstdp_data.h5', 'w')
@@ -48,4 +58,5 @@ h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
+h5f.create_dataset('cumulative_reward_per_episode', data = cumulative_reward_per_episode)
 h5f.close()

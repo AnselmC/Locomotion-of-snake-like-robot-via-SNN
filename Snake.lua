@@ -194,7 +194,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     C = 0
 
     if (comments == true) then
-        print("--------------------------------")
+    --[[print("--------------------------------")
         print("------Snake initialization------")
         print("--------------------------------")     
         for i=1,#init_pos,1 do
@@ -209,7 +209,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         print("Omega:\t", Omega)
         print("P*A:\t", P*A)
         print("head_dir:", head_dir)
-        print("l:\t", l)
+        print("l:\t", l) ]]--
     end
 end 
 
@@ -238,7 +238,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     -- If proxSensor senses an object
     if (res == 1) then
         -- If distance below 1.5, slow down
-        if(dist < 2) then
+        if(dist < 1.5) then
             w = w - speedChange
         -- If distance above 3, speed up
         elseif(dist > 3) then
@@ -320,13 +320,13 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         print("--------Snake step: "..(step).."----------")
         print("--------------------------------")
         print("dist:\t", dist)
-        print("w:\t", w)
-        print("t:\t", t)
         print("radius:\t", radius)
+        print("w:\t", w)
+    --[[print("t:\t", t)
         print("C:\t", C)
         print("P*A:\t", P*A)
         print("phi:\t", phi)
         print("theta:\t", theta)
-        print("head_dir:", head_dir)
+        print("head_dir:", head_dir) ]]--
     end
 end

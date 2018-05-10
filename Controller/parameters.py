@@ -5,11 +5,11 @@ import numpy as np
 path = "../data/session_010"        # Path for saving data
 
 # Other
-training_length = 75000            # Lenth of training procedure (1 step ~ 50 ms)
-modulo = 1000
-max_steps = 2000                    # Maximum amount of steps per episode before the simulation is reset
+training_length = 50000             # Lenth of training procedure (1 step ~ 50 ms)
+modulo = 100000
+max_steps = 1500                    # Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2                # Reset distance
-rate = 20.                        # ROS publication rate motor speed
+rate = 20.                          # ROS publication rate motor speed
 
 # Input image
 img_resolution = [32,32]            # Original DVS frame resolution
@@ -27,7 +27,7 @@ max_poisson_freq = 300.                # Maximum Poisson firing frequency for n_
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
-w_min = -3500.                            # Minimum weight value
+w_min = 0.                            # Minimum weight value
 w_max = 3500.                        # Maximum weight value
 w0_min = 200.                        # Minimum initial random value
 w0_max = 201.                        # Maximum initial random value
@@ -39,5 +39,5 @@ A_minus = 1.                        # Constant scaling strength of depression
 
 # Steering wheel model
 turn_pre = 0                        # Initial turn speed
-n_max = sim_time//t_refrac          # Maximum input activity [Question] Why -10?
-r_min = 0.5                         # Minimum turning radius
+n_max = sim_time//t_refrac          # Maximum input activity 
+r_min = 1                            # Minimum turning radius
