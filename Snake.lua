@@ -10,7 +10,7 @@ end
 
 function publishParameters()
     data = {}
-    parameters = '{"Snake parameters":{' .. '"speedChange": ' .. speedChange .. '}}'
+    parameters = '{"Snake parameters":{' .. '"speedChange": ' .. speedChange .. ', "minDistance": '.. minDistance ..', "maxDistance": '.. maxDistance ..'}}'
     data['data'] = parameters
     simExtRosInterface_publish(paramsPub,data)
 end
@@ -105,7 +105,9 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     t = 0
     mod = simGetScriptSimulationParameter(sim_handle_self, "mod")
     speedChange = simGetScriptSimulationParameter(sim_handle_self, "speedChange")
-    
+    minDistance = simGetScriptSimulationParameter(sim_handle_self, "minDistance")
+    maxDistance = simGetScriptSimulationParameter(sim_handle_self, "maxDistance")
+
     N = 8
     
     local l0 = simGetScriptSimulationParameter(sim_handle_self, "l0")
@@ -199,10 +201,10 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     -- If proxSensor senses an object
     if (res == 1) then
         -- If distance below 1.5, slow down
-        if(dist < 1.5) then
+        if(dist < minDistance) then
             w = w - speedChange
         -- If distance above 3, speed up
-        elseif(dist > 3) then
+        elseif(dist > maxDistance) then
             w = w + speedChange
         end
     end

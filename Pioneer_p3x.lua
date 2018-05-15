@@ -139,8 +139,8 @@ if (sim_call_type==sim_childscriptcall_actuation) then
         turning = true
         math.randomseed(os.time())
         randomNumber = math.random()
-        -- speedIncrease = math.fmod(randomNumber * 100, v0/2)
-        speedIncrease = v0/4
+        speedIncrease = math.fmod(randomNumber * 100, v0/2)
+        --speedIncrease = v0/4
     end
     
     -- As long as turning is true
