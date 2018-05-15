@@ -10,113 +10,147 @@ import numpy as np
 import cv2 as cv
 from cv_bridge import CvBridge, CvBridgeError
 
-from std_msgs.msg import Float32, Bool
+from std_msgs.msg import Float32, Bool, String
 from sensor_msgs.msg import Image
 
 from parameters import *
 
-def normpdf(x):
-    var = float(sd)**2
-    denom = (2*math.pi*var)**.5
-    num = math.exp(-(float(x)-float(mean))**2/(2*var))
-    return scaling_factor*(num/denom)+y_offset
-
 class VrepEnvironment():
-	def __init__(self):
-		self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
-		self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
-		self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
-		self.img = None
-		self.imgFlag = False
-		self.cx = 0.0
-		self.terminate = False
-		self.startLeft = True
-		self.steps = 0
-		self.turn_pre = 0.0
-		self.bridge = CvBridge()
-		rospy.init_node('rstdp_controller')
-		self.rate = rospy.Rate(rate)
+    def __init__(self):
+        self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
+        self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
+        self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
+        self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
+        self.img = None
+        self.imgFlag = False
+        self.cx = 0.0
+        self.terminate = False
+        self.steps = 0
+        self.turn_pre = 0.0
+        self.bridge = CvBridge()
+        rospy.init_node('rstdp_controller')
+        self.rate = rospy.Rate(rate)
+        self.snake_params = None
+        self.pioneer_params = None
+        self.first_cb = True
+        self.blind_steps_counter = 0
 
-	def image_callback(self, msg):
-		# Process incoming image data
+    def params_callback(self, msg):
+        if(self.first_cb):
+            self.snake_params = msg.data
+            self.first_cb = False
+        else:
+            self.pioneer_params = msg.data
+        return
 
-    # Get an OpenCV image
-		cv_image = self.bridge.imgmsg_to_cv2(msg, "rgb8")
-		self.img = cv_image[:,:,2]					# get red channel
-		M = cv.moments(self.img, True)			# compute image moments for centroid
-		if M['m00'] == 0:
-			self.terminate = True
-			self.cx = 1.0
-		else:
-			self.terminate = False
-			self.cx = 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 # normalized centroid position
+    def image_callback(self, msg):
+    # Process incoming image data
+        # Get an OpenCV image
+        cv_image = self.bridge.imgmsg_to_cv2(msg, "rgb8")
+        self.img = cv_image[:,:,2]                # get red channel
+        M = cv.moments(self.img, True)            # compute image moments for centroid
+        if M['m00'] == 0:
+            self.blind_steps_counter += 1
+            if self.blind_steps_counter == blind_steps:
+                self.terminate = True
+                self.blind_steps_counter = 0
+            self.cx = 0.0
+        else:
+            self.blind_steps_counter = 0
+            self.terminate = False
+            # https://www.youtube.com/watch?v=AAbUfZD_09s
+            # Assumption: Origin of coordinate system is in the bottom left of the picture
+            # M['m10']/M['m00'] = x_mean (between 0 and 32)
+            # M['m10']/(M['m00']*img_resolution[1]) = x_mean_normalized (between 0 and 1)
+            # 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 = cx (between -1 and 1, 0 in the middle)
+            self.cx = 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 # normalized centroid position
 
-		cv.imshow('image',self.img)
-		cv.waitKey(2)
+        cv.imshow('image',self.img)
+        cv.waitKey(2)
 
-		self.imgFlag = True
+        self.imgFlag = True
 
-		return
+        return
 
-	def reset(self):
-		# Reset model
-		self.turn_pre = 0.0
-		self.radius_pub.publish(0.0)
-		# Change lane
-		self.startLeft = not self.startLeft
-		self.reset_pub.publish(Bool(self.startLeft))
-		time.sleep(1)
-		return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
+    def reset(self):
+        # Reset model
+        print "-------------reset--------------"
+        self.turn_pre = 0.0
+        self.radius_pub.publish(0.0)
+        # Change lane
+        #self.startLeft = not self.startLeft
+        self.reset_pub.publish(Bool(True))
+        time.sleep(1)
+        return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
 
-	def step(self, n_l, n_r):
+    def step(self, n_l, n_r):
 
-		self.steps += 1
+        self.steps += 1
 
-		# Snake turning model
-		m_l = n_l/n_max
-		m_r = n_r/n_max
-		a = m_r - m_l
-		c = math.sqrt((m_l*2 + m_r*2)/2.0)
-		# Master thesis equation 4.7
-		# [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s 
-		self.turn_pre = c*a*(v_max-v_min) + (1-c)*self.turn_pre
-		if abs(self.turn_pre) < 0.001:
-			radius = 0
-		else:
-			radius = r_min/self.turn_pre
-		
-		# Publish turning radius
-		self.radius_pub.publish(radius)
-		self.rate.sleep()
+        # Snake turning model
+        m_l = n_l/n_max
+        m_r = n_r/n_max
+        a = m_l - m_r
+        c = math.sqrt((m_l*2 + m_r*2)/2.0)
+        
+        self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
 
-		# Set reward signal
-		r = normpdf(abs(self.cx))
+        if abs(self.turn_pre) < 0.001:
+            radius = 0
+        else:
+            # [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s
+            radius = r_min/self.turn_pre
 
-		s = self.getState()
-		n = self.steps
-		lane = self.startLeft
+        # Publish turning radius
+        self.radius_pub.publish(radius)
+        self.rate.sleep()
 
-		# Terminate episode given max. step amount
-		if self.steps > max_steps:
-			self.terminate = True
+        # Set reward signal
+        # Reward
+        r = self.cx
 
-		# Terminate episode of robot reaches start position again
-		# or reset distance
-		t = self.terminate
-		if t == True:
-			self.steps = 0
-			self.reset()
-			self.terminate = False
+        s = self.getState()
+        n = self.steps
 
-		# Return state, distance, reward, termination, steps, lane
-		return s,self.cx,r,t,n,lane
+        # Terminate episode given max. step amount
+        if self.steps > max_steps:
+            self.terminate = True
 
-	def getState(self):
-		new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4
-		# bring the red filtered image in the form of the state
-		if self.imgFlag == True:
-			for y in range(img_resolution[0] - crop_top - crop_bottom):
-				for x in range(img_resolution[1]):				
-					if self.img[y + crop_top,x] > 0:
-						new_state[x//(img_resolution[1]//resolution[0]), y//(img_resolution[0]//resolution[1])] += 4
-		return new_state
+        # Terminate episode of robot reaches start position again
+        # or reset distance
+        t = self.terminate
+        if t == True:
+            self.steps = 0
+            self.reset()
+            self.terminate = False
+
+        if (self.steps%modulo == 0):
+            print "--------------------------------"
+            print "-----------step: ", self.steps, "-----------"
+            print "--------------------------------"
+            print "n_l: \t\t", n_l
+            print "m_l: \t\t", m_l
+            print "n_r: \t\t", n_r
+            print "m_r: \t\t", m_r
+            print "a: \t\t", a
+            print "c: \t\t", c
+            print "turn_pre: \t", self.turn_pre
+            print "radius: \t", radius
+            print "cx: \t\t", self.cx
+            print "reward: \t", r
+
+        # Return state, distance, reward, termination, steps
+        return s,self.cx,r,t,n
+
+    def getParams(self):
+        return self.snake_params, self.pioneer_params
+
+    def getState(self):
+        new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4
+        # bring the red filtered image in the form of the state
+        if self.imgFlag == True:
+            for y in range(img_resolution[1] - crop_top - crop_bottom):
+                for x in range(img_resolution[0]):
+                    if self.img[y + crop_top, x] > 0:
+                        new_state[x//(img_resolution[0]//resolution[0]), y//((img_resolution[1] - crop_top - crop_bottom)//resolution[1])] += 4
+        return new_state
