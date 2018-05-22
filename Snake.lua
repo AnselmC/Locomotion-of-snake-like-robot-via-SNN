@@ -100,13 +100,14 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     end
 
     -- Initialize parameters
-    comments = simGetScriptSimulationParameter(sim_handle_self, "comments")
     step = 0
     t = 0
+    comments = simGetScriptSimulationParameter(sim_handle_self, "comments")
     mod = simGetScriptSimulationParameter(sim_handle_self, "mod")
     speedChange = simGetScriptSimulationParameter(sim_handle_self, "speedChange")
     minDistance = simGetScriptSimulationParameter(sim_handle_self, "minDistance")
     maxDistance = simGetScriptSimulationParameter(sim_handle_self, "maxDistance")
+    radius =  simGetScriptSimulationParameter(sim_handle_self, "r")   
 
     N = 8
     
@@ -153,8 +154,12 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     end
     l = l0 * l;
 
-    C = 0
-
+    if (radius ~= 0) then
+        C = l/(N*radius)
+    else 
+        C = 0
+    end
+        
     if (comments == true) then
         print("--------------------------------")
         print("------Snake initialization------")
