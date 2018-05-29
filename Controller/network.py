@@ -16,9 +16,9 @@ class SpikingNeuralNetwork():
         self.spike_generators = nest.Create("poisson_generator", p.resolution[0]*p.resolution[1], params=p.poisson_params)
         self.neuron_pre = nest.Create("parrot_neuron", p.resolution[0]*p.resolution[1])
         # Create motor IAF neurons
-        self.neuron_post = nest.Create("iaf_psc_alpha", 2, params=p.iaf_params)
+        self.neuron_post = nest.Create("iaf_psc_alpha", 4, params=p.iaf_params)
         # Create Output spike detector
-        self.spike_detector = nest.Create("spike_detector", 2, params={"withtime": True})
+        self.spike_detector = nest.Create("spike_detector", 4, params={"withtime": True})
         # Create R-STDP synapses
         self.syn_dict = {"model": "stdp_dopamine_synapse",
                         "weight": {"distribution": "uniform", "low": p.w0_min, "high": p.w0_max}}
@@ -30,11 +30,15 @@ class SpikingNeuralNetwork():
         # Create connection handles for left and right motor neuron
         self.conn_l = nest.GetConnections(target=[self.neuron_post[0]])
         self.conn_r = nest.GetConnections(target=[self.neuron_post[1]])
+        self.conn_slower = nest.GetConnections(target=[self.neuron_post[2]])
+        self.conn_faster = nest.GetConnections(target=[self.neuron_post[3]])
 
-    def simulate(self, dvs_data, reward):
+    def simulate(self, dvs_data, reward, speed_reward):
         # Set reward signal for left and right network
         nest.SetStatus(self.conn_l, {"n": -reward*p.reward_factor})
         nest.SetStatus(self.conn_r, {"n": reward*p.reward_factor})
+        nest.SetStatus(self.conn_faster, {"n": -speed_reward*p.reward_factor})
+        nest.SetStatus(self.conn_slower, {"n": speed_reward*p.reward_factor})
         # Set poisson neuron firing time span
         time = nest.GetKernelStatus("time")
         nest.SetStatus(self.spike_generators, {"origin": time})
@@ -50,14 +54,18 @@ class SpikingNeuralNetwork():
         # Get left and right output spikes
         n_l = nest.GetStatus(self.spike_detector,keys="n_events")[0]
         n_r = nest.GetStatus(self.spike_detector,keys="n_events")[1]
+        n_slower = nest.GetStatus(self.spike_detector,keys="n_events")[2]
+        n_faster = nest.GetStatus(self.spike_detector,keys="n_events")[3]
         # Reset output spike detector
         nest.SetStatus(self.spike_detector, {"n_events": 0})
         # Get network weights
         weights_l = np.array(nest.GetStatus(self.conn_l, keys="weight")).reshape(p.resolution)
         weights_r = np.array(nest.GetStatus(self.conn_r, keys="weight")).reshape(p.resolution)
-        return n_l, n_r, weights_l, weights_r
+        weights_faster = np.array(nest.GetStatus(self.conn_faster, keys="weight")).reshape(p.resolution)
+        weights_slower = np.array(nest.GetStatus(self.conn_slower, keys="weight")).reshape(p.resolution)
+        return n_l, n_r, n_slower, n_faster, weights_l, weights_r, weights_slower, weights_faster
 
-    def set_weights(self, weights_l, weights_r):
+    def set_weights(self, weights_l, weights_r, weights_slower, weights_faster):
         # Translate weights into dictionary format
         w_l = []
         for w in weights_l.reshape(weights_l.size):
@@ -65,7 +73,15 @@ class SpikingNeuralNetwork():
         w_r = []
         for w in weights_r.reshape(weights_r.size):
             w_r.append({'weight': w})
+        w_slower = []
+        for w in weights_m.reshape(weights_slower.size):
+            w_slower.append({'weight':w})
+        w_faster = []
+        for w in weights_m.reshape(weights_faster.size):
+            w_m.append({'weight':w})
         # Set left and right network weights
         nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)
+        nest.SetStatus(self.conn_slower, w_slower)
+        nest.SetStatus(self.conn_faster, w_faster)
         return

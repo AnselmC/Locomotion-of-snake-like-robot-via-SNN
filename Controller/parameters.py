@@ -2,15 +2,18 @@
 
 import numpy as np
 
-path = "../data/session_010"        # Path for saving data
+path = "../data/session_012"        # Path for saving data
 
 # Other
-training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
-modulo = 100000
-max_steps = 1500                    # Maximum amount of steps per episode before the simulation is reset
+training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
+modulo =
+max_steps = 1500000                    # Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
-blind_steps = 50
+blind_steps = 20
+ideal_number_of_pixels = 6
+v_start = 1
+reward_slope = 0.25
 
 # Input image
 img_resolution = [32,32]            # Original DVS frame resolution
@@ -40,5 +43,5 @@ A_minus = 1.                        # Constant scaling strength of depression
 
 # Steering wheel model
 turn_pre = 0                        # Initial turn speed
-n_max = sim_time//t_refrac          # Maximum input activity 
+n_max = sim_time//t_refrac          # Maximum input activity
 r_min = 1                            # Minimum turning radius

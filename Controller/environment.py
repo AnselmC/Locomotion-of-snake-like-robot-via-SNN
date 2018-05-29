@@ -20,10 +20,13 @@ class VrepEnvironment():
         self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
         self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
+        self.speed_pub = rospy.Publisher('speed', Float32, queue_size=1)
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
         self.img = None
         self.imgFlag = False
         self.cx = 0.0
+        self.speed = v_start
+        self.num_of_red_pixels = 0
         self.terminate = False
         self.steps = 0
         self.turn_pre = 0.0
@@ -48,6 +51,18 @@ class VrepEnvironment():
         # Get an OpenCV image
         cv_image = self.bridge.imgmsg_to_cv2(msg, "rgb8")
         self.img = cv_image[:,:,2]                # get red channel
+
+
+        rows, cols = self.img.shape
+
+        self.num_of_red_pixels = 0
+
+        for i in range(rows):
+            for j in range(cols):
+                intensity = self.img[i,j]
+                if(intensity > 0):
+                    self.num_of_red_pixels += 1
+
         M = cv.moments(self.img, True)            # compute image moments for centroid
         if M['m00'] == 0:
             self.blind_steps_counter += 1
@@ -77,13 +92,15 @@ class VrepEnvironment():
         print "-------------reset--------------"
         self.turn_pre = 0.0
         self.radius_pub.publish(0.0)
+        self.speed = v_start
+        self.speed_pub.publish(self.speed)
         # Change lane
         #self.startLeft = not self.startLeft
         self.reset_pub.publish(Bool(True))
         time.sleep(1)
-        return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
+        return np.zeros((resolution[0],resolution[1]),dtype=int), 0., 0.
 
-    def step(self, n_l, n_r):
+    def step(self, n_l, n_r, n_slower, n_faster):
 
         self.steps += 1
 
@@ -91,7 +108,7 @@ class VrepEnvironment():
         m_l = n_l/n_max
         m_r = n_r/n_max
         a = m_l - m_r
-        c = math.sqrt((m_l*2 + m_r*2)/2.0)
+        c = math.sqrt((m_l**2 + m_r**2)/2.0)
         
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
 
@@ -105,9 +122,22 @@ class VrepEnvironment():
         self.radius_pub.publish(radius)
         self.rate.sleep()
 
-        # Set reward signal
+        # Set reward signals
         # Reward
         r = self.cx
+
+        # Snake speed
+        self.speed = self.speed + float(n_faster-n_slower)/(100*n_max)    
+
+        if(self.speed < 0):
+            self.speed = 0
+
+        # Publish snake speed
+        self.speed_pub.publish(self.speed)
+        self.rate.sleep()
+
+        # Speed Reward
+        speed_reward = self.getSpeedReward()
 
         s = self.getState()
         n = self.steps
@@ -132,18 +162,33 @@ class VrepEnvironment():
             print "m_l: \t\t", m_l
             print "n_r: \t\t", n_r
             print "m_r: \t\t", m_r
+            print "n_slower: \t", n_slower
+            print "n_faster: \t", n_faster
             print "a: \t\t", a
             print "c: \t\t", c
             print "turn_pre: \t", self.turn_pre
             print "radius: \t", radius
+            print "speed: \t\t", self.    speed
             print "cx: \t\t", self.cx
             print "reward: \t", r
+            print "speed reward: \t", speed_reward
 
-        # Return state, distance, reward, termination, steps
-        return s,self.cx,r,t,n
+        # Return state, distance, reward, speed reward, termination, steps
+        return s,self.cx,r,speed_reward,t,n
 
     def getParams(self):
         return self.snake_params, self.pioneer_params
+
+    def getSpeedReward(self):
+        # y = a*(x+b)^2+c
+        # reward = -1/ideal^2 * (red - ideal)^2 + 1
+        # a = float(-1)/(ideal_number_of_pixels**2)
+        # b = -ideal_number_of_pixels
+        # c = 1
+
+        # logistic function
+        # y = 2/(exp(-k(x-x0))+1) - 1
+        return 2/(math.exp(-reward_slope*(self.num_of_red_pixels - ideal_number_of_pixels))+1)-1
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4

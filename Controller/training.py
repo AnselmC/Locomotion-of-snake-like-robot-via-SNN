@@ -11,24 +11,26 @@ env = VrepEnvironment()
 
 weights_r = []
 weights_l = []
+weights_slower = []
+weights_faster = []
 weights_i = []
 steps = []
 cumulative_reward_per_episode = []
 cumulative_reward = 0
 params = {}
 
-# Initialize environment, get initial state, initial reward
-s,r = env.reset()
+# Initialize environment, get initial state, initial reward, initial speed reward
+s,r,s_r = env.reset()
 
 for i in range(p.training_length):
 
     # Simulate network for 50 ms
     # get number of output spikes and network weights
-    n_l, n_r, w_l, w_r = snn.simulate(s,r)
+    n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,r,s_r)
 
     # Feed output spikes in steering wheel model
     # Get state, distance, reward, termination, step
-    s,d,r,t,n = env.step(n_l, n_r)
+    s,d,r,s_r,t,n = env.step(n_l, n_r, n_slower, n_faster)
 
     cumulative_reward = cumulative_reward + abs(r)
     
@@ -42,6 +44,8 @@ for i in range(p.training_length):
         print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
+        weights_slower.append(w_slower)
+        weights_faster.append(w_faster)
         weights_i.append(i)
 
     # Save no. of steps every episode
@@ -61,6 +65,11 @@ params['w0_max'] = p.w0_max
 params['reward_factor'] = p.reward_factor
 params['training_length'] = p.training_length
 params['max_steps'] = p.max_steps
+params['ideal_number_of_pixels'] = p.ideal_number_of_pixels
+params['v_start'] = p.v_start
+params['blind_steps'] = p.blind_steps
+params['r_min'] = p.r_min
+params['reward_slope'] = p.reward_slope
 
 snake_params, pioneer_params = env.getParams()
 
@@ -79,6 +88,8 @@ with open(p.path+'/pioneer_parameters.json','w') as file:
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
+h5f.create_dataset('w_slower', data=weights_slower)
+h5f.create_dataset('w_faster', data=weights_faster)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
 h5f.create_dataset('cumulative_reward_per_episode', data = cumulative_reward_per_episode)
