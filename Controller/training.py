@@ -32,10 +32,10 @@ for i in range(p.training_length):
 
     cumulative_reward = cumulative_reward + abs(r)
     
-    # Save weights every 10 simulation steps
-    if i % 10 == 0:
-#        print "----------training.py----------"
-#        print "-----------step: ", i, "-----------"
+    # Save weights every 100 simulation steps
+    if i % 100 == 0:
+        print "----------training.py----------"
+        print "-----------step: ", i, "-----------"
 #        print "cumulative_reward:\t", cumulative_reward
 #        print "Left weights:\n", w_l
 #        print "Right weights:\n", w_r
@@ -46,8 +46,8 @@ for i in range(p.training_length):
 
     # Save no. of steps every episode
     if t:
-        print "----------training.py----------"
-        print "-----------terminate-----------"
+#        print "----------training.py----------"
+#        print "-----------terminate-----------"
         steps.append(n)
 #        print "steps:\n", steps
         cumulative_reward_per_episode.append(cumulative_reward)
@@ -63,18 +63,18 @@ params['reward_factor'] = p.reward_factor
 params['training_length'] = p.training_length
 params['max_steps'] = p.max_steps
 
-snake_params, pioneer_params = env.getParams()
+#snake_params, pioneer_params = env.getParams()
 
 # Save to separate json files
 json_data = json.dumps(params)
 with open(p.path+'/training_parameters.json','w') as file:
     file.write(json_data)
 
-with open(p.path+'/snake_parameters.json','w') as file:
-    file.write(snake_params.__str__())
-
-with open(p.path+'/pioneer_parameters.json','w') as file:
-    file.write(pioneer_params.__str__())
+#with open(p.path+'/snake_parameters.json','w') as file:
+#    file.write(snake_params.__str__())
+#
+#with open(p.path+'/pioneer_parameters.json','w') as file:
+#    file.write(pioneer_params.__str__())
 
 # Save data
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')

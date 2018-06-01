@@ -51,18 +51,25 @@ class VrepEnvironment():
         # Length of the wall in meter
         self.length_wall = 7.5
         self.snake_init_position = [20.0, 0.0]
-        self.gamma_deg = 20
-        self.gamma_rad = self.gamma_deg*math.pi/180
+        self.gamma1_deg = 20
+        self.gamma1_rad = self.gamma1_deg*math.pi/180
+        self.gamma2_deg = 30
+        self.gamma2_rad = self.gamma1_deg*math.pi/180
         
         # p1 = [20.0, 0]
         self.p1 = self.snake_init_position
         # p2 = [12.5, 0]
         self.p2 = np.add(self.p1, [-self.length_wall, 0])
         # p3 = [5.45, -2.57]
-        self.p3 = np.add(self.p2, [-self.length_wall*math.cos(self.gamma_rad), 
-                                   -self.length_wall*math.sin(self.gamma_rad)])
+        self.p3 = np.add(self.p2, [-self.length_wall*math.cos(self.gamma1_rad), 
+                                   -self.length_wall*math.sin(self.gamma1_rad)])
         # p4 = [-2.05, -2.57]                           
         self.p4 = np.add(self.p3, [-self.length_wall, 0])
+        
+        self.p5 = np.add(self.p4, [-self.length_wall*math.cos(self.gamma2_rad), 
+                                   self.length_wall*math.sin(self.gamma2_rad)])
+                                  
+        self.p6 = np.add(self.p5, [-self.length_wall, 0])
 
     def dvs_callback(self, msg):	
         # Store incoming DVS data
@@ -190,6 +197,16 @@ class VrepEnvironment():
         if (self.p4[0] < snake_position[0] < self.p3[0]):
             section = "section 3"
             distance = self.calculateDistance(snake_position, self.p3, self.p4)
+            return distance, section
+            
+        if (self.p5[0] < snake_position[0] < self.p4[0]):
+            section = "section 4"
+            distance = self.calculateDistance(snake_position, self.p4, self.p5)
+            return distance, section
+            
+        if (self.p6[0] < snake_position[0] < self.p5[0]):
+            section = "section 5"
+            distance = self.calculateDistance(snake_position, self.p5, self.p6)
             return distance, section
 
     def getState(self):
