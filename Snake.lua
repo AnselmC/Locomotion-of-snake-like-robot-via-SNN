@@ -117,8 +117,6 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 
     N = 8
     
-    notFirstHere = true
-
     local l0 = simGetScriptSimulationParameter(sim_handle_self, "l0")
     
     -- linear reduction parameters (set y = 0 and z = 1 for disabling)
@@ -269,17 +267,12 @@ end
 
 if (sim_call_type==sim_childscriptcall_sensing) then 
     -- Read and formate DVS data at each simulation step
-    print("Snake sim_childscriptcall_sensing")
 
     if notFirstHere and not pluginNotFound then
         r,t0,t1=simReadVisionSensor(cameraHandle)
-        print("r:\t", r)
-        print("t0:\t", t0)
-        print("t1:\t", t1)
 
         if (t1) then
             ts=math.floor(simGetSimulationTime()*1000)
-            print("ts:\t", ts)
             newData={}
             for i=0,(#t1/3)-1,1 do
                 newData[1+i*2]=math.floor(t1[3*i+2])
@@ -298,8 +291,6 @@ if (sim_call_type==sim_childscriptcall_sensing) then
             end
         end
         simExtRosInterface_publish(dvsPub,{data=newData})
-        print("publish dvsPub")
-        print("--------------------------------")
     end
     notFirstHere=true
 end 
