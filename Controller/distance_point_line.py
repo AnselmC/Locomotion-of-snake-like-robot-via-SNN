@@ -30,7 +30,7 @@ gamma_rad = gamma_deg*math.pi/180
      
 p1 = snake_init_position
 p2 = np.add(p1, [-length_cuboid, 0])
-p3 = np.add(p2, [-length_cuboid*math.cos(gamma_rad), -length_cuboid*math.sin(gamma_rad)])
+p3 = np.add(p2, [-length_cuboid*math.cos(gamma_rad), length_cuboid*math.sin(gamma_rad)])
 p4 = np.add(p3, [-length_cuboid, 0])
 
 pos_data = [10.0, 1.0]

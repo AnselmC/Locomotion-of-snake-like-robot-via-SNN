@@ -26,11 +26,11 @@ class VrepEnvironment():
         self.pos_sub = rospy.Subscriber('transformData', Transform, self.pos_callback)
         self.pos_data = []
         
-        # Parameter sub
-        self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
-        self.snake_params = None
-        self.pioneer_params = None
-        self.first_cb = True
+#        # Parameter sub
+#        self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
+#        self.snake_params = None
+#        self.pioneer_params = None
+#        self.first_cb = True
         
         # Radius pub
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
@@ -47,18 +47,22 @@ class VrepEnvironment():
         rospy.init_node('rstdp_controller')
         self.rate = rospy.Rate(rate)
 
-        self.blind_steps_counter = 0
-        
         # Values for distance calculation
-        self.length_cuboid = 7.5
+        # Length of the wall in meter
+        self.length_wall = 7.5
         self.snake_init_position = [20.0, 0.0]
         self.gamma_deg = 20
         self.gamma_rad = self.gamma_deg*math.pi/180
         
+        # p1 = [20.0, 0]
         self.p1 = self.snake_init_position
-        self.p2 = np.add(self.p1, [-self.length_cuboid, 0])
-        self.p3 = np.add(self.p2, [-self.length_cuboid*math.cos(self.gamma_rad), -self.length_cuboid*math.sin(self.gamma_rad)])
-        self.p4 = np.add(self.p3, [-self.length_cuboid, 0])
+        # p2 = [12.5, 0]
+        self.p2 = np.add(self.p1, [-self.length_wall, 0])
+        # p3 = [5.45, -2.57]
+        self.p3 = np.add(self.p2, [-self.length_wall*math.cos(self.gamma_rad), 
+                                   -self.length_wall*math.sin(self.gamma_rad)])
+        # p4 = [-2.05, -2.57]                           
+        self.p4 = np.add(self.p3, [-self.length_wall, 0])
 
     def dvs_callback(self, msg):	
         # Store incoming DVS data
@@ -73,18 +77,18 @@ class VrepEnvironment():
         self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
         return
 
-    def params_callback(self, msg):
-        if(self.first_cb):
-            self.snake_params = msg.data
-            self.first_cb = False
-        else:
-            self.pioneer_params = msg.data
-        return
+#    def params_callback(self, msg):
+#        if(self.first_cb):
+#            self.snake_params = msg.data
+#            self.first_cb = False
+#        else:
+#            self.pioneer_params = msg.data
+#        return
 
     def reset(self):
         # Reset model
-        print "---------environment.py---------"
-        print "-------------reset--------------"
+#        print "---------environment.py---------"
+#        print "-------------reset--------------"
         self.turn_pre = 0.0
         self.radius_pub.publish(0.0)
         self.reset_pub.publish(Bool(True))
@@ -98,8 +102,9 @@ class VrepEnvironment():
         # Snake turning model
         m_l = n_l/n_max
         m_r = n_r/n_max
-        a = m_l - m_r
-        # c = math.sqrt((m_l*2 + m_r*2)/2.0)
+        # TODO: 
+        a = m_r - m_l
+#        a = m_l - m_r
         c = math.sqrt((m_l**2 + m_r**2)/2.0)
         
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
@@ -115,10 +120,12 @@ class VrepEnvironment():
         self.rate.sleep()
 
         # Get distance
-        d = self.getDistance(self.pos_data)
+        d, section = self.getDistance(self.pos_data)
         
         # Set reward signal
-        r = abs(d)
+        # TODO: 
+        r = d
+#        r = abs(d)
         
         self.distance = d
         s = self.getState()
@@ -140,7 +147,7 @@ class VrepEnvironment():
         if (self.steps % modulo == 0):
             print "---------environment.py---------"
             print "-----------step: ", self.steps, "-----------"
-            print "dvs_data: \n", self.dvs_data
+            #print "dvs_data: \n", self.dvs_data
             print "pos_data[0]: \t", self.pos_data[0]
             print "pos_data[1]: \t", self.pos_data[1]
             print "n_l: \t\t", n_l
@@ -151,17 +158,19 @@ class VrepEnvironment():
             print "radius: \t", radius
             print "d: \t\t", d
             print "reward: \t", r
+            print "section: \t", section
+            print "state: \n", s
             print "--------------------------------"
 
         # Return state, distance, pos_data, reward, termination, steps
         return s,d,self.pos_data,r,t,n
 
-    def getParams(self):
-        return self.snake_params, self.pioneer_params
+#    def getParams(self):
+#        return self.snake_params, self.pioneer_params
     
     def calculateDistance(self, snake_position, p1, p2):
         
-        distance = abs(np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/ norm(np.subtract(p2,p1)))
+        distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/ norm(np.subtract(p2,p1))
         return distance
     
     def getDistance(self, snake_position):
@@ -169,14 +178,19 @@ class VrepEnvironment():
         snake_position = [snake_position[0], snake_position[1]]
         
         if (self.p2[0] < snake_position[0] < self.p1[0]):
-            return self.calculateDistance(snake_position, self.p1, self.p2)
+            section = "section 1"
+            distance = self.calculateDistance(snake_position, self.p1, self.p2)
+            return distance, section
         
-        # if pos between (12.5-cos(20deg)*7.5) and 12.5
         if (self.p3[0] < snake_position[0] < self.p2[0]):
-            return self.calculateDistance(snake_position, self.p2, self.p3)
+            section = "section 2"
+            distance = self.calculateDistance(snake_position, self.p2, self.p3)
+            return distance, section
             
         if (self.p4[0] < snake_position[0] < self.p3[0]):
-            return self.calculateDistance(snake_position, self.p3, self.p4)
+            section = "section 3"
+            distance = self.calculateDistance(snake_position, self.p3, self.p4)
+            return distance, section
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int)
