@@ -27,25 +27,26 @@ for i in range(p.training_length):
     n_l, n_r, w_l, w_r = snn.simulate(s,r)
 
     # Feed output spikes in steering wheel model
-    # Get state, distance, reward, termination, step
-    s,d,r,t,n = env.step(n_l, n_r)
+    # Get state, distance, pos_data, reward, termination, step
+    s,d,pos_data,r,t,n = env.step(n_l, n_r)
 
     cumulative_reward = cumulative_reward + abs(r)
     
-    # Save weights every 100 simulation steps
-    if i % 100 == 0:
-        print "--------------------------------"
+    # Save weights every 10 simulation steps
+    if i % 10 == 0:
+        print "----------training.py----------"
         print "-----------step: ", i, "-----------"
-        print "--------------------------------"
         print "cumulative_reward:\t", cumulative_reward
-        print "Left weights:\n", w_l
-        print "Right weights:\n", w_r
+        #print "Left weights:\n", w_l
+        #print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_i.append(i)
+        print "--------------------------------"
 
     # Save no. of steps every episode
     if t:
+        print "----------training.py----------"
         print "-----------terminate-----------"
         steps.append(n)
         print "steps:\n", steps

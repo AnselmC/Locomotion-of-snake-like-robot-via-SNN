@@ -41,15 +41,14 @@ function resetRobot_cb(msg)
     t = 0
 
     if (comments == true) then
-        print("--------------------------------")
         print("----------Reset Snake-----------")
-        print("--------------------------------")
         for i=1,#init_pos,1 do
             print("init_pos["..(i).."]:", init_pos[i])
         end
         for i=1,#init_ori,1 do
             print("init_ori["..(i).."]:", init_ori[i])
         end
+        print("--------------------------------")
     end
 end
 
@@ -57,7 +56,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 
     -- Get object handles
     robotHandle=simGetObjectAssociatedWithScript(sim_handle_self)
-    proxSensor=simGetObjectHandle("Snake_proxSensor")
+    -- proxSensor=simGetObjectHandle("Snake_proxSensor")
 
     joints_v={-1,-1,-1,-1,-1,-1,-1,-1}
 
@@ -83,20 +82,27 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         index=index+1
     end
 
-    if (not pluginNotFound) then
-        -- Prepare the sensor publisher and the motor speed subscribers:
-        turnRadiusSub=simExtRosInterface_subscribe('/turningRadius','std_msgs/Float32','setTurningRadius_cb')
-        resetRobotSub=simExtRosInterface_subscribe('/resetRobot','std_msgs/Bool','resetRobot_cb')
-        paramsPub=simExtRosInterface_advertise('/parameters', 'std_msgs/String')
-    end
-
     -- Prepare Camera handle
     cameraHandle=simGetObjectHandle('DVS_128')
-    showCameraView=simGetScriptSimulationParameter(sim_handle_self,'showCameraView')
+    
+    showConsole=simGetScriptSimulationParameter(sim_handle_self,'showConsole')
+    if (showConsole) then
+        auxConsole=simAuxiliaryConsoleOpen("DVS128 output",500,4)
+    end
 
+    showCameraView=simGetScriptSimulationParameter(sim_handle_self,'showCameraView')
     if (showCameraView) then
         floatingView=simFloatingViewAdd(0.2,0.8,0.4,0.4,0)
         simAdjustView(floatingView,cameraHandle,64)
+    end
+
+    if (not pluginNotFound) then
+        -- Prepare the sensor publisher and the motor speed subscribers:
+        dvsPub=simExtRosInterface_advertise('/dvsData', 'std_msgs/Int8MultiArray')
+        transformPub=simExtRosInterface_advertise('/transformData', 'geometry_msgs/Transform')
+        turnRadiusSub=simExtRosInterface_subscribe('/turningRadius','std_msgs/Float32','setTurningRadius_cb')
+        resetRobotSub=simExtRosInterface_subscribe('/resetRobot','std_msgs/Bool','resetRobot_cb')
+        paramsPub=simExtRosInterface_advertise('/parameters', 'std_msgs/String')
     end
 
     -- Initialize parameters
@@ -111,6 +117,8 @@ if (sim_call_type==sim_childscriptcall_initialization) then
 
     N = 8
     
+    notFirstHere = true
+
     local l0 = simGetScriptSimulationParameter(sim_handle_self, "l0")
     
     -- linear reduction parameters (set y = 0 and z = 1 for disabling)
@@ -161,9 +169,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     end
         
     if (comments == true) then
-        print("--------------------------------")
         print("------Snake initialization------")
-        print("--------------------------------")     
         for i=1,#init_pos,1 do
             print("init_pos["..(i).."]:", init_pos[i])
         end
@@ -176,6 +182,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         print("P*A:\t", P*A)
         print("head_dir:", head_dir)
         print("l:\t", l)
+        print("--------------------------------")     
     end
 end 
 
@@ -183,6 +190,8 @@ if (sim_call_type==sim_childscriptcall_cleanup) then
     if not pluginNotFound then
         -- Following not really needed in a simulation script 
         -- (i.e. automatically shut down at simulation end):
+        simExtRosInterface_shutdownPublisher(dvsPub)
+        simExtRosInterface_shutdownPublisher(transformPub)
         simExtRosInterface_shutdownSubscriber(turnRadiusSub)
         simExtRosInterface_shutdownSubscriber(resetRobotSub)
     end
@@ -199,6 +208,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     step=step+1
     t=t+simGetSimulationTimeStep()
     
+    --[[
     -- Read res (-1, 0 or 1) and dist from proxSensor
     res, dist = simReadProximitySensor(proxSensor)
     
@@ -213,6 +223,7 @@ if (sim_call_type==sim_childscriptcall_actuation) then
             w = w + speedChange
         end
     end
+    ]]--
 
     -- Snake locomotion
 
@@ -243,13 +254,52 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     
     simSetJointTargetPosition(joints_v[1], -head_dir*(1-math.exp(p*t)))
 
+    position=simGetObjectPosition(robotHandle,-1)
+    quaternion=simGetObjectQuaternion(robotHandle,-1)
+    simExtRosInterface_publish(transformPub, {translation={x=position[1],y=position[2],z=position[3]},rotation={x=quaternion[1],y=quaternion[2],z=quaternion[3],w=quaternion[4]}})
+    
     -- Print parameters every mod steps
     if(comments==true and math.fmod(step,mod)==0) then
-        print("--------------------------------")
         print("--------Snake step: "..(step).."----------")
-        print("--------------------------------")
-        print("dist:\t", dist)
         print("radius:\t", radius)
         print("w:\t", w)
+        print("--------------------------------")
     end
-end
+end 
+
+if (sim_call_type==sim_childscriptcall_sensing) then 
+    -- Read and formate DVS data at each simulation step
+    print("Snake sim_childscriptcall_sensing")
+
+    if notFirstHere and not pluginNotFound then
+        r,t0,t1=simReadVisionSensor(cameraHandle)
+        print("r:\t", r)
+        print("t0:\t", t0)
+        print("t1:\t", t1)
+
+        if (t1) then
+            ts=math.floor(simGetSimulationTime()*1000)
+            print("ts:\t", ts)
+            newData={}
+            for i=0,(#t1/3)-1,1 do
+                newData[1+i*2]=math.floor(t1[3*i+2])
+                newData[2+i*2]=math.floor(t1[3*i+3])
+                --newData=newData..string.char(timeStampByte1)
+                --newData=newData..string.char(timeStampByte2)
+
+                if (showConsole) then
+                    if (t1[3*i+1]>0) then
+                        onOff=", on"
+                    else
+                        onOff=", off"
+                    end
+                    simAuxiliaryConsolePrint(auxConsole,"time="..ts.." ms, x="..math.floor(t1[3*i+2])..", y="..math.floor(t1[3*i+3])..onOff.."\n")
+                end
+            end
+        end
+        simExtRosInterface_publish(dvsPub,{data=newData})
+        print("publish dvsPub")
+        print("--------------------------------")
+    end
+    notFirstHere=true
+end 

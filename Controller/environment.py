@@ -7,33 +7,71 @@ import rospy
 import math
 import time
 import numpy as np
-import cv2 as cv
-from cv_bridge import CvBridge, CvBridgeError
+from numpy.linalg import norm 
 
-from std_msgs.msg import Float32, Bool, String
-from sensor_msgs.msg import Image
+from std_msgs.msg import Int8MultiArray, Float32, Bool, String
+from geometry_msgs.msg import Transform
 
 from parameters import *
 
 class VrepEnvironment():
     def __init__(self):
-        self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
+        # Image
+        self.dvs_sub = rospy.Subscriber('dvsData', Int8MultiArray, self.dvs_callback)
+        self.dvs_data = np.array([0,0])
+        self.resize_factor = [dvs_resolution[0]//resolution[0], 
+                              (dvs_resolution[1]-crop_bottom-crop_top)//resolution[1]]
+        
+        # Position sub
+        self.pos_sub = rospy.Subscriber('transformData', Transform, self.pos_callback)
+        self.pos_data = []
+        
+        # Parameter sub
         self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
-        self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
-        self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
-        self.img = None
-        self.imgFlag = False
-        self.cx = 0.0
-        self.terminate = False
-        self.steps = 0
-        self.turn_pre = 0.0
-        self.bridge = CvBridge()
-        rospy.init_node('rstdp_controller')
-        self.rate = rospy.Rate(rate)
         self.snake_params = None
         self.pioneer_params = None
         self.first_cb = True
+        
+        # Radius pub
+        self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
+        
+        # Reset pub
+        self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
+        
+        self.distance = 0
+        self.steps = 0
+        self.turn_pre = turn_pre
+        
+        self.terminate = False
+        
+        rospy.init_node('rstdp_controller')
+        self.rate = rospy.Rate(rate)
+
         self.blind_steps_counter = 0
+        
+        # Values for distance calculation
+        self.length_cuboid = 7.5
+        self.snake_init_position = [20.0, 0.0]
+        self.gamma_deg = 20
+        self.gamma_rad = self.gamma_deg*math.pi/180
+        
+        self.p1 = self.snake_init_position
+        self.p2 = np.add(self.p1, [-self.length_cuboid, 0])
+        self.p3 = np.add(self.p2, [-self.length_cuboid*math.cos(self.gamma_rad), -self.length_cuboid*math.sin(self.gamma_rad)])
+        self.p4 = np.add(self.p3, [-self.length_cuboid, 0])
+
+    def dvs_callback(self, msg):	
+        # Store incoming DVS data
+        #print "---------environment.py---------"
+        #print "-------------dvs_callback--------------"
+        #print "msg.data: \n", msg.data
+        self.dvs_data = msg.data
+        return
+    
+    def pos_callback(self, msg):
+        # Store incoming position data
+        self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
+        return
 
     def params_callback(self, msg):
         if(self.first_cb):
@@ -43,42 +81,12 @@ class VrepEnvironment():
             self.pioneer_params = msg.data
         return
 
-    def image_callback(self, msg):
-    # Process incoming image data
-        # Get an OpenCV image
-        cv_image = self.bridge.imgmsg_to_cv2(msg, "rgb8")
-        self.img = cv_image[:,:,2]                # get red channel
-        M = cv.moments(self.img, True)            # compute image moments for centroid
-        if M['m00'] == 0:
-            self.blind_steps_counter += 1
-            if self.blind_steps_counter == blind_steps:
-                self.terminate = True
-                self.blind_steps_counter = 0
-            self.cx = 0.0
-        else:
-            self.blind_steps_counter = 0
-            self.terminate = False
-            # https://www.youtube.com/watch?v=AAbUfZD_09s
-            # Assumption: Origin of coordinate system is in the bottom left of the picture
-            # M['m10']/M['m00'] = x_mean (between 0 and 32)
-            # M['m10']/(M['m00']*img_resolution[1]) = x_mean_normalized (between 0 and 1)
-            # 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 = cx (between -1 and 1, 0 in the middle)
-            self.cx = 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 # normalized centroid position
-
-        cv.imshow('image',self.img)
-        cv.waitKey(2)
-
-        self.imgFlag = True
-
-        return
-
     def reset(self):
         # Reset model
+        print "---------environment.py---------"
         print "-------------reset--------------"
         self.turn_pre = 0.0
         self.radius_pub.publish(0.0)
-        # Change lane
-        #self.startLeft = not self.startLeft
         self.reset_pub.publish(Bool(True))
         time.sleep(1)
         return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
@@ -91,7 +99,8 @@ class VrepEnvironment():
         m_l = n_l/n_max
         m_r = n_r/n_max
         a = m_l - m_r
-        c = math.sqrt((m_l*2 + m_r*2)/2.0)
+        # c = math.sqrt((m_l*2 + m_r*2)/2.0)
+        c = math.sqrt((m_l**2 + m_r**2)/2.0)
         
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
 
@@ -105,52 +114,77 @@ class VrepEnvironment():
         self.radius_pub.publish(radius)
         self.rate.sleep()
 
+        # Get distance
+        d = self.getDistance(self.pos_data)
+        
         # Set reward signal
-        # Reward
-        r = self.cx
-
+        r = abs(d)
+        
+        self.distance = d
         s = self.getState()
         n = self.steps
 
         # Terminate episode given max. step amount
-        if self.steps > max_steps:
+        if self.steps > max_steps or abs(d) > reset_distance:
             self.terminate = True
 
         # Terminate episode of robot reaches start position again
         # or reset distance
+        
         t = self.terminate
         if t == True:
             self.steps = 0
             self.reset()
             self.terminate = False
 
-        if (self.steps%modulo == 0):
-            print "--------------------------------"
+        if (self.steps % modulo == 0):
+            print "---------environment.py---------"
             print "-----------step: ", self.steps, "-----------"
-            print "--------------------------------"
+            print "dvs_data: \n", self.dvs_data
+            print "pos_data[0]: \t", self.pos_data[0]
+            print "pos_data[1]: \t", self.pos_data[1]
             print "n_l: \t\t", n_l
-            print "m_l: \t\t", m_l
             print "n_r: \t\t", n_r
-            print "m_r: \t\t", m_r
             print "a: \t\t", a
             print "c: \t\t", c
             print "turn_pre: \t", self.turn_pre
             print "radius: \t", radius
-            print "cx: \t\t", self.cx
+            print "d: \t\t", d
             print "reward: \t", r
+            print "--------------------------------"
 
-        # Return state, distance, reward, termination, steps
-        return s,self.cx,r,t,n
+        # Return state, distance, pos_data, reward, termination, steps
+        return s,d,self.pos_data,r,t,n
 
     def getParams(self):
         return self.snake_params, self.pioneer_params
+    
+    def calculateDistance(self, snake_position, p1, p2):
+        
+        distance = abs(np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/ norm(np.subtract(p2,p1)))
+        return distance
+    
+    def getDistance(self, snake_position):
+        # if pos between 12.5 and 20
+        snake_position = [snake_position[0], snake_position[1]]
+        
+        if (self.p2[0] < snake_position[0] < self.p1[0]):
+            return self.calculateDistance(snake_position, self.p1, self.p2)
+        
+        # if pos between (12.5-cos(20deg)*7.5) and 12.5
+        if (self.p3[0] < snake_position[0] < self.p2[0]):
+            return self.calculateDistance(snake_position, self.p2, self.p3)
+            
+        if (self.p4[0] < snake_position[0] < self.p3[0]):
+            return self.calculateDistance(snake_position, self.p3, self.p4)
 
     def getState(self):
-        new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4
-        # bring the red filtered image in the form of the state
-        if self.imgFlag == True:
-            for y in range(img_resolution[1] - crop_top - crop_bottom):
-                for x in range(img_resolution[0]):
-                    if self.img[y + crop_top, x] > 0:
-                        new_state[x//(img_resolution[0]//resolution[0]), y//((img_resolution[1] - crop_top - crop_bottom)//resolution[1])] += 4
+        new_state = np.zeros((resolution[0],resolution[1]),dtype=int)
+        for i in range(len(self.dvs_data)//2):
+            try:
+                if crop_bottom <= self.dvs_data[i*2+1] < (dvs_resolution[1]-crop_top):
+                    idx = ((self.dvs_data[i*2])//self.resize_factor[0], (self.dvs_data[i*2+1]-crop_bottom)//self.resize_factor[1])
+                    new_state[idx] += 1
+            except:
+                pass
         return new_state
