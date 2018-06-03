@@ -54,7 +54,7 @@ class VrepEnvironment():
         self.gamma1_deg = 20
         self.gamma1_rad = self.gamma1_deg*math.pi/180
         self.gamma2_deg = 30
-        self.gamma2_rad = self.gamma1_deg*math.pi/180
+        self.gamma2_rad = self.gamma2_deg*math.pi/180
         
         # p1 = [20.0, 0]
         self.p1 = self.snake_init_position
@@ -65,10 +65,10 @@ class VrepEnvironment():
                                    -self.length_wall*math.sin(self.gamma1_rad)])
         # p4 = [-2.05, -2.57]                           
         self.p4 = np.add(self.p3, [-self.length_wall, 0])
-        
+        # p5 = [-8.54, 1.18]
         self.p5 = np.add(self.p4, [-self.length_wall*math.cos(self.gamma2_rad), 
                                    self.length_wall*math.sin(self.gamma2_rad)])
-                                  
+        # p6 = [-16.04, 1.18]                           
         self.p6 = np.add(self.p5, [-self.length_wall, 0])
 
     def dvs_callback(self, msg):	
@@ -181,7 +181,7 @@ class VrepEnvironment():
         return distance
     
     def getDistance(self, snake_position):
-        # if pos between 12.5 and 20
+
         snake_position = [snake_position[0], snake_position[1]]
         
         if (self.p2[0] < snake_position[0] < self.p1[0]):

@@ -55,13 +55,19 @@ for i in range(p.training_length):
         cumulative_reward = 0
 
 # Save training parameters
+params['training_length'] = p.training_length
+params['max_steps'] = p.max_steps
+params['reset_distance'] = p.reset_distance
+params['img_resolution'] = p.img_resolution
+params['crop_top'] = p.crop_top
+params['crop_bottom'] = p.crop_bottom
+params['resolution'] = p.resolution
 params['w_min'] = p.w_min
 params['w_max'] = p.w_max
 params['w0_min'] = p.w0_min
 params['w0_max'] = p.w0_max
 params['reward_factor'] = p.reward_factor
-params['training_length'] = p.training_length
-params['max_steps'] = p.max_steps
+params['r_min'] = p.r_min
 
 #snake_params, pioneer_params = env.getParams()
 

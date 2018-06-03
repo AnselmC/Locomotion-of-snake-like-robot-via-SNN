@@ -1,0 +1,1 @@
+{"w0_min": 200.0, "reward_factor": 0.001, "w_max": 3500.0, "crop_top": 16, "img_resolution": [128, 128], "r_min": 1, "w_min": 0.0, "w0_max": 201.0, "crop_bottom": 16, "training_length": 20000, "reset_distance": 1, "max_steps": 1000, "resolution": [16, 12]}
