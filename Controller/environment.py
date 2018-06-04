@@ -2,6 +2,8 @@
 
 import sys
 sys.path.append('/usr/lib/python2.7/dist-packages') # weil ROS nicht mit Anaconda installiert
+import signal
+
 import rospy
 
 import math
@@ -27,6 +29,7 @@ class VrepEnvironment():
         self.cx = 0.0
         self.speed = v_start
         self.num_of_red_pixels = 0
+        self.pixel_ratio = 0
         self.terminate = False
         self.steps = 0
         self.turn_pre = 0.0
@@ -37,6 +40,7 @@ class VrepEnvironment():
         self.pioneer_params = None
         self.first_cb = True
         self.blind_steps_counter = 0
+        signal.signal(signal.SIGTSTP, self.handler)
 
     def params_callback(self, msg):
         if(self.first_cb):
@@ -63,6 +67,7 @@ class VrepEnvironment():
                 if(intensity > 0):
                     self.num_of_red_pixels += 1
 
+        self.pixel_ratio = float(self.num_of_red_pixels)/(img_resolution[0]*img_resolution[1])
         M = cv.moments(self.img, True)            # compute image moments for centroid
         if M['m00'] == 0:
             self.blind_steps_counter += 1
@@ -188,7 +193,10 @@ class VrepEnvironment():
 
         # logistic function
         # y = 2/(exp(-k(x-x0))+1) - 1
-        return 2/(math.exp(-reward_slope*(self.num_of_red_pixels - ideal_number_of_pixels))+1)-1
+        return 2/(math.exp(-reward_slope*(self.pixel_ratio - ideal_pixel_ratio))+1)-1
+
+    def handler(self, signum, frame):
+        self.terminate = True
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4

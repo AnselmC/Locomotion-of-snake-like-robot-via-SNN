@@ -43,7 +43,7 @@ plt.plot(cumulative_reward_per_episode, linewidth=1.0)
 
 ax3 = plt.subplot(413)
 ax3.set_ylabel('Weight', position=(0.,0.))
-ax3.set_xlim((0,training_length))
+ax3.set_xlim((0,w_l.size*3))
 ax3.set_ylim((0,w_max*1.1))
 ax3.set_xticklabels([])
 ax3.text(1000, 2100, 'Left Motor', color='0.4')
@@ -53,7 +53,7 @@ for i in range(w_l.shape[1]):
 		plt.plot(w_i, w_l[:,i,j])
 
 ax4 = plt.subplot(414, sharey=ax3)
-ax4.set_xlim((0,training_length))
+ax4.set_xlim((0,w_r.size*3))
 ax4.set_ylim((0,w_max*1.1))
 ax4.text(1000, 2100, 'Right Motor', color='0.4')
 ax4.tick_params(axis='both', which='both', direction='in', bottom=True, top=True, left=True, right=True)
