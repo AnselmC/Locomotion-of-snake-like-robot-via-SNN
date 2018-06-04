@@ -28,6 +28,8 @@ class VrepEnvironment():
         self.cx = 0.0
         self.speed = v_start
         self.num_of_red_pixels = 0
+        self.ideal_number_of_pixels = 0
+        self.first_image_cb = True
         self.pixel_ratio = 0
         self.terminate = False
         self.steps = 0
@@ -65,7 +67,10 @@ class VrepEnvironment():
                 if(intensity > 0):
                     self.num_of_red_pixels += 1
 
-        self.pixel_ratio = float(self.num_of_red_pixels)/(img_resolution[0]*img_resolution[1])
+        if(self.first_image_cb):
+            self.ideal_number_of_pixels = self.num_of_red_pixels
+            self.first_image_cb = False
+
         M = cv.moments(self.img, True)            # compute image moments for centroid
         if M['m00'] == 0:
             self.blind_steps_counter += 1
@@ -184,15 +189,9 @@ class VrepEnvironment():
         return self.snake_params, self.pioneer_params
 
     def getSpeedReward(self):
-        # y = a*(x+b)^2+c
-        # reward = -1/ideal^2 * (red - ideal)^2 + 1
-        # a = float(-1)/(ideal_number_of_pixels**2)
-        # b = -ideal_number_of_pixels
-        # c = 1
-
         # logistic function
         # y = 2/(exp(-k(x-x0))+1) - 1
-        return 2/(math.exp(-reward_slope*(self.pixel_ratio - ideal_pixel_ratio))+1)-1   
+        return 2/(math.exp(-reward_slope*(self.num_of_red_pixels - self.ideal_number_of_pixels))+1)-1   
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4

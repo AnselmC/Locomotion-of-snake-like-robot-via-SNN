@@ -37,8 +37,8 @@ class SpikingNeuralNetwork():
         # Set reward signal for left and right network
         nest.SetStatus(self.conn_l, {"n": -reward*p.reward_factor})
         nest.SetStatus(self.conn_r, {"n": reward*p.reward_factor})
-        nest.SetStatus(self.conn_faster, {"n": -speed_reward*p.reward_factor})
-        nest.SetStatus(self.conn_slower, {"n": speed_reward*p.reward_factor})
+        nest.SetStatus(self.conn_faster, {"n": -speed_reward*p.reward_factor_speed})
+        nest.SetStatus(self.conn_slower, {"n": speed_reward*p.reward_factor_speed})
         # Set poisson neuron firing time span
         time = nest.GetKernelStatus("time")
         nest.SetStatus(self.spike_generators, {"origin": time})
