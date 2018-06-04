@@ -2,7 +2,6 @@
 
 import sys
 sys.path.append('/usr/lib/python2.7/dist-packages') # weil ROS nicht mit Anaconda installiert
-import signal
 
 import rospy
 
@@ -40,7 +39,6 @@ class VrepEnvironment():
         self.pioneer_params = None
         self.first_cb = True
         self.blind_steps_counter = 0
-        signal.signal(signal.SIGTSTP, self.handler)
 
     def params_callback(self, msg):
         if(self.first_cb):
@@ -132,10 +130,11 @@ class VrepEnvironment():
         r = self.cx
 
         # Snake speed
-        self.speed = self.speed + float(n_faster-n_slower)/(100*n_max)    
+        self.speed = self.speed + (n_faster-n_slower)*speed_change    
 
+        # Terminate if speed turns negative   
         if(self.speed < 0):
-            self.speed = 0
+            self.terminate = True
 
         # Publish snake speed
         self.speed_pub.publish(self.speed)
@@ -193,10 +192,7 @@ class VrepEnvironment():
 
         # logistic function
         # y = 2/(exp(-k(x-x0))+1) - 1
-        return 2/(math.exp(-reward_slope*(self.pixel_ratio - ideal_pixel_ratio))+1)-1
-
-    def handler(self, signum, frame):
-        self.terminate = True
+        return 2/(math.exp(-reward_slope*(self.pixel_ratio - ideal_pixel_ratio))+1)-1   
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4

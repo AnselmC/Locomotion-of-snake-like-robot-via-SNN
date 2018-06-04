@@ -13,6 +13,7 @@ reset_distance = 0.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
 blind_steps = 20
 ideal_number_of_pixels = 8
+speed_change = 0.001
 
 v_start = 1
 reward_slope = 0.4
