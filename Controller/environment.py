@@ -132,7 +132,7 @@ class VrepEnvironment():
 
         # Set reward signals
         # Reward
-        r = self.cx
+        r = self.getMotorReward()
 
         # Snake speed
         self.speed = self.speed + (n_faster-n_slower)*speed_change    
@@ -188,10 +188,13 @@ class VrepEnvironment():
     def getParams(self):
         return self.snake_params, self.pioneer_params
 
+    def getMotorReward(self):
+        return 2/(1+math.exp(-4*self.cx))-1
+
     def getSpeedReward(self):
         # logistic function
         # y = 2/(exp(-k(x-x0))+1) - 1
-        return 2/(math.exp(-reward_slope*(self.num_of_red_pixels - self.ideal_number_of_pixels))+1)-1   
+        return 2/(math.exp(-reward_slope*(self.num_of_red_pixels - self.ideal_number_of_pixels))+1)-1
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4

@@ -40,7 +40,7 @@ w0_max = 201.                        # Maximum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                        # Time constant of eligibility trace
 reward_factor = 0.01                # Reward factor modulating reward signal strength
-reward_factor_speed = 1
+reward_factor_speed = 0.1
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 

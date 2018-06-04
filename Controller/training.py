@@ -80,7 +80,6 @@ params['w0_max'] = p.w0_max
 params['reward_factor'] = p.reward_factor
 params['training_length'] = p.training_length
 params['max_steps'] = p.max_steps
-params['ideal_number_of_pixels'] = p.ideal_number_of_pixels
 params['v_start'] = p.v_start
 params['blind_steps'] = p.blind_steps
 params['r_min'] = p.r_min
