@@ -50,12 +50,18 @@ class VrepEnvironment():
         # Values for distance calculation
         # Length of the wall in meter
         self.length_wall = 7.5
+        # Init position of the snake in the global coordinate system of the scene
         self.snake_init_position = [20.0, 0.0]
+        # Angle in degrees between the section 1 & 2 and 2 & 3
         self.gamma1_deg = 20
+        # Gamma1 in radians
         self.gamma1_rad = self.gamma1_deg*math.pi/180
+        # Angle in degrees between the section 3 & 4 and 4 & 5
         self.gamma2_deg = 30
+        # Gamma2 in radians
         self.gamma2_rad = self.gamma2_deg*math.pi/180
         
+        # Points of the optimal path
         # p1 = [20.0, 0]
         self.p1 = self.snake_init_position
         # p2 = [12.5, 0]
@@ -138,13 +144,10 @@ class VrepEnvironment():
         s = self.getState()
         n = self.steps
 
-        # Terminate episode given max. step amount
+        # Terminate episode if  max_steps or reset_distance are reached
         if self.steps > max_steps or abs(d) > reset_distance:
             self.terminate = True
 
-        # Terminate episode of robot reaches start position again
-        # or reset distance
-        
         t = self.terminate
         if t == True:
             self.steps = 0
@@ -177,33 +180,39 @@ class VrepEnvironment():
     
     def calculateDistance(self, snake_position, p1, p2):
         
-        distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/ norm(np.subtract(p2,p1))
+        distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/norm(np.subtract(p2,p1))
+        
         return distance
     
     def getDistance(self, snake_position):
-
+    
         snake_position = [snake_position[0], snake_position[1]]
         
+        # Section 1
         if (self.p2[0] < snake_position[0] < self.p1[0]):
             section = "section 1"
             distance = self.calculateDistance(snake_position, self.p1, self.p2)
             return distance, section
         
+        # Section 2
         if (self.p3[0] < snake_position[0] < self.p2[0]):
             section = "section 2"
             distance = self.calculateDistance(snake_position, self.p2, self.p3)
             return distance, section
             
+        # Section 3
         if (self.p4[0] < snake_position[0] < self.p3[0]):
             section = "section 3"
             distance = self.calculateDistance(snake_position, self.p3, self.p4)
             return distance, section
-            
+        
+        # Section 4
         if (self.p5[0] < snake_position[0] < self.p4[0]):
             section = "section 4"
             distance = self.calculateDistance(snake_position, self.p4, self.p5)
             return distance, section
-            
+        
+        # Section 5
         if (self.p6[0] < snake_position[0] < self.p5[0]):
             section = "section 5"
             distance = self.calculateDistance(snake_position, self.p5, self.p6)

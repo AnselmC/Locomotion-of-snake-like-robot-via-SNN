@@ -5,6 +5,7 @@ from environment import *
 import parameters as p
 import h5py
 import json
+import signal
 
 snn = SpikingNeuralNetwork()
 env = VrepEnvironment()
@@ -16,6 +17,13 @@ steps = []
 cumulative_reward_per_episode = []
 cumulative_reward = 0
 params = {}
+terminate = False
+
+def handler(signum, frane):
+    global terminate
+    terminate = True
+    
+signal.signal(signal.SIGINT, handler)
 
 # Initialize environment, get initial state, initial reward
 s,r = env.reset()
@@ -53,6 +61,9 @@ for i in range(p.training_length):
         cumulative_reward_per_episode.append(cumulative_reward)
 #        print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
         cumulative_reward = 0
+    
+    if terminate:
+        break
 
 # Save training parameters
 params['training_length'] = p.training_length
