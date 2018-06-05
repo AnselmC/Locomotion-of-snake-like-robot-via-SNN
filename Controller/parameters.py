@@ -2,13 +2,13 @@
 
 import numpy as np
 
-session = "session_018"
+session = "session_021"
 path = "../data/" + session        # Path for saving data
 
 # Other
-training_length = 15000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 20
-max_steps = 1050                    # Maximum amount of steps per episode before the simulation is reset
+#max_steps = 1100                    # Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.8                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
 
@@ -16,7 +16,7 @@ rate = 20.                          # ROS publication rate motor speed
 img_resolution = [128, 128]          # Original DVS frame resolution
 dvs_resolution = img_resolution
 crop_top = 0                        # Crop at the top
-crop_bottom = 48                    # Crop at the bottom
+crop_bottom = 32                    # Crop at the bottom
 resolution = [img_resolution[0]/16,
               (img_resolution[1]-crop_top-crop_bottom)/16]            # Resolution of reduced image
 
@@ -36,7 +36,7 @@ w0_min = 200.                       # Minimum initial random value
 w0_max = 201.                       # Maximum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
-reward_factor = 0.001               # Reward factor modulating reward signal strength
+reward_factor = 0.002               # Reward factor modulating reward signal strength
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 

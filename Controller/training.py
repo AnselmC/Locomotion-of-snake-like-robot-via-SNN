@@ -67,7 +67,7 @@ for i in range(p.training_length):
 
 # Save training parameters
 params['training_length'] = p.training_length
-params['max_steps'] = p.max_steps
+#params['max_steps'] = p.max_steps
 params['reset_distance'] = p.reset_distance
 params['img_resolution'] = p.img_resolution
 params['crop_top'] = p.crop_top
@@ -83,7 +83,7 @@ params['r_min'] = p.r_min
 #snake_params, pioneer_params = env.getParams()
 
 # Save to separate json files
-json_data = json.dumps(params)
+json_data = json.dumps(params, indent=4)
 with open(p.path+'/training_parameters.json','w') as file:
     file.write(json_data)
 

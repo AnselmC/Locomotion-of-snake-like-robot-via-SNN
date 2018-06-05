@@ -24,6 +24,7 @@ class VrepEnvironment():
         
         # Position sub
         self.pos_sub = rospy.Subscriber('transformData', Transform, self.pos_callback)
+        self.pos_data_old = []
         self.pos_data = []
         
 #        # Parameter sub
@@ -42,7 +43,6 @@ class VrepEnvironment():
         self.steps = 0
         self.turn_pre = turn_pre
         self.radius_buffer = 0       
-        
         
         self.terminate = False
         
@@ -89,6 +89,14 @@ class VrepEnvironment():
     
     def pos_callback(self, msg):
         # Store incoming position data
+#        if msg is not None:
+#            self.pos_data_old = self.pos_data
+#            self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
+#            return 
+#        else:
+#            self.pos_data = self.pos_data_old
+#            return
+    
         self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
         return
 
@@ -135,23 +143,28 @@ class VrepEnvironment():
         if (self.steps%10 != 0):
             self.radius_buffer = self.radius_buffer + radius
         else:
-            self.radius_pub.publish(self.radius_buffer/10)
-            self.rate.sleep()
+            radius = self.radius_buffer/10
             self.radius_buffer = 0
 
+        self.radius_pub.publish(radius)
+        self.rate.sleep()
+        
         # Get distance
         d, section = self.getDistance(self.pos_data)
         
         # Set reward signal
         r = d
-#        r = abs(d)
         
         self.distance = d
         s = self.getState()
         n = self.steps
 
-        # Terminate episode if  max_steps or reset_distance are reached
-        if self.steps > max_steps or abs(d) > reset_distance:
+        # Terminate episode if  end  or reset_distance are reached
+        if self.pos_data[0] < self.p6[0]:
+            print "p6[0] reached: ", self.pos_data[0]            
+            self.terminate = True
+        if abs(d) > reset_distance:
+            print "Reset_distance reached: ", abs(d)            
             self.terminate = True
 
         t = self.terminate
@@ -199,30 +212,30 @@ class VrepEnvironment():
             section = "section 1"
             distance = self.calculateDistance(snake_position, self.p1, self.p2)
             return distance, section
-        
         # Section 2
-        if (self.p3[0] < snake_position[0] < self.p2[0]):
+        elif (self.p3[0] < snake_position[0] < self.p2[0]):
             section = "section 2"
             distance = self.calculateDistance(snake_position, self.p2, self.p3)
             return distance, section
-            
         # Section 3
-        if (self.p4[0] < snake_position[0] < self.p3[0]):
+        elif (self.p4[0] < snake_position[0] < self.p3[0]):
             section = "section 3"
             distance = self.calculateDistance(snake_position, self.p3, self.p4)
             return distance, section
-        
         # Section 4
-        if (self.p5[0] < snake_position[0] < self.p4[0]):
+        elif (self.p5[0] < snake_position[0] < self.p4[0]):
             section = "section 4"
             distance = self.calculateDistance(snake_position, self.p4, self.p5)
             return distance, section
-        
         # Section 5
-        if (self.p6[0] < snake_position[0] < self.p5[0]):
+        elif (self.p6[0] < snake_position[0] < self.p5[0]):
             section = "section 5"
             distance = self.calculateDistance(snake_position, self.p5, self.p6)
             return distance, section
+        else:
+            section = "section 6"
+            distance = self.calculateDistance(snake_position, self.p5, self.p6)
+            return distance, section 
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int)

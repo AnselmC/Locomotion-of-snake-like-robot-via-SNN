@@ -16,7 +16,7 @@ print w_l.shape
 weights_l = np.flipud(w_l[-1].T)
 weights_r = np.flipud(w_r[-1].T)
 
-fig = plt.figure(figsize=(6,6))
+fig = plt.figure(figsize=(12,12))
 
 ax1 = plt.subplot(211)
 plt.title('Left Weights')
