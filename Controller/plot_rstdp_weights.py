@@ -33,4 +33,8 @@ for (j,i),label in np.ndenumerate(weights_r):
 	ax2.text(i,j,int(label),ha='center',va='center')
 
 fig.tight_layout()
-plt.show()
+
+filename = "maze_" + session + "_weights.png"
+filepath = "../plots/" + filename
+plt.savefig(filepath, bbox_inches='tight')
+plt.show(filepath)

@@ -41,6 +41,8 @@ class VrepEnvironment():
         self.distance = 0
         self.steps = 0
         self.turn_pre = turn_pre
+        self.radius_buffer = 0       
+        
         
         self.terminate = False
         
@@ -79,9 +81,9 @@ class VrepEnvironment():
 
     def dvs_callback(self, msg):	
         # Store incoming DVS data
-        #print "---------environment.py---------"
-        #print "-------------dvs_callback--------------"
-        #print "msg.data: \n", msg.data
+#        print "---------environment.py---------"
+#        print "-------------dvs_callback--------------"
+#        print "msg.data: \n", msg.data
         self.dvs_data = msg.data
         return
     
@@ -127,16 +129,19 @@ class VrepEnvironment():
         else:
             # [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s
             radius = r_min/self.turn_pre
-
-        # Publish turning radius
-        self.radius_pub.publish(radius)
-        self.rate.sleep()
+        
+        # Publish mean turning radius every 10 steps
+        if (self.steps%10 != 0):
+            self.radius_buffer = self.radius_buffer + radius
+        else:
+            self.radius_pub.publish(self.radius_buffer/10)
+            self.rate.sleep()
+            self.radius_buffer = 0
 
         # Get distance
         d, section = self.getDistance(self.pos_data)
         
         # Set reward signal
-        # TODO: 
         r = d
 #        r = abs(d)
         

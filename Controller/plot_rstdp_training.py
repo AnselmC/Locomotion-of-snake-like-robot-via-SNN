@@ -42,4 +42,8 @@ plt.grid(linestyle=':')
 plt.plot(cumulative_reward_per_episode, linewidth=1.0)
 
 fig.tight_layout()
-plt.show()
+
+filename = "maze_" + session + "_training.png"
+filepath = "../plots/" + filename
+plt.savefig(filepath, bbox_inches='tight')
+plt.show(filepath)

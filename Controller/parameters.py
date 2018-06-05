@@ -2,7 +2,8 @@
 
 import numpy as np
 
-path = "../data/session_018"        # Path for saving data
+session = "session_018"
+path = "../data/" + session        # Path for saving data
 
 # Other
 training_length = 15000             # Lenth of training procedure (1 step ~ 50 ms)
