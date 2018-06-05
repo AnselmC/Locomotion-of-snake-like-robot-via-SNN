@@ -131,6 +131,7 @@ class VrepEnvironment():
             radius = r_min/self.turn_pre
         
         # Publish mean turning radius every 10 steps
+        
         if (self.steps%10 != 0):
             self.radius_buffer = self.radius_buffer + radius
         else:
