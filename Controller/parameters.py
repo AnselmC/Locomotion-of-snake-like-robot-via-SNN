@@ -2,14 +2,14 @@
 
 import numpy as np
 
-session = "session_021"
+session = "session_022"
 path = "../data/" + session        # Path for saving data
 
 # Other
 training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 20
 #max_steps = 1100                    # Maximum amount of steps per episode before the simulation is reset
-reset_distance = 0.8                # Reset distance
+reset_distance = 1.0                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
 
 # Input image
@@ -36,7 +36,7 @@ w0_min = 200.                       # Minimum initial random value
 w0_max = 201.                       # Maximum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
-reward_factor = 0.002               # Reward factor modulating reward signal strength
+reward_factor = 0.001               # Reward factor modulating reward signal strength
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 

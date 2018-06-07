@@ -81,37 +81,16 @@ class VrepEnvironment():
 
     def dvs_callback(self, msg):	
         # Store incoming DVS data
-#        print "---------environment.py---------"
-#        print "-------------dvs_callback--------------"
-#        print "msg.data: \n", msg.data
         self.dvs_data = msg.data
         return
     
     def pos_callback(self, msg):
-        # Store incoming position data
-#        if msg is not None:
-#            self.pos_data_old = self.pos_data
-#            self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
-#            return 
-#        else:
-#            self.pos_data = self.pos_data_old
-#            return
-    
+  
         self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
         return
 
-#    def params_callback(self, msg):
-#        if(self.first_cb):
-#            self.snake_params = msg.data
-#            self.first_cb = False
-#        else:
-#            self.pioneer_params = msg.data
-#        return
-
     def reset(self):
         # Reset model
-#        print "---------environment.py---------"
-#        print "-------------reset--------------"
         self.turn_pre = 0.0
         self.radius_pub.publish(0.0)
         self.reset_pub.publish(Bool(True))
