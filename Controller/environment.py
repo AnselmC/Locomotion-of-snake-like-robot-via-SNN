@@ -14,6 +14,8 @@ from geometry_msgs.msg import Transform
 
 from parameters import *
 
+from New_maze_calculations import *
+
 class VrepEnvironment():
     def __init__(self):
         # Image
@@ -26,12 +28,6 @@ class VrepEnvironment():
         self.pos_sub = rospy.Subscriber('transformData', Transform, self.pos_callback)
         self.pos_data_old = []
         self.pos_data = []
-        
-#        # Parameter sub
-#        self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
-#        self.snake_params = None
-#        self.pioneer_params = None
-#        self.first_cb = True
         
         # Radius pub
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
@@ -85,7 +81,6 @@ class VrepEnvironment():
         return
     
     def pos_callback(self, msg):
-  
         self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
         return
 
@@ -129,7 +124,7 @@ class VrepEnvironment():
         self.rate.sleep()
         
         # Get distance
-        d, section = self.getDistance(self.pos_data)
+        d = getDistance(self.pos_data)
         
         # Set reward signal
         r = d
@@ -138,9 +133,8 @@ class VrepEnvironment():
         s = self.getState()
         n = self.steps
 
-        # Terminate episode if  end  or reset_distance are reached
-        if self.pos_data[0] < self.p6[0]:
-            print "p6[0] reached: ", self.pos_data[0]            
+        if self.pos_data[0] < 0 or self.pos_data[1] < 0:
+            print "Left first quadrant"            
             self.terminate = True
         if abs(d) > reset_distance:
             print "Reset_distance reached: ", abs(d)            
@@ -166,7 +160,6 @@ class VrepEnvironment():
             print "radius: \t", radius
             print "d: \t\t", d
             print "reward: \t", r
-            print "section: \t", section
             print "state: \n", s
             print "--------------------------------"
 
@@ -176,16 +169,13 @@ class VrepEnvironment():
 #    def getParams(self):
 #        return self.snake_params, self.pioneer_params
     
-    def calculateDistance(self, snake_position, p1, p2):
-        
+    def calculateDistance_old(self, snake_position, p1, p2):
         distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/norm(np.subtract(p2,p1))
-        
         return distance
     
-    def getDistance(self, snake_position):
     
+    def getDistance_old(self, snake_position):
         snake_position = [snake_position[0], snake_position[1]]
-        
         # Section 1
         if (self.p2[0] < snake_position[0] < self.p1[0]):
             section = "section 1"

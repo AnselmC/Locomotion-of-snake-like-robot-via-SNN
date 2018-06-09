@@ -44,7 +44,7 @@ for i in range(p.training_length):
     if i % 100 == 0:
         print "----------training.py----------"
         print "-----------step: ", i, "-----------"
-#        print "cumulative_reward:\t", cumulative_reward
+        print "cumulative_reward:\t", cumulative_reward
 #        print "Left weights:\n", w_l
 #        print "Right weights:\n", w_r
         weights_l.append(w_l)
@@ -54,12 +54,12 @@ for i in range(p.training_length):
 
     # Save no. of steps every episode
     if t:
-#        print "----------training.py----------"
-#        print "-----------terminate-----------"
+        print "----------training.py----------"
+        print "-----------terminate-----------"
         steps.append(n)
-#        print "steps:\n", steps
+        print "steps:\n", steps
         cumulative_reward_per_episode.append(cumulative_reward)
-#        print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
+        print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
         cumulative_reward = 0
     
     if terminate:

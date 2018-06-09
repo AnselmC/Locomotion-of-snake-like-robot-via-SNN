@@ -1,4 +1,6 @@
 import matplotlib.pylab as plt
+import numpy as np
+from numpy.linalg import norm 
 import math 
 
 length = 10
@@ -60,6 +62,39 @@ def plot_points(points):
     plt.axis([-35,35,-15,15])       
     plt.show()
     return
+
+def calculate_distance_point_line(snake_position, p1, p2):
+    distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/norm(np.subtract(p2,p1))
+    return distance
+
+def getDistance(snake_position):
+    
+    snake_position = [snake_position[0], snake_position[1]]
+    
+    if (snake_position[0] >= 0 and snake_position[1] >= 0):
+        if ((0 < snake_position[0] <=  points_00_47[0][0]) and (points_00_47[32][1] < snake_position[1] <= points_00_47[16][1])):
+#            print 'section 1'
+            distance = calculate_distance_point_line(snake_position, points_00_47[15], points_00_47[0])
+            return distance
+        elif ((points_00_47[0][0] < snake_position[0] <=  points_00_47[1][0]) and (points_00_47[32][1] < snake_position[1] <= points_00_47[17][1])):
+#            print 'section 2'
+            distance = calculate_distance_point_line(snake_position, points_00_47[0], points_00_47[1])
+            return distance
+        elif ((points_00_47[1][0] < snake_position[0] <=  points_00_47[2][0]) and (points_00_47[33][1] < snake_position[1] <= points_00_47[18][1])):
+#            print 'section 3'
+            distance = calculate_distance_point_line(snake_position, points_00_47[1], points_00_47[2])
+            return distance
+        elif ((points_00_47[2][0] < snake_position[0] <=  points_00_47[3][0]) and (points_00_47[35][1] < snake_position[1] <= points_00_47[18][1])):
+#            print 'section 4'
+            distance = calculate_distance_point_line(snake_position, points_00_47[2], points_00_47[3])
+            return distance
+        elif ((points_00_47[35][0] < snake_position[0] <=  points_00_47[19][0]) and (0 < snake_position[1] <= points_00_47[35][1])):
+#            print 'section 5'
+            distance = calculate_distance_point_line(snake_position, points_00_47[2], points_00_47[3])
+            return distance
+        else:
+            print 'Should not be reachable'
+            return
     
 p00 = [0.5*length, 0.5*length]
 p01 = [p00[0] + cos_length, p00[1] + sin_length]
@@ -85,10 +120,10 @@ points_16_31 = mirror_x_y(points_16_19)
 points_32_35 = [p32, p33, p34, p35]
 points_32_47 = mirror_x_y(points_32_35)
 
-midpoints_16_31 = calculate_midpoints(points_16_31)
-midpoints_32_47 = calculate_midpoints(points_32_47)
+points_00_47 = points_00_15 + points_16_31 + points_32_47
 
-distances_16_31 = calculate_distances(points_16_31)
-distances_32_47 = calculate_distances(points_32_47)
-
-plot_points(points_00_15)
+#midpoints_16_31 = calculate_midpoints(points_16_31)
+#midpoints_32_47 = calculate_midpoints(points_32_47)
+#
+#distances_16_31 = calculate_distances(points_16_31)
+#distances_32_47 = calculate_distances(points_32_47)
