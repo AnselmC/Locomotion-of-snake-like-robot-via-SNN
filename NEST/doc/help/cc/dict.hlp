@@ -1,0 +1,33 @@
+Name: dict - Create new, empty dictionary
+
+Synopsis:
+
+dict -> <<>>
+
+
+Description:
+
+dict creates a new dictionary with no entries. This command is 
+equivalent to 
+<<>>
+
+
+Diagnostics:
+
+No errors are raised.
+
+
+Author:
+
+Marc-Oliver Gewaltig
+
+
+SeeAlso:
+
+<<>>
+clonedict
+cleardict
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/sli/slidict.cc

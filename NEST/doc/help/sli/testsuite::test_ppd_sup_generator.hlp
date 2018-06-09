@@ -1,0 +1,49 @@
+Name: testsuite::test_ppd_sup_generator - sli script for test of ppd_sup_generator output
+
+Synopsis:
+
+(test_ppd_sup_generator) run -> compare spike train statistics with expectations
+
+
+Description:
+
+test_ppd_sup_generator is a collection of tests which require basic 
+functionality of the generator. It tests 
+1) if the firing rate of a superposition is close to the preset one. 
+2) if the coefficient of variation of a superposition agrees with theory 
+3) if a fixed dead-time is respected absolutely in case of a single generated 
+process. 
+4) if the coefficient of variation of a single process agrees with theory 
+5) if the spike trains generated for two different targets differ 
+All of these tests are based on random number realizations, which is 
+necessarily so  since the model is stochastic. There is thus a finite 
+probability of test failure, even if everything is fine. The choice of the 
+variable err, which is the allowed relative deviation from the reference value, 
+can be used to make the test more or less strict. Increasing T inside the test 
+functions can also help to get more reliable statistics and a reduced 
+probability of false alarms. 
+The values are chosen to have a reasonable execution time. False alarm were 
+never observed yet. Since random numbers are preserved through repetitions of 
+the simulations, the test should work for sure as long as the random number 
+generation procedure of nest is not changed. If it is changed, failure of the 
+test is still very unlikely. 
+The intention of this script is to make sure that there are no gross errors in 
+the main functions of the ppd_sup_generator. It does not test the sinusoidal 
+hazard feature yet.
+
+
+Remarks:
+
+This test script was adapted from test_pp_psc_delta.sli 
+Author:  June 2011, Moritz Deger
+
+
+SeeAlso:
+
+ppd_sup_generator
+testsuite::test_pp_psc_delta
+testsuite::test_poisson_generator_ps
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/testsuite/unittests/test_ppd_sup_generator.sli

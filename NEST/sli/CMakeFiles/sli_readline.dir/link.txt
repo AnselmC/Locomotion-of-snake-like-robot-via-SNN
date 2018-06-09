@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC  -O2 -Wall -fopenmp -fdiagnostics-color=auto  -shared -Wl,-soname,libsli_readline.so -o libsli_readline.so CMakeFiles/sli_readline.dir/gnureadline.cc.o libsli.so ../libnestutil/libnestutil.so -Wl,-rpath,/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/sli:/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/libnestutil: 

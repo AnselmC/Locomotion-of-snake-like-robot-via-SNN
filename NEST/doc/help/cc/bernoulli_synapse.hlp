@@ -1,0 +1,11 @@
+Name: bernoulli_synapse - Static synapse with stochastic transmission
+
+SeeAlso:
+
+synapsedict
+static_synapse
+static_synapse_hom_w
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/models/modelsmodule.cpp

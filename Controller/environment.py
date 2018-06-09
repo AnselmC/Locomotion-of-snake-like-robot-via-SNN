@@ -78,7 +78,6 @@ class VrepEnvironment():
         self.turn_pre = 0.0
         self.radius_pub.publish(0.0)
         # Change lane
-        #self.startLeft = not self.startLeft
         self.reset_pub.publish(Bool(True))
         time.sleep(1)
         return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
@@ -91,7 +90,7 @@ class VrepEnvironment():
         m_l = n_l/n_max
         m_r = n_r/n_max
         a = m_l - m_r
-        c = math.sqrt((m_l*2 + m_r*2)/2.0)
+        c = math.sqrt((m_l**2 + m_r**2)/2.0)
         
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
 

@@ -34,23 +34,23 @@ for i in range(p.training_length):
     
     # Save weights every 100 simulation steps
     if i % 100 == 0:
-        print "--------------------------------"
-        print "-----------step: ", i, "-----------"
-        print "--------------------------------"
-        print "cumulative_reward:\t", cumulative_reward
-        print "Left weights:\n", w_l
-        print "Right weights:\n", w_r
+#        print "--------------------------------"
+#        print "-----------step: ", i, "-----------"
+#        print "--------------------------------"
+#        print "cumulative_reward:\t", cumulative_reward
+#        print "Left weights:\n", w_l
+#        print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_i.append(i)
 
     # Save no. of steps every episode
     if t:
-        print "-----------terminate-----------"
+#        print "-----------terminate-----------"
         steps.append(n)
-        print "steps:\n", steps
+#        print "steps:\n", steps
         cumulative_reward_per_episode.append(cumulative_reward)
-        print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
+#        print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
         cumulative_reward = 0
 
 # Save training parameters

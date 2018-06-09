@@ -1,0 +1,20 @@
+Name: assert - assert that procedure returns true
+
+Synopsis:
+
+{assertion} assert ->	-
+
+
+Remarks:
+
+assertion is a boolean
+
+
+Author:
+
+docu by Sirko Straube
+
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/lib/sli/sli-init.sli

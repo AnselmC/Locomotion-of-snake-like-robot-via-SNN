@@ -1,0 +1,131 @@
+Determining if files mach-o/dyld.h exist failed with the following output:
+Change Dir: /home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_037ae/fast"
+/usr/bin/make -f CMakeFiles/cmTC_037ae.dir/build.make CMakeFiles/cmTC_037ae.dir/build
+make[1]: Entering directory '/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_037ae.dir/CheckIncludeFiles.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_037ae.dir/CheckIncludeFiles.c.o   -c /home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp/CheckIncludeFiles.c:2:25: fatal error: mach-o/dyld.h: No such file or directory
+compilation terminated.
+CMakeFiles/cmTC_037ae.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_037ae.dir/CheckIncludeFiles.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_037ae.dir/CheckIncludeFiles.c.o] Error 1
+make[1]: Leaving directory '/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_037ae/fast' failed
+make: *** [cmTC_037ae/fast] Error 2
+
+Source:
+/* */
+#include <mach-o/dyld.h>
+
+
+int main(void){return 0;}
+
+Determining if files mach/mach.h exist failed with the following output:
+Change Dir: /home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_e2366/fast"
+/usr/bin/make -f CMakeFiles/cmTC_e2366.dir/build.make CMakeFiles/cmTC_e2366.dir/build
+make[1]: Entering directory '/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_e2366.dir/CheckIncludeFiles.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_e2366.dir/CheckIncludeFiles.c.o   -c /home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp/CheckIncludeFiles.c
+/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp/CheckIncludeFiles.c:2:23: fatal error: mach/mach.h: No such file or directory
+compilation terminated.
+CMakeFiles/cmTC_e2366.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_e2366.dir/CheckIncludeFiles.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_e2366.dir/CheckIncludeFiles.c.o] Error 1
+make[1]: Leaving directory '/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_e2366/fast' failed
+make: *** [cmTC_e2366/fast] Error 2
+
+Source:
+/* */
+#include <mach/mach.h>
+
+
+int main(void){return 0;}
+
+Determining size of u_int16_t failed with the following output:
+Change Dir: /home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_a1e16/fast"
+/usr/bin/make -f CMakeFiles/cmTC_a1e16.dir/build.make CMakeFiles/cmTC_a1e16.dir/build
+make[1]: Entering directory '/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_a1e16.dir/U_INT16_T_SIZE.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_a1e16.dir/U_INT16_T_SIZE.c.o   -c /home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CheckTypeSize/U_INT16_T_SIZE.c
+/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CheckTypeSize/U_INT16_T_SIZE.c:4:19: fatal error: types.h: No such file or directory
+compilation terminated.
+CMakeFiles/cmTC_a1e16.dir/build.make:65: recipe for target 'CMakeFiles/cmTC_a1e16.dir/U_INT16_T_SIZE.c.o' failed
+make[1]: *** [CMakeFiles/cmTC_a1e16.dir/U_INT16_T_SIZE.c.o] Error 1
+make[1]: Leaving directory '/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_a1e16/fast' failed
+make: *** [cmTC_a1e16/fast] Error 2
+
+/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CheckTypeSize/U_INT16_T_SIZE.c:
+#include <sys/types.h>
+#include <stdint.h>
+#include <stddef.h>
+#include "types.h"
+
+
+#undef KEY
+#if defined(__i386)
+# define KEY '_','_','i','3','8','6'
+#elif defined(__x86_64)
+# define KEY '_','_','x','8','6','_','6','4'
+#elif defined(__ppc__)
+# define KEY '_','_','p','p','c','_','_'
+#elif defined(__ppc64__)
+# define KEY '_','_','p','p','c','6','4','_','_'
+#endif
+
+#define SIZE (sizeof(u_int16_t))
+char info_size[] =  {'I', 'N', 'F', 'O', ':', 's','i','z','e','[',
+  ('0' + ((SIZE / 10000)%10)),
+  ('0' + ((SIZE / 1000)%10)),
+  ('0' + ((SIZE / 100)%10)),
+  ('0' + ((SIZE / 10)%10)),
+  ('0' +  (SIZE    % 10)),
+  ']',
+#ifdef KEY
+  ' ','k','e','y','[', KEY, ']',
+#endif
+  '\0'};
+
+#ifdef __CLASSIC_C__
+int main(argc, argv) int argc; char *argv[];
+#else
+int main(int argc, char *argv[])
+#endif
+{
+  int require = 0;
+  require += info_size[argc];
+  (void)argv;
+  return require;
+}
+
+
+Determining if the function expm1 exists failed with the following output:
+Change Dir: /home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_2198b/fast"
+/usr/bin/make -f CMakeFiles/cmTC_2198b.dir/build.make CMakeFiles/cmTC_2198b.dir/build
+make[1]: Entering directory '/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_2198b.dir/CheckFunctionExists.c.o
+/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=expm1   -o CMakeFiles/cmTC_2198b.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+<command-line>:0:23: warning: conflicting types for built-in function ‘expm1’
+/usr/share/cmake-3.5/Modules/CheckFunctionExists.c:6:6: note: in expansion of macro ‘CHECK_FUNCTION_EXISTS’
+ char CHECK_FUNCTION_EXISTS();
+      ^
+Linking C executable cmTC_2198b
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_2198b.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=expm1    CMakeFiles/cmTC_2198b.dir/CheckFunctionExists.c.o  -o cmTC_2198b -rdynamic 
+CMakeFiles/cmTC_2198b.dir/CheckFunctionExists.c.o: In function `main':
+CheckFunctionExists.c:(.text+0x15): undefined reference to `expm1'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_2198b.dir/build.make:97: recipe for target 'cmTC_2198b' failed
+make[1]: *** [cmTC_2198b] Error 1
+make[1]: Leaving directory '/home/christoph/Documents/bachelor-thesis/Locomotion_of_snake_via_SNN/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_2198b/fast' failed
+make: *** [cmTC_2198b/fast] Error 2
+
+

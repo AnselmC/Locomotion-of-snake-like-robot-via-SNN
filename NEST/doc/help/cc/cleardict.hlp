@@ -1,0 +1,16 @@
+Name: cleardict - Clears the contents of a dictionary
+
+Synopsis:
+
+dict cleardict
+
+
+SeeAlso:
+
+<<>>
+clonedict
+dictstack
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/sli/slidict.cc

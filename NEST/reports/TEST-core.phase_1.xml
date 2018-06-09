@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="christoph-HP-Spectre-x360-Convertible" name="core.phase_1" tests="6" time="0.786234" timestamp="2018-05-31T21:30:48+00:00">
+  <properties>
+    <property name="os.arch" value="x86_64" />
+    <property name="os.name" value="Linux" />
+    <property name="os.version" value="4.13.0-43-generic" />
+    <property name="user.home" value="/home/christoph" />
+    <property name="user.name" value="christoph" />
+  </properties>
+  <testcase classname="core.selftests" name="test_pass.sli" time="0.154779" />
+  <testcase classname="core.selftests" name="test_goodhandler.sli" time="0.123829" />
+  <testcase classname="core.selftests" name="test_lazyhandler.sli" time="0.13044" />
+  <testcase classname="core.selftests" name="test_fail.sli" time="0.123278" />
+  <testcase classname="core.selftests" name="test_stop.sli" time="0.122138" />
+  <testcase classname="core.selftests" name="test_badhandler.sli" time="0.13177" />
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

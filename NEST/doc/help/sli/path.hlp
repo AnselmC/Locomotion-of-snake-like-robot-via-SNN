@@ -1,0 +1,10 @@
+Name: path - Return current search path as array
+
+SeeAlso:
+
+addpath
+setpath
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/lib/sli/sli-init.sli

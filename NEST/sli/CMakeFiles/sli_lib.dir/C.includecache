@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/christoph/nest-simulator-2.14.0-src/sli/get_mem.c
+config.h
+/home/christoph/nest-simulator-2.14.0-src/sli/config.h
+assert.h
+-
+spi/bgp_SPI.h
+-
+kernel/memory.h
+-
+mach/mach.h
+-
+
+/home/christoph/nest-simulator-2.14.0-src/sli/psignal.c
+psignal.h
+/home/christoph/nest-simulator-2.14.0-src/sli/psignal.h
+
+/home/christoph/nest-simulator-2.14.0-src/sli/psignal.h
+config.h
+/home/christoph/nest-simulator-2.14.0-src/sli/config.h
+signal.h
+-
+signal.h
+-
+
+libnestutil/config.h
+

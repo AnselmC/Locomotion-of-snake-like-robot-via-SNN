@@ -1,0 +1,10 @@
+Name: RestoreModels - Restore saved models from an array of status dictionaries.
+
+Description:
+
+
+
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/lib/sli/nest-init.sli

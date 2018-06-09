@@ -1,0 +1,18 @@
+Name: sleep_i - suspends proces for x seconds 
+ Synopsis:  x sleep_d -> -
+
+Description:
+
+Calls the POSIX select() function.
+
+
+SeeAlso:
+
+clock
+usertime
+tic
+toc
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/sli/slicontrol.cc

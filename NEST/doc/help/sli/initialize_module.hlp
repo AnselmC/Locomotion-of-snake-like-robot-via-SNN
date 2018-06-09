@@ -1,0 +1,15 @@
+Name: initialize_module - Initialize module by executing commandstring
+
+Synopsis:
+
+commandstring initialize_module ->	-
+
+
+Description:
+
+Executes the command string provided by a module to initialize it.
+
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/lib/sli/library.sli

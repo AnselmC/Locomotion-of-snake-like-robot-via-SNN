@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="christoph-HP-Spectre-x360-Convertible" name="core.phase_4" tests="90" time="77.3888" timestamp="2018-05-31T21:32:07+00:00">
+  <properties>
+    <property name="os.arch" value="x86_64" />
+    <property name="os.name" value="Linux" />
+    <property name="os.version" value="4.13.0-43-generic" />
+    <property name="user.home" value="/home/christoph" />
+    <property name="user.name" value="christoph" />
+  </properties>
+  <testcase classname="core.regressiontests" name="issue-105.sli" time="0.208083" />
+  <testcase classname="core.regressiontests" name="issue-211.sli" time="0.164139" />
+  <testcase classname="core.regressiontests" name="issue-264.sli" time="0.303322" />
+  <testcase classname="core.regressiontests" name="issue-311.sli" time="0.145855" />
+  <testcase classname="core.regressiontests" name="issue-327.sli" time="0.769085" />
+  <testcase classname="core.regressiontests" name="issue-351.sli" time="0.185272" />
+  <testcase classname="core.regressiontests" name="issue-368.sli" time="0.272113" />
+  <testcase classname="core.regressiontests" name="issue-410.sli" time="0.120896" />
+  <testcase classname="core.regressiontests" name="issue-437.sli" time="0.190972" />
+  <testcase classname="core.regressiontests" name="issue-521.sli" time="0.391145" />
+  <testcase classname="core.regressiontests" name="issue-527.sli" time="0.777972" />
+  <testcase classname="core.regressiontests" name="issue-545.sli" time="0.557086" />
+  <testcase classname="core.regressiontests" name="issue-596.sli" time="0.199787" />
+  <testcase classname="core.regressiontests" name="issue-665.sli" time="0.549839" />
+  <testcase classname="core.regressiontests" name="issue-707.sli" time="0.12853" />
+  <testcase classname="core.regressiontests" name="issue-708.sli" time="0.132334" />
+  <testcase classname="core.regressiontests" name="issue-735.sli" time="0.607488" />
+  <testcase classname="core.regressiontests" name="issue-737.sli" time="0.245991" />
+  <testcase classname="core.regressiontests" name="issue-737-threads.sli" time="0.334698" />
+  <testcase classname="core.regressiontests" name="issue-740.sli" time="0.208274" />
+  <testcase classname="core.regressiontests" name="issue-77.sli" time="0.526512" />
+  <testcase classname="core.regressiontests" name="issue-832.sli" time="0.124878" />
+  <testcase classname="core.regressiontests" name="ticket-156.sli" time="0.194862" />
+  <testcase classname="core.regressiontests" name="ticket-157.sli" time="0.140971" />
+  <testcase classname="core.regressiontests" name="ticket-235.sli" time="0.818732" />
+  <testcase classname="core.regressiontests" name="ticket-293.sli" time="0.144923" />
+  <testcase classname="core.regressiontests" name="ticket-310.sli" time="0.887162" />
+  <testcase classname="core.regressiontests" name="ticket-333.sli" time="0.149684" />
+  <testcase classname="core.regressiontests" name="ticket-336-serial.sli" time="0.178466" />
+  <testcase classname="core.regressiontests" name="ticket-349.sli" time="0.132926" />
+  <testcase classname="core.regressiontests" name="ticket-382.sli" time="0.15697" />
+  <testcase classname="core.regressiontests" name="ticket-386.sli" time="0.97589" />
+  <testcase classname="core.regressiontests" name="ticket-396.sli" time="0.280016" />
+  <testcase classname="core.regressiontests" name="ticket-399.sli" time="0.131184" />
+  <testcase classname="core.regressiontests" name="ticket-414.sli" time="0.145144" />
+  <testcase classname="core.regressiontests" name="ticket-421.sli" time="0.929985" />
+  <testcase classname="core.regressiontests" name="ticket-433.sli" time="0.128931" />
+  <testcase classname="core.regressiontests" name="ticket-451.sli" time="0.135055" />
+  <testcase classname="core.regressiontests" name="ticket-452.sli" time="0.215692" />
+  <testcase classname="core.regressiontests" name="ticket-459.sli" time="0.145522" />
+  <testcase classname="core.regressiontests" name="ticket-464.sli" time="0.158636" />
+  <testcase classname="core.regressiontests" name="ticket-466.sli" time="0.133243" />
+  <testcase classname="core.regressiontests" name="ticket-475.sli" time="0.136658" />
+  <testcase classname="core.regressiontests" name="ticket-478.sli" time="0.435254" />
+  <testcase classname="core.regressiontests" name="ticket-481.sli" time="0.215687" />
+  <testcase classname="core.regressiontests" name="ticket-507.sli" time="0.182346" />
+  <testcase classname="core.regressiontests" name="ticket-514.sli" time="0.437246" />
+  <testcase classname="core.regressiontests" name="ticket-519.sli" time="0.216121" />
+  <testcase classname="core.regressiontests" name="ticket-520.sli" time="0.489457" />
+  <testcase classname="core.regressiontests" name="ticket-528.sli" time="0.13887" />
+  <testcase classname="core.regressiontests" name="ticket-537.sli" time="0.126146" />
+  <testcase classname="core.regressiontests" name="ticket-543.sli" time="0.362017" />
+  <testcase classname="core.regressiontests" name="ticket-564.sli" time="0.674641" />
+  <testcase classname="core.regressiontests" name="ticket-566.sli" time="0.141507" />
+  <testcase classname="core.regressiontests" name="ticket-573.sli" time="0.127221" />
+  <testcase classname="core.regressiontests" name="ticket-580.sli" time="0.129879" />
+  <testcase classname="core.regressiontests" name="ticket-618.sli" time="0.921776" />
+  <testcase classname="core.regressiontests" name="ticket-619.sli" time="0.138274" />
+  <testcase classname="core.regressiontests" name="ticket-638.sli" time="0.167703" />
+  <testcase classname="core.regressiontests" name="ticket-643.sli" time="1.15991" />
+  <testcase classname="core.regressiontests" name="ticket-673.sli" time="0.21082" />
+  <testcase classname="core.regressiontests" name="ticket-681.sli" time="0.312564" />
+  <testcase classname="core.regressiontests" name="ticket-683.sli" time="0.500825" />
+  <testcase classname="core.regressiontests" name="ticket-686-positive-parameters.sli" time="2.14573" />
+  <testcase classname="core.regressiontests" name="ticket-689.sli" time="0.181124" />
+  <testcase classname="core.regressiontests" name="ticket-692-getconnections-args.sli" time="0.154182" />
+  <testcase classname="core.regressiontests" name="ticket-710.sli" time="0.135659" />
+  <testcase classname="core.regressiontests" name="ticket-716.sli" time="0.145912" />
+  <testcase classname="core.regressiontests" name="ticket-733.sli" time="0.130363" />
+  <testcase classname="core.regressiontests" name="ticket-737.sli" time="0.195281" />
+  <testcase classname="core.regressiontests" name="ticket-748.sli" time="0.127675" />
+  <testcase classname="core.regressiontests" name="ticket-754.sli" time="0.248113" />
+  <testcase classname="core.regressiontests" name="ticket-772.sli" time="0.172453" />
+  <testcase classname="core.regressiontests" name="ticket-777.sli" time="0.12808" />
+  <testcase classname="core.regressiontests" name="ticket-784.sli" time="0.135764" />
+  <testcase classname="core.regressiontests" name="ticket-785.sli" time="0.124615" />
+  <testcase classname="core.regressiontests" name="ticket-787.sli" time="48.0729" />
+  <testcase classname="core.regressiontests" name="ticket-798.sli" time="0.572758" />
+  <testcase classname="core.regressiontests" name="ticket-800.sli" time="1.32095" />
+  <testcase classname="core.regressiontests" name="ticket-80-175-179.sli" time="0.354139" />
+  <testcase classname="core.regressiontests" name="ticket-85.sli" time="0.823022" />
+  <testcase classname="core.regressiontests" name="ticket-881.sli" time="0.38521" />
+  <testcase classname="core.regressiontests" name="ticket-903.sli" time="0.16883" />
+  <testcase classname="core.regressiontests" name="ticket-921.sli" time="0.128506" />
+  <testcase classname="core.regressiontests" name="ticket-926.sli" time="0.203999" />
+  <testcase classname="core.regressiontests" name="ticket-933.sli" time="0.166301" />
+  <testcase classname="core.regressiontests" name="ticket-941.sli" time="0.130072" />
+  <testcase classname="core.regressiontests" name="ticket-949.sli" time="0.155056" />
+  <testcase classname="core.regressiontests" name="ticket-959.sli" time="0.211204" />
+  <testcase classname="core.regressiontests" name="ticket-659-copyright.py" time="0.11776" />
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

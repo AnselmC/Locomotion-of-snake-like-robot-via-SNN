@@ -2,11 +2,11 @@
 
 import numpy as np
 
-path = "../data/session_011"        # Path for saving data
+path = "../data/session_012_master"        # Path for saving data
 
 # Other
 training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
-modulo = 100000
+modulo = 10
 max_steps = 1500                    # Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed

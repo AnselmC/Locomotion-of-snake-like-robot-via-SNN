@@ -1,0 +1,11 @@
+Name: cloc - Return elapsed interpreter cycles since clic was called.
+
+SeeAlso:
+
+clic
+tic
+toc
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/lib/sli/sli-init.sli

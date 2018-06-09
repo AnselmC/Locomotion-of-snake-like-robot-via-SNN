@@ -1,0 +1,29 @@
+Name: testsuite::test_noise_generator - minimal test of noise_generator
+
+Synopsis:
+
+(test_noise_generator) run -> dies if assertion fails
+
+
+Description:
+
+Tests parameter setting and statistical correctness for one application.
+
+
+Author:
+
+Plesser
+
+
+FirstVersion:
+
+July 2008
+
+
+SeeAlso:
+
+noise_generator
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/testsuite/unittests/test_noise_generator.sli

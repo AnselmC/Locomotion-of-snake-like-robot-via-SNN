@@ -1,0 +1,25 @@
+Name: testsuite::test_pulsepacket_generator - minimal test of pulsepacket_generator
+
+Synopsis:
+
+(test_pulsepacket_generator) run -> dies if assertion fails
+
+
+Description:
+
+Tests parameter setting and statistical correctness for one application.
+
+
+Author:
+
+July 2008, Plesser
+
+
+SeeAlso:
+
+noise_generator
+testsuite::test_poisson_ps_min_interval
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/testsuite/unittests/test_pulsepacket_generator.sli

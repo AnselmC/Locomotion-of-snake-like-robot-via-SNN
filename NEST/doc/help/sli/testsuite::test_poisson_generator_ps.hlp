@@ -1,0 +1,27 @@
+Name: testsuite::test_poisson_generator_ps - basic test of poisson_generator_ps
+
+Synopsis:
+
+(test_poisson_generator_ps) run -> fails if targets receive identical spikes trains
+
+
+Description:
+
+This basic test checks whether two targets receive different spikes trains 
+and whether the start and stop properties of the generator are respected. 
+The test does neither check that spikes indeed have high resolution nor 
+that grid-constrained neuron models receive consistent spike times.
+
+
+Remarks:
+
+This test fails for a correct implementation if in the simulation interval both targets 
+receive no spikes. The seed set in the default configuration of NEST avoids this 
+problem. Therefore, failure of this script indicates that the configuration is not 
+portable. 
+Author:  February 2008, Diesmann, Plesser
+
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/testsuite/unittests/test_poisson_generator_ps.sli

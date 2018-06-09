@@ -1,0 +1,20 @@
+Name: Install - Load a dynamic module to extend the functionality.
+
+Synopsis:
+
+(module_name) Install -> handle
+
+
+Description:
+
+
+
+
+Require:
+
+HAVE_LIBLTDL
+
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/nestkernel/dynamicloader.cpp

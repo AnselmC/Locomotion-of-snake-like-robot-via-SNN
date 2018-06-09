@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+    
+        <title>NEST Command Index: testsuite::test_pp_psc_delta</title>
+        <style type="text/css">
+            body {
+  padding: 0;
+  margin: 0;
+}
+h1 {
+  padding: 15px 0 0 15px;
+}
+p {
+  padding-left: 15px;
+}
+a {
+  color: #339;
+  text-decoration: none;
+}
+a:visited {
+  color: #339;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+h1 a {
+  color: #000;
+  text-decoration: none;
+}
+table.headerfooter {
+  margin: 20px 0 20px 0;
+  background-color: #eee;
+  width: 100%;
+  height: 30px;
+  border-top: 2px solid #ccc;
+  border-bottom: 2px solid #ccc;
+  text-align: center;
+}
+table.commands {
+  margin: 15px 0 15px 0;
+  background-color: #eee;
+  width: 90%;
+  border: 2px solid #ccc;
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+table.commands td {
+  border-bottom: 1px solid #ccc;
+  border-right: 1px dotted #ccc;
+  padding: 5px 0 5px 10px;
+  text-align: left;
+}
+table.letteridx {
+  margin: 0;
+  background-color: #eee;
+  width: 90%;
+  border: 2px solid #ccc;
+  border-spacing: 0px;
+  border-collapse: collapse;
+}
+table.letteridx td {
+  border-right: 1px solid #ccc;
+  padding: 5px;
+  text-align: center;
+}
+table.letteridx a {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+td.left{
+    width:30%;
+}
+div.wrap {
+        padding-left: 15px;
+      }
+         </style>
+        </head>
+        <body>
+    <h1>Command: testsuite::test_pp_psc_delta</h1>
+
+    <table class="headerfooter">
+      <tbody><tr>
+        <td width="30%" align="center"><a href="../../index.html">
+            NEST HelpDesk</a></td>
+        <td width="30%" align="center"><a href="../helpindex.html">
+            Command Index</a></td>
+        <td width="30%" align="center"><a href="../../quickref.html">
+            NEST Quick Reference</a></td>
+      </tr>
+    </tbody></table>
+
+    <div class="wrap">
+    <!-- Begin -->
+    <b>Name:</b><pre>testsuite::test_pp_psc_delta - test of pp_psc_delta neuron functionality</pre>
+<b>Synopsis: </b>
+<pre>(test_pp_psc_delta) run -> compare spike train statistics with expectations  <br/>   <br/>  
+</pre>
+<b>Description: </b>
+<pre> <br/>   <br/>  This simulation tests the basic functionality of the pp_psc_delta neuron model.  <br/>  Specifically, it checks whether:  <br/>   <br/> 	- the firing rate is close to the preset one  <br/>   <br/> 	- the fixed dead-time is respected in all cases  <br/>   <br/> 	- for randomly distributed dead-times, the mean and the variance of the  <br/>  dead-times are close to the theoretical values  <br/>   <br/> 	- the threshold adaptation works by looking for negative serial correlation of  <br/>  the inter-spike intervals  <br/>   <br/> 	- that threshold adaptation with time constant of the membrane is equivalent  <br/>  to an inhibitory self-connection with the same strength  <br/>   <br/>  All of these tests are based on random number realizations, which is necessary  <br/>  since the model is stochastic. Thus there is a finite probability for the test  <br/>  to fail, even if everything is fine.  <br/>   <br/>  The choice of the variable err, which is the allowed relative deviation from  <br/>  the reference value, can be used to make the test more or less strict.  <br/>  Increasing T inside the test functions can also help to get more reliable  <br/>  statistics and a reduced probability of false alarms.  <br/>   <br/>  The values are chosen to have a reasonable execution time. False alarms were  <br/>  never observed yet. Since random numbers are preserved through repetitions of  <br/>  the simulations, the test should work for sure as long as the random number  <br/>  generation procedure of NEST is not changed. If it is changed, failure of the  <br/>  test is still very unlikely.  <br/>   <br/>  The intention of this script is to make sure that there are no gross errors in  <br/>  the functionality of the neuron model pp_psc_delta.  <br/>   <br/>  
+</pre>
+<b>Remarks: </b>
+<pre> <br/>   <br/>  This test script is based on the python version  <br/>   <br/>  test_pp_psc_delta.py  <br/>   <br/>  and was adapted to SLI using  <br/>   <br/>  test_iaf_dc_aligned.sli  <br/>   <br/>  as a guideline. The commented code is the original python test code.  <br/>   <br/>  Test 5) was added later (2014), when support for several adaptation time  <br/>  constants was added to pp_psc_delta.  <br/>   <br/>   <br/>  Author:  June 2011, Deger, Zaytsev  <br/>  
+</pre>
+<b>SeeAlso: </b>
+<ul>
+    <li><a href="../cc/pp_psc_delta.html">pp_psc_delta</a></li>
+</ul>
+<b>Source:</b><pre>/home/christoph/nest-simulator-2.14.0-src/testsuite/unittests/test_pp_psc_delta.sli</pre>
+</div>
+    <!-- End -->
+    </div>
+
+
+    <table class="headerfooter">
+      <tbody><tr>
+        <td width="30%" align="center"><a href="../../index.html">
+            NEST HelpDesk</a></td>
+        <td width="30%" align="center"><a href="../helpindex.html">
+            Command Index</a></td>
+        <td width="30%" align="center"><a href="../../quickref.html">
+            NEST Quick Reference</a></td>
+      </tr>
+    </tbody></table>
+
+     <p style="text-align:center">
+    &copy; 2004 <a href="http://www.nest-initiative.org">The NEST Initiative</a>
+ </p>
+
+    </body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite errors="0" failures="0" hostname="christoph-HP-Spectre-x360-Convertible" name="core.phase_2" tests="8" time="1.70409" timestamp="2018-05-31T21:30:49+00:00">
+  <properties>
+    <property name="os.arch" value="x86_64" />
+    <property name="os.name" value="Linux" />
+    <property name="os.version" value="4.13.0-43-generic" />
+    <property name="user.home" value="/home/christoph" />
+    <property name="user.name" value="christoph" />
+  </properties>
+  <testcase classname="core.selftests" name="test_pass_or_die.sli" time="0.12526" />
+  <testcase classname="core.selftests" name="test_assert_or_die_b.sli" time="0.125387" />
+  <testcase classname="core.selftests" name="test_assert_or_die_p.sli" time="0.129252" />
+  <testcase classname="core.selftests" name="test_fail_or_die.sli" time="0.12687" />
+  <testcase classname="core.selftests" name="test_crash_or_die.sli" time="0.285322" />
+  <testcase classname="core.selftests" name="test_failbutnocrash_or_die_crash.sli" time="0.28088" />
+  <testcase classname="core.selftests" name="test_failbutnocrash_or_die_pass.sli" time="0.272837" />
+  <testcase classname="core.selftests" name="test_passorfailbutnocrash_or_die.sli" time="0.358285" />
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

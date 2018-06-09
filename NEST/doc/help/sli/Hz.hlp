@@ -1,0 +1,9 @@
+Name: Hz - Specification in Hz (for readability)
+
+SeeAlso:
+
+unit_conversion
+
+Source:
+
+/home/christoph/nest-simulator-2.14.0-src/lib/sli/nest-init.sli
