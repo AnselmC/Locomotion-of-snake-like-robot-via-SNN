@@ -71,30 +71,46 @@ def getDistance(snake_position):
     
     snake_position = [snake_position[0], snake_position[1]]
     
-    if (snake_position[0] >= 0 and snake_position[1] >= 0):
-        if ((0 < snake_position[0] <=  points_00_47[0][0]) and (points_00_47[32][1] < snake_position[1] <= points_00_47[16][1])):
-#            print 'section 1'
-            distance = calculate_distance_point_line(snake_position, points_00_47[15], points_00_47[0])
-            return distance
-        elif ((points_00_47[0][0] < snake_position[0] <=  points_00_47[1][0]) and (points_00_47[32][1] < snake_position[1] <= points_00_47[17][1])):
-#            print 'section 2'
-            distance = calculate_distance_point_line(snake_position, points_00_47[0], points_00_47[1])
-            return distance
-        elif ((points_00_47[1][0] < snake_position[0] <=  points_00_47[2][0]) and (points_00_47[33][1] < snake_position[1] <= points_00_47[18][1])):
-#            print 'section 3'
-            distance = calculate_distance_point_line(snake_position, points_00_47[1], points_00_47[2])
-            return distance
-        elif ((points_00_47[2][0] < snake_position[0] <=  points_00_47[3][0]) and (points_00_47[35][1] < snake_position[1] <= points_00_47[18][1])):
-#            print 'section 4'
-            distance = calculate_distance_point_line(snake_position, points_00_47[2], points_00_47[3])
-            return distance
-        elif ((points_00_47[35][0] < snake_position[0] <=  points_00_47[19][0]) and (0 < snake_position[1] <= points_00_47[35][1])):
-#            print 'section 5'
-            distance = calculate_distance_point_line(snake_position, points_00_47[2], points_00_47[3])
-            return distance
-        else:
-            print 'Should not be reachable'
-            return
+    if ((points_00_47[15][0] < snake_position[0] <=  points_00_47[0][0]) and (points_00_47[32][1] < snake_position[1] <= points_00_47[16][1])):
+#        print 'section 1'
+        distance = calculate_distance_point_line(snake_position, points_00_47[15], points_00_47[0])
+        return distance, 'section 1'
+    elif ((points_00_47[0][0] < snake_position[0] <=  points_00_47[1][0]) and (points_00_47[32][1] < snake_position[1] <= points_00_47[17][1])):
+#        print 'section 2'
+        distance = calculate_distance_point_line(snake_position, points_00_47[0], points_00_47[1])
+        return distance, 'section 2'
+    elif ((points_00_47[1][0] < snake_position[0] <=  points_00_47[2][0]) and (points_00_47[33][1] < snake_position[1] <= points_00_47[18][1])):
+#        print 'section 3'
+        distance = calculate_distance_point_line(snake_position, points_00_47[1], points_00_47[2])
+        return distance, 'section 3'
+    elif ((points_00_47[2][0] < snake_position[0] <=  points_00_47[19][0]) and (points_00_47[3][1] < snake_position[1] <= points_00_47[18][1])):
+#        print 'section 4'
+        distance = calculate_distance_point_line(snake_position, points_00_47[2], points_00_47[3])
+        return distance, 'section 4'
+    elif ((points_00_47[35][0] < snake_position[0] <=  points_00_47[19][0]) and (points_00_47[4][1] < snake_position[1] <= points_00_47[3][1])):
+#        print 'section 5'
+        distance = calculate_distance_point_line(snake_position, points_00_47[3], points_00_47[4])
+        return distance, 'section 5'
+        
+    elif ((points_00_47[27][0] < snake_position[0] <=  points_00_47[43][0]) and (points_00_47[11][1] < snake_position[1] <= points_00_47[12][1])):
+#        print 'section 13'
+        distance = calculate_distance_point_line(snake_position, points_00_47[11], points_00_47[12])
+        return distance, 'section 13'
+    elif ((points_00_47[28][0] < snake_position[0] <=  points_00_47[13][0]) and (points_00_47[12][1] < snake_position[1] <= points_00_47[29][1])):
+#        print 'section 14', 
+        distance = calculate_distance_point_line(snake_position, points_00_47[12], points_00_47[13])
+        return distance, 'section 14'
+    elif ((points_00_47[13][0] < snake_position[0] <=  points_00_47[14][0]) and (points_00_47[45][1] < snake_position[1] <= points_00_47[30][1])):
+#        print 'section 15'
+        distance = calculate_distance_point_line(snake_position, points_00_47[13], points_00_47[14])
+        return distance, 'section 15'
+    elif ((points_00_47[14][0] < snake_position[0] <=  points_00_47[15][0]) and (points_00_47[47][1] < snake_position[1] <= points_00_47[30][1])):
+#        print 'section 16'
+        distance = calculate_distance_point_line(snake_position, points_00_47[14], points_00_47[15])
+        return distance, 'section 16'        
+    else:
+        print 'Should not be reachable'
+        return
     
 p00 = [0.5*length, 0.5*length]
 p01 = [p00[0] + cos_length, p00[1] + sin_length]
