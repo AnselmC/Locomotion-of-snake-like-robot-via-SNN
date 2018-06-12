@@ -36,7 +36,7 @@ for i in range(p.training_length):
 
     # Feed output spikes in model
     # Get state, distance, pos_data, reward, termination, step
-    s,d,pos_data,r,t,n, positive_direction = env.step(n_l, n_r)
+    s,d,pos_data,r,t,n = env.step(n_l, n_r)
 
     cumulative_reward = cumulative_reward + abs(r)
     

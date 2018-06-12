@@ -14,8 +14,6 @@ from geometry_msgs.msg import Transform
 
 from parameters import *
 
-from New_maze_calculations import *
-
 class VrepEnvironment():
     def __init__(self):
         # Image
@@ -40,7 +38,6 @@ class VrepEnvironment():
         self.turn_pre = turn_pre
         self.radius_buffer = 0       
         
-        self.positive_direction = False
         self.terminate = False
         
         rospy.init_node('rstdp_controller')
@@ -91,8 +88,7 @@ class VrepEnvironment():
         self.radius_pub.publish(0.0)
         self.turn_pre = 0.0
         # Change direction
-        self.positive_direction = not self.positive_direction
-        self.reset_pub.publish(Bool(self.positive_direction))
+        self.reset_pub.publish(Bool(True))
         time.sleep(1)
         return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
 
@@ -127,27 +123,16 @@ class VrepEnvironment():
         self.rate.sleep()
         
         # Get distance
-        d, section = getDistance(self.pos_data)
+        d, section = self.getDistance(self.pos_data)
 
         # Set reward signal
-#        r = -d
-
-        if self.positive_direction == True:
-#            print "r = d"
-            r = d
-        else:
-#            print "r = - d"
-            r = - d
+        r = d
         
         self.distance = d
         s = self.getState()
         n = self.steps
-        positive_direction = self.positive_direction
 
-#        if (self.pos_data[0] < 0) or (self.pos_data[1] < 0):
-#            print "Left first quadrant"            
-#            self.terminate = True
-        if (abs(d) > reset_distance):
+        if (abs(d) > reset_distance) or (n > max_steps):
             print "Reset_distance reached: ", abs(d)            
             self.terminate = True
 
@@ -171,22 +156,17 @@ class VrepEnvironment():
             print "radius: \t", radius
             print "d: \t\t", d
             print "reward: \t", r
-            print "positive_direction: \t", self.positive_direction
-            print section
 #            print "state: \n", s
             print "--------------------------------"
 
         # Return state, distance, pos_data, reward, termination, steps
-        return s,d,self.pos_data,r,t,n, positive_direction
+        return s,d,self.pos_data,r,t,n
 
-#    def getParams(self):
-#        return self.snake_params, self.pioneer_params
-    
-    def calculateDistance_old(self, snake_position, p1, p2):
+    def calculateDistance(self, snake_position, p1, p2):
         distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/norm(np.subtract(p2,p1))
         return distance
     
-    def getDistance_old(self, snake_position):
+    def getDistance(self, snake_position):
         snake_position = [snake_position[0], snake_position[1]]
         # Section 1
         if (self.p2[0] < snake_position[0] < self.p1[0]):

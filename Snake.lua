@@ -21,7 +21,7 @@ function resetRobot_cb(msg)
     allModelObjects=simGetObjectsInTree(robotHandle) 
 
     simSetThreadAutomaticSwitch(false)
-    
+  
     -- reset all objects in the model
     for i=1,#allModelObjects,1 do
         simResetDynamicObject(allModelObjects[i])
