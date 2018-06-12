@@ -3,16 +3,17 @@
 import numpy as np
 import math
 
-path = "../data/session_011"        # Path for saving data
+path = "../data/session_015"        # Path for saving data
 
 # Other
-training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 10
-max_steps = 1500000                    # Maximum amount of steps per episode before the simulation is reset
+max_steps = 2200                    # Maximum amount of steps per episode before the simulation is reset
 reset_distance = 0.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
-blind_steps = 10
+blind_steps = 20
 speed_change = 0.001
+max_speed_change = 0.01
 
 v_start = 1.5
 reward_slope = 0.5
@@ -39,8 +40,8 @@ w0_min = 200.                        # Minimum initial random value
 w0_max = 201.                        # Maximum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                        # Time constant of eligibility trace
-reward_factor = 0.01                # Reward factor modulating reward signal strength
-reward_factor_speed = 0.1
+reward_factor = 0.001                # Reward factor modulating reward signal strength
+reward_factor_speed = 0.001
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 

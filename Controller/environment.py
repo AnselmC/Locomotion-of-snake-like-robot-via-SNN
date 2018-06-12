@@ -18,30 +18,40 @@ from parameters import *
 
 class VrepEnvironment():
     def __init__(self):
+        # Subscriber and publisher set up
         self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
         self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
         self.speed_pub = rospy.Publisher('speed', Float32, queue_size=1)
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
-        self.img = None
+        # Flags
         self.imgFlag = False
+        self.first_cb = True
+        self.first_image_cb = True
+        self.terminate = False
+
+        # Variables
+        self.img = None
         self.cx = 0.0
         self.speed = v_start
         self.num_of_red_pixels = 0
         self.ideal_number_of_pixels = 0
-        self.first_image_cb = True
-        self.pixel_ratio = 0
-        self.terminate = False
         self.steps = 0
+        self.blind_steps_counter = 0
         self.turn_pre = 0.0
-        self.bridge = CvBridge()
-        rospy.init_node('rstdp_controller')
-        self.rate = rospy.Rate(rate)
         self.snake_params = None
         self.pioneer_params = None
-        self.first_cb = True
-        self.blind_steps_counter = 0
+        self.speed_buffer = 0
 
+        # Open cv
+        self.bridge = CvBridge()
+
+        #Rospy
+        rospy.init_node('rstdp_controller')
+        self.rate = rospy.Rate(rate)
+        
+
+    # Callback functions
     def params_callback(self, msg):
         if(self.first_cb):
             self.snake_params = msg.data
@@ -54,24 +64,24 @@ class VrepEnvironment():
     # Process incoming image data
         # Get an OpenCV image
         cv_image = self.bridge.imgmsg_to_cv2(msg, "rgb8")
-        self.img = cv_image[:,:,2]                # get red channel
-
-
+        # Get red channel
+        self.img = cv_image[:,:,2]
+        # Get number of rows and columns
         rows, cols = self.img.shape
-
+        # Reset number of red pixels
         self.num_of_red_pixels = 0
-
+        # Count number of red pixels
         for i in range(rows):
             for j in range(cols):
                 intensity = self.img[i,j]
                 if(intensity > 0):
                     self.num_of_red_pixels += 1
-
+        # Set ideal number of red pixels based on first image callback
         if(self.first_image_cb):
             self.ideal_number_of_pixels = self.num_of_red_pixels
             self.first_image_cb = False
-
-        M = cv.moments(self.img, True)            # compute image moments for centroid
+        # Compute image moments for centroid
+        M = cv.moments(self.img, True)
         if M['m00'] == 0:
             self.blind_steps_counter += 1
             if self.blind_steps_counter == blind_steps:
@@ -81,12 +91,8 @@ class VrepEnvironment():
         else:
             self.blind_steps_counter = 0
             self.terminate = False
-            # https://www.youtube.com/watch?v=AAbUfZD_09s
-            # Assumption: Origin of coordinate system is in the bottom left of the picture
-            # M['m10']/M['m00'] = x_mean (between 0 and 32)
-            # M['m10']/(M['m00']*img_resolution[1]) = x_mean_normalized (between 0 and 1)
-            # 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 = cx (between -1 and 1, 0 in the middle)
-            self.cx = 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 # normalized centroid position
+            # normalized centroid position
+            self.cx = 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 
 
         cv.imshow('image',self.img)
         cv.waitKey(2)
@@ -108,16 +114,14 @@ class VrepEnvironment():
         time.sleep(1)
         return np.zeros((resolution[0],resolution[1]),dtype=int), 0., 0.
 
+
     def step(self, n_l, n_r, n_slower, n_faster):
-
         self.steps += 1
-
         # Snake turning model
         m_l = n_l/n_max
         m_r = n_r/n_max
         a = m_l - m_r
         c = math.sqrt((m_l**2 + m_r**2)/2.0)
-        
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
 
         if abs(self.turn_pre) < 0.001:
@@ -131,11 +135,41 @@ class VrepEnvironment():
         self.rate.sleep()
 
         # Set reward signals
-        # Reward
+        # Motor reward
         r = self.getMotorReward()
 
-        # Snake speed
-        self.speed = self.speed + (n_faster-n_slower)*speed_change    
+        # # Snake speed v1
+        # if(self.steps%10 != 0):
+        #     self.speed_buffer = self.speed_buffer + (n_faster-n_slower)*speed_change
+        # else:
+        #     if(abs(self.speed_buffer/10) > max_speed_change):
+        #         if(self.speed_buffer > 0):
+        #             self.speed_buffer = max_speed_change*10
+        #         else:
+        #             self.speed_buffer = -max_speed_change*10
+        #     self.speed = self.speed + self.speed_buffer/10
+        #     self.speed_buffer = 0     
+
+        # Snake speed v2
+        if(self.steps%10 !=0):
+            if(n_faster > n_slower):
+                if(n_slower==0):
+                    n_slower=0.1
+                self.speed_buffer = self.speed_buffer + n_faster/n_slower
+            else:
+                if(n_faster==0):
+                    n_faster=0.1
+                self.speed_buffer = self.speed_buffer - n_slower/n_faster
+        else:
+            self.speed_buffer = self.speed_buffer*speed_change
+            if(abs(self.speed_buffer) > max_speed_change):
+                if(self.speed_buffer > 0):
+                    self.speed_buffer = max_speed_change
+                else:
+                    self.speed_buffer = -max_speed_change
+            self.speed = self.speed + self.speed_buffer
+            self.speed_buffer = 0   
+
 
         # Terminate if speed turns negative   
         if(self.speed < 0):

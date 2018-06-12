@@ -73,6 +73,7 @@ for i in range(p.training_length):
         break
 
 # Save training parameters
+params['terminated_early'] = terminate
 params['w_min'] = p.w_min
 params['w_max'] = p.w_max
 params['w0_min'] = p.w0_min
@@ -81,22 +82,25 @@ params['reward_factor'] = p.reward_factor
 params['training_length'] = p.training_length
 params['max_steps'] = p.max_steps
 params['v_start'] = p.v_start
+params['speed_change'] = p.speed_change
+params['max_speed_change'] = p.max_speed_change
+params['reward_factor_speed'] = p.reward_factor_speed
 params['blind_steps'] = p.blind_steps
 params['r_min'] = p.r_min
 params['reward_slope'] = p.reward_slope
 
 snake_params, pioneer_params = env.getParams()
 
-# Save to separate json files
-json_data = json.dumps(params)
+# Save to single json file
+json_data = json.dumps(params, indent=4, sort_keys=True)
 with open(p.path+'/training_parameters.json','w') as file:
     file.write(json_data)
-
-with open(p.path+'/snake_parameters.json','w') as file:
-    file.write(snake_params.__str__())
-
-with open(p.path+'/pioneer_parameters.json','w') as file:
-    file.write(pioneer_params.__str__())
+    json_data=json.loads(snake_params.__str__())
+    json_data = json.dumps(json_data, indent=4, sort_keys=True)
+    file.write(json_data)
+    json_data=json.loads(pioneer_params.__str__())
+    json_data = json.dumps(json_data, indent=4, sort_keys=True)
+    file.write(json_data)
 
 # Save data
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')

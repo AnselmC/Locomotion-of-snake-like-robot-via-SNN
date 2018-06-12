@@ -1,1 +1,1 @@
-{"w0_min": 200.0, "reward_factor": 0.01, "w_max": 3500.0, "w_min": 0.0, "w0_max": 201.0, "training_length": 10000, "max_steps": 1500}
+{"w0_min": 200.0, "reward_factor": 0.01, "w_max": 3500.0, "v_start": 1, "blind_steps": 20, "w_min": 0.0, "w0_max": 201.0, "reward_slope": 0.4, "training_length": 30000, "ideal_number_of_pixels": 8, "max_steps": 1500000, "r_min": 1}
