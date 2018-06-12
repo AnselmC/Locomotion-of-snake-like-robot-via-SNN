@@ -2,7 +2,7 @@
 
 import numpy as np
 
-session = "session_022"
+session = "session_001"
 path = "../data/" + session        # Path for saving data
 
 # Other

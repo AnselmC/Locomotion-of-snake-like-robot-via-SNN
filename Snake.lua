@@ -32,8 +32,15 @@ function resetRobot_cb(msg)
         simSetJointTargetPosition(joints_v[i], 0)
     end
 
+    if (msg.data == true) then
+        ori = {0.0, 0.0, math.pi}
+    else 
+        ori = {0.0, 0.0, 0.0}
+    end
+
     simSetObjectPosition(robotHandle,-1,init_pos)
-    simSetObjectOrientation(robotHandle,-1,init_ori)
+    -- simSetObjectOrientation(robotHandle,-1,init_ori)    
+    simSetObjectOrientation(robotHandle,-1,ori)
 
     simSetThreadAutomaticSwitch(true)
 
@@ -45,9 +52,10 @@ function resetRobot_cb(msg)
         for i=1,#init_pos,1 do
             print("init_pos["..(i).."]:", init_pos[i])
         end
-        for i=1,#init_ori,1 do
-            print("init_ori["..(i).."]:", init_ori[i])
+        for i=1,#ori,1 do
+            print("ori["..(i).."]:", ori[i])
         end
+        print("msg.data:\t", msg.data)
         print("--------------------------------")
     end
 end
