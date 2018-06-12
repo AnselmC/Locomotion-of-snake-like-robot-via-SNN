@@ -88,11 +88,11 @@ class SpikingNeuralNetwork():
         for w in weights_r.reshape(weights_r.size):
             w_r.append({'weight': w})
         w_slower = []
-        for w in weights_m.reshape(weights_slower.size):
+        for w in weights_slower.reshape(weights_slower.size):
             w_slower.append({'weight':w})
         w_faster = []
-        for w in weights_m.reshape(weights_faster.size):
-            w_m.append({'weight':w})
+        for w in weights_faster.reshape(weights_faster.size):
+            w_faster.append({'weight':w})
         # Set left and right network weights
         nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)

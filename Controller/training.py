@@ -18,8 +18,10 @@ weights_slower = []
 weights_faster = []
 weights_i = []
 steps = []
-cumulative_reward_per_episode = []
-cumulative_reward = 0
+cumulative_motor_reward_per_episode = []
+cumulative_speed_reward_per_episode = []
+cumulative_motor_reward = 0
+cumulative_speed_reward = 0
 params = {}
 terminate = False
 
@@ -41,17 +43,19 @@ for i in range(p.training_length):
     n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,r,s_r)
 
     # Feed output spikes in steering wheel model
-    # Get state, distance, reward, termination, step
+    # Get state, distance, motor reward, speed reward, termination, step
     s,d,r,s_r,t,n = env.step(n_l, n_r, n_slower, n_faster)
 
-    cumulative_reward = cumulative_reward + abs(r)
+    cumulative_motor_reward = cumulative_motor_reward + abs(r)
+    cumulative_speed_reward = cumulative_speed_reward + abs(s_r)
     
     # Save weights every 100 simulation steps
     if i % 100 == 0:
         print "--------------------------------"
         print "-----------step: ", i, "-----------"
         print "--------------------------------"
-        print "cumulative_reward:\t", cumulative_reward
+        print "cumulative_motor_reward:\t", cumulative_motor_reward
+        print "cumulative_speed_reward:\t", cumulative_speed_reward
         print "Left weights:\n", w_l
         print "Right weights:\n", w_r
         weights_l.append(w_l)
@@ -65,10 +69,13 @@ for i in range(p.training_length):
         print "-----------terminate-----------"
         steps.append(n)
         print "steps:\n", steps
-        cumulative_reward_per_episode.append(cumulative_reward)
-        print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
-        cumulative_reward = 0
-
+        cumulative_motor_reward_per_episode.append(cumulative_motor_reward)
+        cumulative_speed_reward_per_episode.append(cumulative_speed_reward)
+        print "cumulative_motor_reward_per_episode:\n", cumulative_motor_reward_per_episode
+        print "cumulative_speed_reward_per_episode:\n", cumulative_speed_reward_per_episode
+        cumulative_motor_reward = 0
+        cumulative_speed_reward = 0
+        
     if terminate:
         break
 
@@ -110,5 +117,5 @@ h5f.create_dataset('w_slower', data=weights_slower)
 h5f.create_dataset('w_faster', data=weights_faster)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
-h5f.create_dataset('cumulative_reward_per_episode', data = cumulative_reward_per_episode)
+h5f.create_dataset('cumulative_motor_reward_per_episode', data = cumulative_motor_reward_per_episode)
 h5f.close()

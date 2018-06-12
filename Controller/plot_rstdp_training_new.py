@@ -9,7 +9,7 @@ from matplotlib import gridspec
 h5f = h5py.File(path + '/rstdp_data.h5', 'r')
 
 steps = np.array(h5f['steps'], dtype = float)
-cumulative_reward_per_episode = np.array(h5f['cumulative_reward_per_episode'], dtype = float)
+cumulative_reward_per_episode = np.array(h5f['cumulative_motor_reward_per_episode'], dtype = float)
 
 xlim1 = steps.size
 ylim1 = steps.max(axis=0)*1.1

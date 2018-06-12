@@ -223,7 +223,8 @@ class VrepEnvironment():
         return self.snake_params, self.pioneer_params
 
     def getMotorReward(self):
-        return 2/(1+math.exp(-4*self.cx))-1
+        # return 2/(1+math.exp(-4*self.cx))-1
+        return 3*self.cx**3
 
     def getSpeedReward(self):
         # logistic function
