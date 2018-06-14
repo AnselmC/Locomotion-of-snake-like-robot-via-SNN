@@ -60,6 +60,8 @@ class VrepEnvironment():
         self.alpha2_rad = self.alpha2_deg*math.pi/180
         self.alpha3_deg = 40
         self.alpha3_rad = self.alpha3_deg*math.pi/180
+        self.alpha4_deg = 50
+        self.alpha4_rad = self.alpha4_deg*math.pi/180
 
         self.length_cos_1 = self.length_wall*math.cos(self.alpha1_rad)
         self.length_sin_1 = self.length_wall*math.sin(self.alpha1_rad)
@@ -67,6 +69,8 @@ class VrepEnvironment():
         self.length_sin_2 = self.length_wall*math.sin(self.alpha2_rad)
         self.length_cos_3 = self.length_wall*math.cos(self.alpha3_rad)
         self.length_sin_3 = self.length_wall*math.sin(self.alpha3_rad)
+        self.length_cos_4 = self.length_wall*math.cos(self.alpha4_rad)
+        self.length_sin_4 = self.length_wall*math.sin(self.alpha4_rad)
         
         self.p00 = self.snake_init_position
         self.p01 = [self.p00[0] + self.length_wall,  self.p00[1]]
@@ -76,6 +80,8 @@ class VrepEnvironment():
         self.p05 = [self.p04[0] + self.length_wall,  self.p04[1]]
         self.p06 = [self.p05[0] + self.length_cos_3, self.p05[1] + self.length_sin_3]
         self.p07 = [self.p06[0] + self.length_wall,  self.p06[1]]
+        self.p08 = [self.p07[0] + self.length_cos_4, self.p07[1] - self.length_sin_4]
+        self.p09 = [self.p08[0] + self.length_wall,  self.p08[1]]
 
     def dvs_callback(self, msg):	
         # Store incoming DVS data
@@ -137,7 +143,7 @@ class VrepEnvironment():
         if (abs(self.distance) > reset_distance):
             print "Reset_distance reached: ", abs(self.distance)            
             self.terminate = True
-        if (self.pos_data[0] > self.p07[0]):
+        if (self.pos_data[0] > self.p09[0]):
             print "End of maze reached: ", self.pos_data[0]
             self.terminate = True
 
@@ -213,9 +219,19 @@ class VrepEnvironment():
             distance = self.calculateDistance(snake_position, self.p06, self.p07)
             return distance, section
         # Section 8
-        else:
+        elif (self.p07[0] < snake_position[0] < self.p08[0]):
             section = 8
-            distance = self.calculateDistance(snake_position, self.p06, self.p07)
+            distance = self.calculateDistance(snake_position, self.p07, self.p08)
+            return distance, section
+        # Section 9
+        elif (self.p08[0] < snake_position[0] < self.p09[0]):
+            section = 9
+            distance = self.calculateDistance(snake_position, self.p08, self.p09)
+            return distance, section
+        # Section 10
+        else:
+            section = 10
+            distance = self.calculateDistance(snake_position, self.p09, self.p10)
             return distance, section
 
     def getState(self):
