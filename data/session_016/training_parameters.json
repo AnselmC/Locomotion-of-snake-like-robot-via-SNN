@@ -3,8 +3,8 @@
     "max_speed_change": 0.01, 
     "max_steps": 2200, 
     "r_min": 1, 
-    "reward_factor": 0.01, 
-    "reward_factor_speed": 0.01, 
+    "reward_factor": 0.005, 
+    "reward_factor_speed": 0.005, 
     "reward_slope": 0.5, 
     "speed_change": 0.001, 
     "terminated_early": false, 
@@ -15,10 +15,10 @@
     "w_max": 2500.0, 
     "w_min": -1500.0
 }{
-    "Snake parameters": {
-        "maxDistance": 3, 
-        "minDistance": 2, 
-        "speedChange": 0
+    "Pioneer parameters": {
+        "turnFrequency": 250, 
+        "turnLength": 11, 
+        "v0": 8
     }
 }{
     "Pioneer parameters": {

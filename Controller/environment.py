@@ -139,36 +139,36 @@ class VrepEnvironment():
         r = self.getMotorReward()
 
         # # Snake speed v1
-        # if(self.steps%10 != 0):
-        #     self.speed_buffer = self.speed_buffer + (n_faster-n_slower)*speed_change
-        # else:
-        #     if(abs(self.speed_buffer/10) > max_speed_change):
-        #         if(self.speed_buffer > 0):
-        #             self.speed_buffer = max_speed_change*10
-        #         else:
-        #             self.speed_buffer = -max_speed_change*10
-        #     self.speed = self.speed + self.speed_buffer/10
-        #     self.speed_buffer = 0     
+        if(self.steps%10 != 0):
+            self.speed_buffer = self.speed_buffer + (n_faster-n_slower)*speed_change
+        else:
+            if(abs(self.speed_buffer/10) > max_speed_change):
+                if(self.speed_buffer > 0):
+                    self.speed_buffer = max_speed_change*10
+                else:
+                    self.speed_buffer = -max_speed_change*10
+            self.speed = self.speed + self.speed_buffer/10
+            self.speed_buffer = 0     
 
         # Snake speed v2
-        if(self.steps%10 !=0):
-            if(n_faster > n_slower):
-                if(n_slower==0):
-                    n_slower=0.1
-                self.speed_buffer = self.speed_buffer + n_faster/n_slower
-            else:
-                if(n_faster==0):
-                    n_faster=0.1
-                self.speed_buffer = self.speed_buffer - n_slower/n_faster
-        else:
-            self.speed_buffer = self.speed_buffer*speed_change
-            if(abs(self.speed_buffer) > max_speed_change):
-                if(self.speed_buffer > 0):
-                    self.speed_buffer = max_speed_change
-                else:
-                    self.speed_buffer = -max_speed_change
-            self.speed = self.speed + self.speed_buffer
-            self.speed_buffer = 0   
+        # if(self.steps%10 !=0):
+        #     if(n_faster > n_slower):
+        #         if(n_slower==0):
+        #             n_slower=0.1
+        #         self.speed_buffer = self.speed_buffer + n_faster/n_slower
+        #     else:
+        #         if(n_faster==0):
+        #             n_faster=0.1
+        #         self.speed_buffer = self.speed_buffer - n_slower/n_faster
+        # else:
+        #     self.speed_buffer = self.speed_buffer*speed_change
+        #     if(abs(self.speed_buffer) > max_speed_change):
+        #         if(self.speed_buffer > 0):
+        #             self.speed_buffer = max_speed_change
+        #         else:
+        #             self.speed_buffer = -max_speed_change
+        #     self.speed = self.speed + self.speed_buffer
+        #     self.speed_buffer = 0   
 
 
         # Terminate if speed turns negative   

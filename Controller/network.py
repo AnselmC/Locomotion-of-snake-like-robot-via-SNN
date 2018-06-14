@@ -73,10 +73,10 @@ class SpikingNeuralNetwork():
         # Reset output spike detector
         nest.SetStatus(self.spike_detector, {"n_events": 0})
         # Get network weights
-        weights_l = np.array(nest.GetStatus(self.conn_l, keys="weight")).reshape((p.resolution[0])*p.resolution[1])
-        weights_r = np.array(nest.GetStatus(self.conn_r, keys="weight")).reshape((p.resolution[0])*p.resolution[1])
-        weights_faster = np.array(nest.GetStatus(self.conn_faster, keys="weight")).reshape((p.resolution[0])*p.resolution[1])
-        weights_slower = np.array(nest.GetStatus(self.conn_slower, keys="weight")).reshape((p.resolution[0])*p.resolution[1])
+        weights_l = np.array(nest.GetStatus(self.conn_l, keys="weight")).reshape(p.resolution)
+        weights_r = np.array(nest.GetStatus(self.conn_r, keys="weight")).reshape(p.resolution)
+        weights_faster = np.array(nest.GetStatus(self.conn_faster, keys="weight")).reshape(p.resolution)
+        weights_slower = np.array(nest.GetStatus(self.conn_slower, keys="weight")).reshape(p.resolution)
         return n_l, n_r, n_slower, n_faster, weights_l, weights_r, weights_slower, weights_faster
 
     def set_weights(self, weights_l, weights_r, weights_slower, weights_faster):
