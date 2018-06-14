@@ -2,14 +2,13 @@
 
 import numpy as np
 
-session = "session_005"
+session = "session_002"
 path = "../data/" + session        # Path for saving data
 
 # Other
 training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 20
-#max_steps = 1000                    # Maximum amount of steps per episode before the simulation is reset
-reset_distance = 1.0                # Reset distance
+reset_distance = 1.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
 
 # Input image
@@ -17,8 +16,8 @@ img_resolution = [128, 128]          # Original DVS frame resolution
 dvs_resolution = img_resolution
 crop_top = 0                        # Crop at the top
 crop_bottom = 32                    # Crop at the bottom
-resolution = [img_resolution[0]/8,
-              (img_resolution[1]-crop_top-crop_bottom)/8]            # Resolution of reduced image
+resolution = [img_resolution[0]/16,
+              (img_resolution[1]-crop_top-crop_bottom)/16]            # Resolution of reduced image
 
 # Network parameters
 sim_time = 50.0                     # Length of network simulation during each step in ms

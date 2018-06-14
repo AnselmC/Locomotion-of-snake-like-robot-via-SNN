@@ -20,11 +20,15 @@ class maze_points_calculation():
         self.alpha1_rad = self.alpha1_deg*math.pi/180
         self.alpha2_deg = 30
         self.alpha2_rad = self.alpha2_deg*math.pi/180
+        self.alpha3_deg = 40
+        self.alpha3_rad = self.alpha3_deg*math.pi/180
 
         self.length_cos_1 = self.length_wall*math.cos(self.alpha1_rad)
         self.length_sin_1 = self.length_wall*math.sin(self.alpha1_rad)
         self.length_cos_2 = self.length_wall*math.cos(self.alpha2_rad)
         self.length_sin_2 = self.length_wall*math.sin(self.alpha2_rad)
+        self.length_cos_3 = self.length_wall*math.cos(self.alpha3_rad)
+        self.length_sin_3 = self.length_wall*math.sin(self.alpha3_rad)
         
         self.p00 = self.snake_init_position
         self.p01 = [self.p00[0] + self.length_wall,  self.p00[1]]
@@ -32,8 +36,10 @@ class maze_points_calculation():
         self.p03 = [self.p02[0] + self.length_wall,  self.p02[1]]
         self.p04 = [self.p03[0] + self.length_cos_2, self.p03[1] - self.length_sin_2]
         self.p05 = [self.p04[0] + self.length_wall,  self.p04[1]]
+        self.p06 = [self.p05[0] + self.length_cos_3, self.p05[1] + self.length_sin_3]
+        self.p07 = [self.p06[0] + self.length_wall,  self.p06[1]]
         
-        self.points_00_05 = [self.p00, self.p01, self.p02, self.p03, self.p04, self.p05]
+        self.points = [self.p00, self.p01, self.p02, self.p03, self.p04, self.p05, self.p06, self.p07]
         
     def calculateDistance(self, snake_position, p1, p2):
         distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/norm(np.subtract(p2,p1))
@@ -57,24 +63,29 @@ class maze_points_calculation():
             distance = self.calculateDistance(snake_position, self.p02, self.p03)
             return distance, section
         # Section 4
-        elif (self.p04[0] < snake_position[0] < self.p05[0]):
+        elif (self.p03[0] < snake_position[0] < self.p04[0]):
             section = 4
-            distance = self.calculateDistance(snake_position, self.p04, self.p05)
+            distance = self.calculateDistance(snake_position, self.p03, self.p04)
             return distance, section
         # Section 5
-        elif (self.p05[0] < snake_position[0] < self.p06[0]):
+        elif (self.p04[0] < snake_position[0] < self.p05[0]):
             section = 5
-            distance = self.calculateDistance(snake_position, self.p05, self.p06)
+            distance = self.calculateDistance(snake_position, self.p04, self.p05)
             return distance, section
-        else:
+        elif (self.p05[0] < snake_position[0] < self.p06[0]):
             section = 6
             distance = self.calculateDistance(snake_position, self.p05, self.p06)
+            return distance, section
+        elif (self.p06[0] < snake_position[0] < self.p07[0]):
+            section = 7
+            distance = self.calculateDistance(snake_position, self.p06, self.p07)
+            return distance, section
+        else:
+            section = 8
+            distance = self.calculateDistance(snake_position, self.p07, self.p08)
             return distance, section
 
 maze_points_calculation = maze_points_calculation()
     
-points_00_05 = maze_points_calculation.points_00_05
-length_cos_1 = maze_points_calculation.length_cos_1
-length_cos_2 = maze_points_calculation.length_cos_2
-length_sin_1 = maze_points_calculation.length_sin_1
-length_sin_2 = maze_points_calculation.length_sin_2
+points = maze_points_calculation.points
+

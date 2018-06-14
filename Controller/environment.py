@@ -58,11 +58,15 @@ class VrepEnvironment():
         self.alpha1_rad = self.alpha1_deg*math.pi/180
         self.alpha2_deg = 30
         self.alpha2_rad = self.alpha2_deg*math.pi/180
+        self.alpha3_deg = 40
+        self.alpha3_rad = self.alpha3_deg*math.pi/180
 
         self.length_cos_1 = self.length_wall*math.cos(self.alpha1_rad)
         self.length_sin_1 = self.length_wall*math.sin(self.alpha1_rad)
         self.length_cos_2 = self.length_wall*math.cos(self.alpha2_rad)
         self.length_sin_2 = self.length_wall*math.sin(self.alpha2_rad)
+        self.length_cos_3 = self.length_wall*math.cos(self.alpha3_rad)
+        self.length_sin_3 = self.length_wall*math.sin(self.alpha3_rad)
         
         self.p00 = self.snake_init_position
         self.p01 = [self.p00[0] + self.length_wall,  self.p00[1]]
@@ -70,6 +74,8 @@ class VrepEnvironment():
         self.p03 = [self.p02[0] + self.length_wall,  self.p02[1]]
         self.p04 = [self.p03[0] + self.length_cos_2, self.p03[1] - self.length_sin_2]
         self.p05 = [self.p04[0] + self.length_wall,  self.p04[1]]
+        self.p06 = [self.p05[0] + self.length_cos_3, self.p05[1] + self.length_sin_3]
+        self.p07 = [self.p06[0] + self.length_wall,  self.p06[1]]
 
     def dvs_callback(self, msg):	
         # Store incoming DVS data
@@ -131,8 +137,8 @@ class VrepEnvironment():
         if (abs(self.distance) > reset_distance):
             print "Reset_distance reached: ", abs(self.distance)            
             self.terminate = True
-        if (self.pos_data[0] < self.p6[0]):
-            print "p6[0] reached: ", self.pos_data[0]
+        if (self.pos_data[0] > self.p07[0]):
+            print "End of maze reached: ", self.pos_data[0]
             self.terminate = True
 
         t = self.terminate
@@ -140,7 +146,7 @@ class VrepEnvironment():
         
         if t == True:
             self.steps = 0
-            self.terminate_position = self.p1[0] - self.pos_data[0]
+            self.terminate_position = abs(self.pos_data[0])
             self.reset()
             self.terminate = False
 
@@ -187,18 +193,29 @@ class VrepEnvironment():
             distance = self.calculateDistance(snake_position, self.p02, self.p03)
             return distance, section
         # Section 4
-        elif (self.p04[0] < snake_position[0] < self.p05[0]):
+        elif (self.p03[0] < snake_position[0] < self.p04[0]):
             section = 4
-            distance = self.calculateDistance(snake_position, self.p04, self.p05)
+            distance = self.calculateDistance(snake_position, self.p03, self.p04)
             return distance, section
         # Section 5
-        elif (self.p05[0] < snake_position[0] < self.p06[0]):
+        elif (self.p04[0] < snake_position[0] < self.p05[0]):
             section = 5
-            distance = self.calculateDistance(snake_position, self.p05, self.p06)
+            distance = self.calculateDistance(snake_position, self.p04, self.p05)
             return distance, section
-        else:
+        # Section 6
+        elif (self.p05[0] < snake_position[0] < self.p06[0]):
             section = 6
             distance = self.calculateDistance(snake_position, self.p05, self.p06)
+            return distance, section
+        # Section 7
+        elif (self.p06[0] < snake_position[0] < self.p07[0]):
+            section = 7
+            distance = self.calculateDistance(snake_position, self.p06, self.p07)
+            return distance, section
+        # Section 8
+        else:
+            section = 8
+            distance = self.calculateDistance(snake_position, self.p06, self.p07)
             return distance, section
 
     def getState(self):
