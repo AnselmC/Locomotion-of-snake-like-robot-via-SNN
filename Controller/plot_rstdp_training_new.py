@@ -46,7 +46,7 @@ ax3.set_ylabel('Weight', position=(0.,0.))
 #ax3.set_xlim((0,training_length))
 #ax3.set_ylim((0,w_max))
 ax3.set_xticklabels([])
-ax3.text(1000, 2100, 'Left Motor', color='0.4')
+ax3.text(200, 1000, 'Left Motor', color='0.4')
 ax3.tick_params(axis='both', which='both', direction='in', bottom=True, top=True, left=True, right=True)
 for i in range(w_l.shape[1]):
 	for j in range(w_l.shape[2]):
@@ -55,7 +55,7 @@ for i in range(w_l.shape[1]):
 ax4 = plt.subplot(414, sharey=ax3)
 #ax4.set_xlim((0,training_length))
 #ax4.set_ylim((0,w_max*1.1))
-ax4.text(1000, 2100, 'Right Motor', color='0.4')
+ax4.text(200, 1000, 'Right Motor', color='0.4')
 ax4.tick_params(axis='both', which='both', direction='in', bottom=True, top=True, left=True, right=True)
 for i in range(w_r.shape[1]):
 	for j in range(w_r.shape[2]):

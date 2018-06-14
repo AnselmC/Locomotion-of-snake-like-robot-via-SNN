@@ -24,7 +24,6 @@ class VrepEnvironment():
         
         # Position sub
         self.pos_sub = rospy.Subscriber('transformData', Transform, self.pos_callback)
-        self.pos_data_old = []
         self.pos_data = []
         
         # Radius pub
@@ -138,16 +137,19 @@ class VrepEnvironment():
         
         self.state = self.getState()
 
-        if (abs(d) > reset_distance):
-            print "Reset_distance reached: ", abs(d)            
+        if (abs(self.distance) > reset_distance):
+            print "Reset_distance reached: ", abs(self.distance)            
             self.terminate = True
         if (self.pos_data[0] < self.p6[0]):
             print "p6[0] reached: ", self.pos_data[0]
             self.terminate = True
 
-        if self.terminate == True:
+        t = self.terminate
+        n = self.steps
+        
+        if t == True:
             self.steps = 0
-            self.terminate_position = self.pos_data[0]
+            self.terminate_position = self.p1[0] - self.pos_data[0]
             self.reset()
             self.terminate = False
 
@@ -164,13 +166,13 @@ class VrepEnvironment():
             print "c: \t\t", c
             print "turn_pre: \t", self.turn_pre
             print "radius: \t", self.radius
-            print "distance: \t\t", self.distance
+            print "distance: \t", self.distance
             print "reward: \t", self.reward
 #            print "state: \n", self.state
             print "--------------------------------"
 
         # Return state, distance, pos_data, reward, terminate, steps
-        return self.state, self.distance, self.pos_data, self.reward, self.terminate, self.steps, self.terminate_position
+        return self.state, self.distance, self.pos_data, self.reward, t, n, self.terminate_position
 
     def calculateDistance(self, snake_position, p1, p2):
         distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/norm(np.subtract(p2,p1))

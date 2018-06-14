@@ -31,7 +31,7 @@ for i in range(p.training_length):
 
     # Simulate network for 50 ms
     # get number of output spikes and network weights
-    n_l, n_r, w_l, w_r = snn.simulate(s,r)
+    n_l, n_r, w_l, w_r = snn.simulate(state, reward)
 
     # Feed output spikes in model
     # Get state, distance, pos_data, reward, t, step
@@ -46,7 +46,6 @@ for i in range(p.training_length):
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_i.append(i)
-        print "--------------------------------"
 
     # Save no. of steps every episode
     if t:
