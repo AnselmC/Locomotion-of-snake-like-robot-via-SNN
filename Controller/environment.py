@@ -33,12 +33,20 @@ class VrepEnvironment():
         # Reset pub
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
         
-        self.distance = 0
         self.steps = 0
+        
         self.turn_pre = turn_pre
+        self.radius = 0
         self.radius_buffer = 0       
         
+        self.distance = 0
+        self.section = 0
+
+        self.reward = 0
+        self.state = []
+        
         self.terminate = False
+        self.terminate_position = 0
         
         rospy.init_node('rstdp_controller')
         self.rate = rospy.Rate(rate)
@@ -107,30 +115,28 @@ class VrepEnvironment():
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
 
         if abs(self.turn_pre) < 0.001:
-            radius = 0
+            self.radius = 0
         else:
             # [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s
-            radius = r_min/self.turn_pre
+            self.radius = r_min/self.turn_pre
         
         # Publish mean turning radius every 5 steps
         if (self.steps%5 != 0):
-            self.radius_buffer = self.radius_buffer + radius
+            self.radius_buffer = self.radius_buffer + self.radius
         else:
-            radius = self.radius_buffer/5
+            self.radius = self.radius_buffer/5
             self.radius_buffer = 0
 
-        self.radius_pub.publish(radius)
+        self.radius_pub.publish(self.radius)
         self.rate.sleep()
         
         # Get distance
-        d, section = self.getDistance(self.pos_data)
+        self.distance, self.section = self.getDistance(self.pos_data)
 
         # Set reward signal
-        r = d
+        self.reward = self.distance
         
-        self.distance = d
-        s = self.getState()
-        n = self.steps
+        self.state = self.getState()
 
         if (abs(d) > reset_distance):
             print "Reset_distance reached: ", abs(d)            
@@ -139,9 +145,9 @@ class VrepEnvironment():
             print "p6[0] reached: ", self.pos_data[0]
             self.terminate = True
 
-        t = self.terminate
-        if t == True:
+        if self.terminate == True:
             self.steps = 0
+            self.terminate_position = self.pos_data[0]
             self.reset()
             self.terminate = False
 
@@ -151,19 +157,20 @@ class VrepEnvironment():
             #print "dvs_data: \n", self.dvs_data
             print "pos_data[0]: \t", self.pos_data[0]
             print "pos_data[1]: \t", self.pos_data[1]
+            print "section: \t", self.section
             print "n_l: \t\t", n_l
             print "n_r: \t\t", n_r
             print "a: \t\t", a
             print "c: \t\t", c
             print "turn_pre: \t", self.turn_pre
-            print "radius: \t", radius
-            print "d: \t\t", d
-            print "reward: \t", r
-#            print "state: \n", s
+            print "radius: \t", self.radius
+            print "distance: \t\t", self.distance
+            print "reward: \t", self.reward
+#            print "state: \n", self.state
             print "--------------------------------"
 
-        # Return state, distance, pos_data, reward, termination, steps
-        return s,d,self.pos_data,r,t,n
+        # Return state, distance, pos_data, reward, terminate, steps
+        return self.state, self.distance, self.pos_data, self.reward, self.terminate, self.steps, self.terminate_position
 
     def calculateDistance(self, snake_position, p1, p2):
         distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/norm(np.subtract(p2,p1))
@@ -173,31 +180,31 @@ class VrepEnvironment():
         snake_position = [snake_position[0], snake_position[1]]
         # Section 1
         if (self.p2[0] < snake_position[0] < self.p1[0]):
-            section = "section 1"
+            section = 1
             distance = self.calculateDistance(snake_position, self.p1, self.p2)
             return distance, section
         # Section 2
         elif (self.p3[0] < snake_position[0] < self.p2[0]):
-            section = "section 2"
+            section = 2
             distance = self.calculateDistance(snake_position, self.p2, self.p3)
             return distance, section
         # Section 3
         elif (self.p4[0] < snake_position[0] < self.p3[0]):
-            section = "section 3"
+            section = 3
             distance = self.calculateDistance(snake_position, self.p3, self.p4)
             return distance, section
         # Section 4
         elif (self.p5[0] < snake_position[0] < self.p4[0]):
-            section = "section 4"
+            section = 4
             distance = self.calculateDistance(snake_position, self.p4, self.p5)
             return distance, section
         # Section 5
         elif (self.p6[0] < snake_position[0] < self.p5[0]):
-            section = "section 5"
+            section = 5
             distance = self.calculateDistance(snake_position, self.p5, self.p6)
             return distance, section
         else:
-            section = "section 6"
+            section = 6
             distance = self.calculateDistance(snake_position, self.p5, self.p6)
             return distance, section 
 

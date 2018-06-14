@@ -14,8 +14,7 @@ weights_r = []
 weights_l = []
 weights_i = []
 steps = []
-cumulative_reward_per_episode = []
-cumulative_reward = 0
+terminate_positions = []
 params = {}
 terminate = False
 
@@ -26,7 +25,7 @@ def handler(signum, frane):
 signal.signal(signal.SIGINT, handler)
 
 # Initialize environment, get initial state, initial reward
-s,r = env.reset()
+state, reward = env.reset()
 
 for i in range(p.training_length):
 
@@ -35,16 +34,13 @@ for i in range(p.training_length):
     n_l, n_r, w_l, w_r = snn.simulate(s,r)
 
     # Feed output spikes in model
-    # Get state, distance, pos_data, reward, termination, step
-    s,d,pos_data,r,t,n = env.step(n_l, n_r)
+    # Get state, distance, pos_data, reward, t, step
+    state, distance, pos_data, reward, t, step, terminate_position = env.step(n_l, n_r)
 
-    cumulative_reward = cumulative_reward + abs(r)
-    
     # Save weights every 100 simulation steps
     if i % 100 == 0:
-        print "----------training.py----------"
-        print "-----------step: ", i, "-----------"
-        print "cumulative_reward:\t", cumulative_reward
+#        print "----------training.py----------"
+#        print "-----------step: ", i, "-----------"
 #        print "Left weights:\n", w_l
 #        print "Right weights:\n", w_r
         weights_l.append(w_l)
@@ -56,18 +52,17 @@ for i in range(p.training_length):
     if t:
         print "----------training.py----------"
         print "-----------terminate-----------"
-        steps.append(n)
+        steps.append(step)
+        terminate_positions.append(terminate_position)
         print "steps:\n", steps
-        cumulative_reward_per_episode.append(cumulative_reward)
-        print "cumulative_reward_per_episode:\n", cumulative_reward_per_episode
-        cumulative_reward = 0
+        print "terminate_positions:\n", terminate_positions
+        print "--------------------------------"
     
     if terminate:
         break
 
 # Save training parameters
 params['training_length'] = p.training_length
-#params['max_steps'] = p.max_steps
 params['reset_distance'] = p.reset_distance
 params['img_resolution'] = p.img_resolution
 params['crop_top'] = p.crop_top
@@ -80,18 +75,10 @@ params['w0_max'] = p.w0_max
 params['reward_factor'] = p.reward_factor
 params['r_min'] = p.r_min
 
-#snake_params, pioneer_params = env.getParams()
-
 # Save to separate json files
 json_data = json.dumps(params, indent=4)
 with open(p.path+'/training_parameters.json','w') as file:
     file.write(json_data)
-
-#with open(p.path+'/snake_parameters.json','w') as file:
-#    file.write(snake_params.__str__())
-#
-#with open(p.path+'/pioneer_parameters.json','w') as file:
-#    file.write(pioneer_params.__str__())
 
 # Save data
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
@@ -99,5 +86,5 @@ h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
-h5f.create_dataset('cumulative_reward_per_episode', data = cumulative_reward_per_episode)
+h5f.create_dataset('terminate_positions', data = terminate_positions)
 h5f.close()
