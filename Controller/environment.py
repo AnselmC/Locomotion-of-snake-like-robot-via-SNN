@@ -18,7 +18,7 @@ class VrepEnvironment():
     def __init__(self):
         # Image
         self.dvs_sub = rospy.Subscriber('dvsData', Int8MultiArray, self.dvs_callback)
-        self.dvs_data = np.array([0,0])
+        self.dvs_data = np.array([0, 0])
         self.resize_factor = [dvs_resolution[0]//resolution[0], 
                               (dvs_resolution[1]-crop_bottom-crop_top)//resolution[1]]
         
@@ -51,34 +51,25 @@ class VrepEnvironment():
         self.rate = rospy.Rate(rate)
 
         # Values for distance calculation
-        # Length of the wall in meter
-        self.length_wall = 7.5
-        # Init position of the snake in the global coordinate system of the scene
-        self.snake_init_position = [20.0, 0.0]
-        # Angle in degrees between the section 1 & 2 and 2 & 3
-        self.gamma1_deg = 20
-        # Gamma1 in radians
-        self.gamma1_rad = self.gamma1_deg*math.pi/180
-        # Angle in degrees between the section 3 & 4 and 4 & 5
-        self.gamma2_deg = 30
-        # Gamma2 in radians
-        self.gamma2_rad = self.gamma2_deg*math.pi/180
+        self.length_wall = 10
+        self.snake_init_position = [0.0, 0.0]
         
-        # Points of the optimal path
-        # p1 = [20.0, 0]
-        self.p1 = self.snake_init_position
-        # p2 = [12.5, 0]
-        self.p2 = np.add(self.p1, [-self.length_wall, 0])
-        # p3 = [5.45, -2.57]
-        self.p3 = np.add(self.p2, [-self.length_wall*math.cos(self.gamma1_rad), 
-                                   -self.length_wall*math.sin(self.gamma1_rad)])
-        # p4 = [-2.05, -2.57]                           
-        self.p4 = np.add(self.p3, [-self.length_wall, 0])
-        # p5 = [-8.54, 1.18]
-        self.p5 = np.add(self.p4, [-self.length_wall*math.cos(self.gamma2_rad), 
-                                   self.length_wall*math.sin(self.gamma2_rad)])
-        # p6 = [-16.04, 1.18]                           
-        self.p6 = np.add(self.p5, [-self.length_wall, 0])
+        self.alpha1_deg = 20
+        self.alpha1_rad = self.alpha1_deg*math.pi/180
+        self.alpha2_deg = 30
+        self.alpha2_rad = self.alpha2_deg*math.pi/180
+
+        self.length_cos_1 = self.length_wall*math.cos(self.alpha1_rad)
+        self.length_sin_1 = self.length_wall*math.sin(self.alpha1_rad)
+        self.length_cos_2 = self.length_wall*math.cos(self.alpha2_rad)
+        self.length_sin_2 = self.length_wall*math.sin(self.alpha2_rad)
+        
+        self.p00 = self.snake_init_position
+        self.p01 = [self.p00[0] + self.length_wall,  self.p00[1]]
+        self.p02 = [self.p01[0] + self.length_cos_1, self.p01[1] + self.length_sin_1]
+        self.p03 = [self.p02[0] + self.length_wall,  self.p02[1]]
+        self.p04 = [self.p03[0] + self.length_cos_2, self.p03[1] - self.length_sin_2]
+        self.p05 = [self.p04[0] + self.length_wall,  self.p04[1]]
 
     def dvs_callback(self, msg):	
         # Store incoming DVS data
@@ -181,34 +172,34 @@ class VrepEnvironment():
     def getDistance(self, snake_position):
         snake_position = [snake_position[0], snake_position[1]]
         # Section 1
-        if (self.p2[0] < snake_position[0] < self.p1[0]):
+        if (self.p00[0] < snake_position[0] < self.p01[0]):
             section = 1
-            distance = self.calculateDistance(snake_position, self.p1, self.p2)
+            distance = self.calculateDistance(snake_position, self.p00, self.p01)
             return distance, section
         # Section 2
-        elif (self.p3[0] < snake_position[0] < self.p2[0]):
+        elif (self.p01[0] < snake_position[0] < self.p02[0]):
             section = 2
-            distance = self.calculateDistance(snake_position, self.p2, self.p3)
+            distance = self.calculateDistance(snake_position, self.p01, self.p02)
             return distance, section
         # Section 3
-        elif (self.p4[0] < snake_position[0] < self.p3[0]):
+        elif (self.p02[0] < snake_position[0] < self.p03[0]):
             section = 3
-            distance = self.calculateDistance(snake_position, self.p3, self.p4)
+            distance = self.calculateDistance(snake_position, self.p02, self.p03)
             return distance, section
         # Section 4
-        elif (self.p5[0] < snake_position[0] < self.p4[0]):
+        elif (self.p04[0] < snake_position[0] < self.p05[0]):
             section = 4
-            distance = self.calculateDistance(snake_position, self.p4, self.p5)
+            distance = self.calculateDistance(snake_position, self.p04, self.p05)
             return distance, section
         # Section 5
-        elif (self.p6[0] < snake_position[0] < self.p5[0]):
+        elif (self.p05[0] < snake_position[0] < self.p06[0]):
             section = 5
-            distance = self.calculateDistance(snake_position, self.p5, self.p6)
+            distance = self.calculateDistance(snake_position, self.p05, self.p06)
             return distance, section
         else:
             section = 6
-            distance = self.calculateDistance(snake_position, self.p5, self.p6)
-            return distance, section 
+            distance = self.calculateDistance(snake_position, self.p05, self.p06)
+            return distance, section
 
     def getState(self):
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int)
