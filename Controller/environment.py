@@ -132,8 +132,11 @@ class VrepEnvironment():
         s = self.getState()
         n = self.steps
 
-        if (abs(d) > reset_distance) or (n > max_steps):
+        if (abs(d) > reset_distance):
             print "Reset_distance reached: ", abs(d)            
+            self.terminate = True
+        if (self.pos_data[0] < self.p6[0]):
+            print "p6[0] reached: ", self.pos_data[0]
             self.terminate = True
 
         t = self.terminate
