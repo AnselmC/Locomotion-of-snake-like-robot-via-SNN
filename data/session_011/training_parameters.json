@@ -1,1 +1,0 @@
-{"w0_min": 200.0, "reward_factor": 0.01, "w_max": 3500.0, "v_start": 1.5, "blind_steps": 10, "w_min": 0.0, "w0_max": 201.0, "reward_slope": 0.5, "training_length": 30000, "max_steps": 1500000, "r_min": 1}

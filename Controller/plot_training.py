@@ -89,7 +89,7 @@ for i in range(w_r.shape[1]):
 
 fig.tight_layout()
 
-filename = session_no + '_training.png'
+filename = 'session_' + session_no + '_training.png'
 filepath = '../plots/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)
