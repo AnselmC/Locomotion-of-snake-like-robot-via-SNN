@@ -2,11 +2,11 @@
 
 import numpy as np
 
-session = "session_002"
+session = "session_003"
 path = "../data/" + session        # Path for saving data
 
 # Other
-training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 20
 reset_distance = 1.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
@@ -41,5 +41,5 @@ A_minus = 1.                        # Constant scaling strength of depression
 
 # Steering wheel model
 turn_pre = 0.0                      # Initial turn speed
-n_max = sim_time//t_refrac          # Maximum input activity 
+n_max = sim_time//t_refrac          # Maximum input activity
 r_min = 1                           # Minimum turning radius

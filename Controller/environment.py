@@ -142,7 +142,7 @@ class VrepEnvironment():
         if self.positive_direction == True:
             self.reward = self.distance
         else:
-            self.reward = self.distance
+            self.reward = -self.distance
 
         self.state = self.getState()
 
@@ -188,7 +188,7 @@ class VrepEnvironment():
         return distance
 
     def getDistance(self, snake_position):
-        snake_position = [snake_position[0], snake_position[1]]
+        snake_position = [abs(snake_position[0]), snake_position[1]]
         # Section 1
         if (self.p00[0] < abs(snake_position[0]) < self.p01[0]):
             section = 1
@@ -237,7 +237,7 @@ class VrepEnvironment():
         # Section 10
         else:
             section = 10
-            distance = self.calculateDistance(snake_position, self.p09, self.p10)
+            distance = self.calculateDistance(snake_position, self.p08, self.p09)
             return distance, section
 
     def getState(self):
