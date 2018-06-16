@@ -1,7 +1,5 @@
 #!/usr/bin/env python
-
 import sys
-sys.path.append('/usr/lib/python2.7/dist-packages') # weil ROS nicht mit Anaconda installiert
 import rospy
 
 import math
@@ -13,6 +11,9 @@ from std_msgs.msg import Int8MultiArray, Float32, Bool, String
 from geometry_msgs.msg import Transform
 
 from parameters import *
+
+sys.path.append('/usr/lib/python2.7/dist-packages')  # weil ROS nicht mit Anaconda installiert
+
 
 class VrepEnvironment():
     def __init__(self):
@@ -102,7 +103,7 @@ class VrepEnvironment():
         self.positive_direction = not self.positive_direction
         self.reset_pub.publish(Bool(self.positive_direction))
         time.sleep(1)
-        return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
+        return np.zeros((resolution[0], resolution[1]), dtype=int), 0.
 
     def step(self, n_l, n_r):
 
@@ -125,7 +126,7 @@ class VrepEnvironment():
             self.radius = r_min/self.turn_pre
 
         # Publish mean turning radius every 5 steps
-        if (self.steps%5 != 0):
+        if (self.steps % 5 != 0):
             self.radius_buffer = self.radius_buffer + self.radius
         else:
             self.radius = self.radius_buffer/5
@@ -139,7 +140,7 @@ class VrepEnvironment():
 
         # Set reward signal
         # self.reward = self.distance
-        if self.positive_direction == True:
+        if self.positive_direction is True:
             self.reward = self.distance
         else:
             self.reward = -self.distance
@@ -156,7 +157,7 @@ class VrepEnvironment():
         t = self.terminate
         n = self.steps
 
-        if t == True:
+        if t is True:
             self.steps = 0
             self.terminate_position = abs(self.pos_data[0])
             self.reset()
@@ -165,7 +166,7 @@ class VrepEnvironment():
         if (self.steps % modulo == 0):
             print "---------environment.py---------"
             print "-----------step: ", self.steps, "-----------"
-            #print "dvs_data: \n", self.dvs_data
+            # print "dvs_data: \n", self.dvs_data
             print "pos_data[0]: \t", abs(self.pos_data[0])
             print "pos_data[1]: \t", self.pos_data[1]
             print "section: \t", self.section
@@ -184,7 +185,7 @@ class VrepEnvironment():
         return self.state, self.distance, self.pos_data, self.reward, t, n, self.terminate_position
 
     def calculateDistance(self, snake_position, p1, p2):
-        distance = np.cross(np.subtract(p2,p1), np.subtract(p1,snake_position))/norm(np.subtract(p2,p1))
+        distance = np.cross(np.subtract(p2, p1), np.subtract(p1, snake_position))/norm(np.subtract(p2, p1))
         return distance
 
     def getDistance(self, snake_position):
@@ -241,7 +242,7 @@ class VrepEnvironment():
             return distance, section
 
     def getState(self):
-        new_state = np.zeros((resolution[0],resolution[1]),dtype=int)
+        new_state = np.zeros((resolution[0], resolution[1]), dtype=int)
         for i in range(len(self.dvs_data)//2):
             try:
                 if crop_bottom <= self.dvs_data[i*2+1] < (dvs_resolution[1]-crop_top):

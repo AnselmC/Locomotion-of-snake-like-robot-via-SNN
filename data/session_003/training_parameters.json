@@ -11,7 +11,7 @@
     "w_min": -3500.0, 
     "w0_max": 201.0, 
     "crop_bottom": 32, 
-    "training_length": 500, 
+    "training_length": 30000, 
     "reset_distance": 1.2, 
     "resolution": [
         8, 

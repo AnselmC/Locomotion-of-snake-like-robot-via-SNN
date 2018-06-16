@@ -1,7 +1,5 @@
 #!/usr/bin/env python
 
-import numpy as np
-
 session = "session_003"
 path = "../data/" + session        # Path for saving data
 

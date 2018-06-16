@@ -18,10 +18,12 @@ terminate_positions = []
 params = {}
 terminate = False
 
+
 def handler(signum, frane):
     global terminate
     terminate = True
-    
+
+
 signal.signal(signal.SIGINT, handler)
 
 # Initialize environment, get initial state, initial reward
@@ -39,10 +41,10 @@ for i in range(p.training_length):
 
     # Save weights every 100 simulation steps
     if i % 100 == 0:
-#        print "----------training.py----------"
-#        print "-----------step: ", i, "-----------"
-#        print "Left weights:\n", w_l
-#        print "Right weights:\n", w_r
+        # print "----------training.py----------"
+        # print "-----------step: ", i, "-----------"
+        # print "Left weights:\n", w_l
+        # print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_i.append(i)
@@ -56,7 +58,7 @@ for i in range(p.training_length):
         print "steps:\n", steps
         print "terminate_positions:\n", terminate_positions
         print "--------------------------------"
-    
+
     if terminate:
         break
 
@@ -76,7 +78,7 @@ params['r_min'] = p.r_min
 
 # Save to separate json files
 json_data = json.dumps(params, indent=4)
-with open(p.path+'/training_parameters.json','w') as file:
+with open(p.path+'/training_parameters.json', 'w') as file:
     file.write(json_data)
 
 # Save data
@@ -84,6 +86,6 @@ h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)
-h5f.create_dataset('steps', data = steps)
-h5f.create_dataset('terminate_positions', data = terminate_positions)
+h5f.create_dataset('steps', data=steps)
+h5f.create_dataset('terminate_positions', data=terminate_positions)
 h5f.close()
