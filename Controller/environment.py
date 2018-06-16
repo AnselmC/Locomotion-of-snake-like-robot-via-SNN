@@ -45,7 +45,10 @@ class VrepEnvironment():
         self.reward = 0
         self.state = []
 
-        self.positive_direction = False
+        # TODO
+        # self.positive_direction = False
+        self.positive_direction = True
+
         self.terminate = False
         self.terminate_position = 0
 
@@ -100,8 +103,12 @@ class VrepEnvironment():
         self.radius_pub.publish(0.0)
         self.turn_pre = 0.0
         # Change direction
-        self.positive_direction = not self.positive_direction
+
+        # TODO
+        # self.positive_direction = not self.positive_direction
+
         self.reset_pub.publish(Bool(self.positive_direction))
+
         time.sleep(1)
         return np.zeros((resolution[0], resolution[1]), dtype=int), 0.
 
