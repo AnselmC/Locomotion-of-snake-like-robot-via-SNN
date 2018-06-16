@@ -3,26 +3,25 @@
 import numpy as np
 import math
 
-session_no = '006'
+session_no = '014'
 path = "../data/session_" + session_no        # Path for saving data
 
 # Other
-training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 15000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 10
 max_steps = 1500                    # Maximum amount of steps per episode before the simulation is reset
-reset_distance = 0.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
 blind_steps = 20
 speed_change = 0.001
-max_speed_change = 0.01
+max_speed_change = 0.06
 
 v_start = 1.5
-reward_slope = 0.5
+reward_slope = 0.25
 
 # Input image
 img_resolution = [64,64]            # Original DVS frame resolution
-crop_top = 24                        # Crop at the top
-crop_bottom = 24                        # Crop at the bottom
+crop_bottom = 24                       # Crop at the top
+crop_top = 24                       # Crop at the bottom
 resolution = [img_resolution[0]/4,(img_resolution[1]-crop_top-crop_bottom)/4]                    # Resolution of reduced image
 
 # Network parameters
@@ -35,7 +34,7 @@ max_poisson_freq = 300.                # Maximum Poisson firing frequency for n_
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
-w_min = -1500.                            # Minimum weight value
+w_min = -2000.                            # Minimum weight value
 w_max = 2500.                        # Maximum weight value
 w0_min = 500.                        # Minimum initial random value
 w0_max = 501.                        # Maximum initial random value

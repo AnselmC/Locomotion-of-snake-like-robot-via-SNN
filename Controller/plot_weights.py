@@ -21,28 +21,28 @@ weights_faster = np.flipud(w_faster[-1].T)
 
 fig = plt.figure(figsize=(12,12))
 
-ax1 = plt.subplot(221)
+ax1 = plt.subplot(411)
 plt.title('Left Weights', fontsize='10')
 plt.imshow(weights_l, alpha=0.5)
 plt.axis('off')
 for (j,i),label in np.ndenumerate(weights_l):
 	ax1.text(i,j,int(label),ha='center',va='center')
 
-ax2 = plt.subplot(222)
+ax2 = plt.subplot(412)
 plt.title('Right Weights', fontsize='10')
 plt.imshow(weights_r, alpha=0.5)
 plt.axis('off')
 for (j,i),label in np.ndenumerate(weights_r):
 	ax2.text(i,j,int(label),ha='center',va='center')
 
-ax3 = plt.subplot(223)
+ax3 = plt.subplot(413)
 plt.title('Slower Weights', fontsize='10')
 plt.imshow(weights_slower, alpha=0.5)
 plt.axis('off')
 for (j,i),label in np.ndenumerate(weights_slower):
 	ax3.text(i,j,int(label),ha='center',va='center')
 
-ax4 = plt.subplot(224)
+ax4 = plt.subplot(414)
 plt.title('Faster Weights', fontsize='10')
 plt.imshow(weights_faster, alpha=0.5)
 plt.axis('off')
