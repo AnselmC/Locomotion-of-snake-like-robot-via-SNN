@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-session = "session_005"
+session = "session_006"
 path = "../data/" + session        # Path for saving data
 
 # Other

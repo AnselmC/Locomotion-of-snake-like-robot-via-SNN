@@ -157,7 +157,7 @@ class VrepEnvironment():
         if (abs(self.distance) > reset_distance):
             print "Reset_distance reached: ", abs(self.distance)
             self.terminate = True
-        if (abs(self.pos_data[0]) > self.p03[0]):
+        if (abs(self.pos_data[0]) > self.p05[0]):
             print "End of maze reached: ", abs(self.pos_data[0])
             self.terminate = True
 
