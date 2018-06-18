@@ -4,7 +4,7 @@ session = "session_005"
 path = "../data/" + session        # Path for saving data
 
 # Other
-training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 20
 reset_distance = 1.2                # Reset distance
 rate = 20.                          # ROS publication rate motor speed
