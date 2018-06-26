@@ -26,7 +26,6 @@ class VrepEnvironment():
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
         # Flags
         self.imgFlag = False
-        self.first_cb = True
         self.first_image_cb = True
         self.terminate = False
 
@@ -39,8 +38,7 @@ class VrepEnvironment():
         self.steps = 0
         self.blind_steps_counter = 0
         self.turn_pre = 0.0
-        self.snake_params = None
-        self.pioneer_params = None
+        self.car_params = None
         self.speed_buffer = 0
 
         # Open cv
@@ -53,11 +51,7 @@ class VrepEnvironment():
 
     # Callback functions
     def params_callback(self, msg):
-        if(self.first_cb):
-            self.snake_params = msg.data
-            self.first_cb = False
-        else:
-            self.pioneer_params = msg.data
+        self.car_params = msg.data
         return
 
     def image_callback(self, msg):
@@ -220,7 +214,7 @@ class VrepEnvironment():
         return s,self.cx,r,speed_reward,t,n
 
     def getParams(self):
-        return self.snake_params, self.pioneer_params
+        return self.car_params
 
     def getMotorReward(self):
         # return 2/(1+math.exp(-4*self.cx))-1
@@ -232,11 +226,14 @@ class VrepEnvironment():
         return 2/(math.exp(-reward_slope*(self.num_of_red_pixels - self.ideal_number_of_pixels))+1)-1
 
     def getState(self):
-        new_state = np.zeros((resolution[0],resolution[1]),dtype=int) # 8x4
+        # 4x16
+        new_state = np.zeros((resolution[0],resolution[1]),dtype=int)
         # bring the red filtered image in the form of the state
         if self.imgFlag == True:
             for y in range(img_resolution[1] - crop_top - crop_bottom):
                 for x in range(img_resolution[0]):
                     if self.img[y + crop_top, x] > 0:
                         new_state[x//(img_resolution[0]//resolution[0]), y//((img_resolution[1] - crop_top - crop_bottom)//resolution[1])] += 4
+        if(self.steps%modulo  == 0):
+            print "new state: ", new_state
         return new_state

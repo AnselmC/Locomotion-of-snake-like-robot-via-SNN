@@ -96,16 +96,13 @@ params['blind_steps'] = p.blind_steps
 params['r_min'] = p.r_min
 params['reward_slope'] = p.reward_slope
 
-snake_params, pioneer_params = env.getParams()
+car_params = env.getParams()
 
 # Save to single json file
 json_data = json.dumps(params, indent=4, sort_keys=True)
 with open(p.path+'/training_parameters.json','w') as file:
     file.write(json_data)
-    json_data=json.loads(snake_params.__str__())
-    json_data = json.dumps(json_data, indent=4, sort_keys=True)
-    file.write(json_data)
-    json_data=json.loads(pioneer_params.__str__())
+    json_data=json.loads(car_params.__str__())
     json_data = json.dumps(json_data, indent=4, sort_keys=True)
     file.write(json_data)
 
