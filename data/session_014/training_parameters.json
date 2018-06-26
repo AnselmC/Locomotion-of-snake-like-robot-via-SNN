@@ -14,16 +14,4 @@
     "w0_min": 500.0, 
     "w_max": 2500.0, 
     "w_min": -2000.0
-}{
-    "Snake parameters": {
-        "maxDistance": 3, 
-        "minDistance": 2, 
-        "speedChange": 0
-    }
-}{
-    "Pioneer parameters": {
-        "turnFrequency": 250, 
-        "turnLength": 11, 
-        "v0": 8
-    }
 }
