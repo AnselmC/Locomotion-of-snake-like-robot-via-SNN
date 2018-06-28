@@ -230,10 +230,14 @@ class VrepEnvironment():
         new_state = np.zeros((resolution[0],resolution[1]),dtype=int)
         # bring the red filtered image in the form of the state
         if self.imgFlag == True:
-            for y in range(img_resolution[1] - crop_top - crop_bottom):
-                for x in range(img_resolution[0]):
-                    if self.img[y + crop_top, x] > 0:
-                        new_state[x//(img_resolution[0]//resolution[0]), y//((img_resolution[1] - crop_top - crop_bottom)//resolution[1])] += 4
-        if(self.steps%modulo  == 0):
-            print "new state: ", new_state
+            # for y in range(img_resolution[1] - crop_top - crop_bottom):
+            #     for x in range(img_resolution[0]):
+            #         if self.img[y + crop_top, x] > 0:
+            #             new_state[x//(img_resolution[0]//resolution[0]), y//((img_resolution[1] - crop_top - crop_bottom)//resolution[1])] += 4
+            for x in range(img_resolution[0]):
+                for y in range(img_resolution[1] - crop_top - crop_bottom):
+                    if self.img[x, y + crop_top] > 0:
+                        normalized_intensity = self.img[x, y + crop_top] / 255.0
+                        new_state[x//(img_resolution[0]//resolution[0]), y//((img_resolution[1] - crop_top - crop_bottom)//resolution[1])] += normalized_intensity
+
         return new_state
