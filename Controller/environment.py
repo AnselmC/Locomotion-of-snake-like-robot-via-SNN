@@ -58,8 +58,8 @@ class VrepEnvironment():
     # Process incoming image data
         # Get an OpenCV image
         cv_image = self.bridge.imgmsg_to_cv2(msg, "rgb8")
-        # Get red channel
-        self.img = cv_image[:,:,2]
+        # Get red + blue channel
+        self.img = cv_image[:,:,0] + cv_image[:,:,2]
         # Get number of rows and columns
         rows, cols = self.img.shape
         # Reset number of red pixels
@@ -121,7 +121,7 @@ class VrepEnvironment():
         if abs(self.turn_pre) < 0.001:
             radius = 0
         else:
-            # [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s
+            # [Question] [r]=m, [r_min]=m 
             radius = r_min/self.turn_pre
 
         # Publish turning radius
@@ -227,17 +227,16 @@ class VrepEnvironment():
 
     def getState(self):
         # 4x16
-        new_state = np.zeros((resolution[0],resolution[1]),dtype=int)
+        new_state = np.zeros((resolution[0],resolution[1]),dtype=float)
         # bring the red filtered image in the form of the state
         if self.imgFlag == True:
             # for y in range(img_resolution[1] - crop_top - crop_bottom):
             #     for x in range(img_resolution[0]):
             #         if self.img[y + crop_top, x] > 0:
             #             new_state[x//(img_resolution[0]//resolution[0]), y//((img_resolution[1] - crop_top - crop_bottom)//resolution[1])] += 4
-            for x in range(img_resolution[0]):
-                for y in range(img_resolution[1] - crop_top - crop_bottom):
-                    if self.img[x, y + crop_top] > 0:
-                        normalized_intensity = self.img[x, y + crop_top] / 255.0
-                        new_state[x//(img_resolution[0]//resolution[0]), y//((img_resolution[1] - crop_top - crop_bottom)//resolution[1])] += normalized_intensity
-
+            for y in range(img_resolution[0] - crop_top - crop_bottom):
+                for x in range(img_resolution[1]):
+                    if self.img[y + crop_top, x] > 0:
+                        normalized_intensity = self.img[y + crop_top, x] / 255.0
+                        new_state[y//((img_resolution[0] - crop_top - crop_bottom)//resolution[0]), x//(img_resolution[1]//resolution[1])] += normalized_intensity
         return new_state

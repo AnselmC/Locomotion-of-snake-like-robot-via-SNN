@@ -19,10 +19,12 @@ v_start = 1.5
 reward_slope = 0.25
 
 # Input image
+# Dimensions of mxn array are set by array = [m,n]
+# Therefore, when going through an image array from a coordinate perspective with variables x,y you do so by array[y,x]
 img_resolution = [64,64]            # Original DVS frame resolution
 crop_bottom = 24                       # Crop at the top
 crop_top = 24                       # Crop at the bottom
-resolution = [img_resolution[0]/4,(img_resolution[1]-crop_top-crop_bottom)/4]                    # Resolution of reduced image
+resolution = [(img_resolution[1]-crop_top-crop_bottom)//4, img_resolution[0]//4] 
 
 # Network parameters
 sim_time = 50.0                        # Length of network simulation during each step in ms
@@ -31,7 +33,7 @@ time_resolution = 0.1                # Network simulation time resolution
 iaf_params = {}                        # IAF neuron parameters
 poisson_params = {}                    # Poisson neuron parameters
 max_poisson_freq = 300.                # Maximum Poisson firing frequency for n_max
-max_spikes = 4.                    # number of events during each step for maximum poisson frequency
+max_spikes = 16.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
 w_min = -2000.                            # Minimum weight value

@@ -41,7 +41,7 @@ class SpikingNeuralNetwork():
         self.conn_slower = nest.GetConnections(target=[self.neuron_post[2]])
         self.conn_faster = nest.GetConnections(target=[self.neuron_post[3]])
 
-    def simulate(self, dvs_data, reward, speed_reward):
+    def simulate(self, image_data, reward, speed_reward):
         # Set reward for hidden layer neuron connections
         # for i in range(len(self.conn_hidden)):
         #     nest.SetStatus(self.conn_hidden[i], {"n":})
@@ -58,9 +58,9 @@ class SpikingNeuralNetwork():
         nest.SetStatus(self.spike_generators, {"origin": time})
         nest.SetStatus(self.spike_generators, {"stop": p.sim_time})
         # Set poisson neuron firing frequency
-        dvs_data = dvs_data.reshape(dvs_data.size)
-        for i in range(dvs_data.size):
-            rate = dvs_data[i]/p.max_spikes
+        image_data = image_data.reshape(image_data.size)
+        for i in range(image_data.size):
+            rate = image_data[i]/p.max_spikes
             rate = np.clip(rate,0,1)*p.max_poisson_freq
             nest.SetStatus([self.spike_generators[i]], {"rate": rate})
         # Simulate network
