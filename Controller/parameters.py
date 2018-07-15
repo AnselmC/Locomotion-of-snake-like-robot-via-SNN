@@ -27,7 +27,7 @@ max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
-w_min = -3500.                          # Minimum weight value
+w_min = -3500.                      # Minimum weight value
 w_max = 3500.                       # Maximum weight value
 w0_min = 200.                       # Minimum initial random value
 w0_max = 201.                       # Maximum initial random value

@@ -149,8 +149,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         -- Linear reduction equation P = ((n/N)*z+y) e [0,1], for all n e [0,N]
         P = ((i-1)/N)*y + z
 
-        -- theta[i+1] = theta[i] + P*A*math.(Omega * (i-1))
-        theta[i+1] = theta[i] + A*math.sin(Omega * (i-1))
+        theta[i+1] = theta[i] + P*A*math.sin(Omega * (i-1))
 
         head_dir = head_dir + theta[i+1]
     end

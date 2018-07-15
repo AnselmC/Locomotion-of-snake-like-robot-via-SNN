@@ -152,6 +152,7 @@ class VrepEnvironment():
         else:
             self.reward = -self.distance
 
+        # Get state
         self.state = self.getState()
 
         if (abs(self.distance) > reset_distance):
