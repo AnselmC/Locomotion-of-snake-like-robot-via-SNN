@@ -66,6 +66,7 @@ for i in range(p.training_length):
 params['end_of_maze'] = p.end_of_maze
 params['training_length'] = p.training_length
 params['reset_distance'] = p.reset_distance
+params['reset_position'] = p.reset_position
 params['img_resolution'] = p.img_resolution
 params['crop_top'] = p.crop_top
 params['crop_bottom'] = p.crop_bottom

@@ -49,4 +49,4 @@ class maze_points_calculation():
 
 maze_points_calculation = maze_points_calculation()
 
-print maze_points_calculation.points
+print maze_points_calculation.points[6]
