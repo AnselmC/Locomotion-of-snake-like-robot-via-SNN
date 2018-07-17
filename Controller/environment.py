@@ -7,7 +7,7 @@ import time
 import numpy as np
 from numpy.linalg import norm
 
-from std_msgs.msg import Int8MultiArray, Float32, Bool, String
+from std_msgs.msg import Int8MultiArray, Float32, Bool, String, Float32MultiArray
 from geometry_msgs.msg import Transform
 
 from parameters import *
@@ -17,20 +17,24 @@ sys.path.append('/usr/lib/python2.7/dist-packages')  # weil ROS nicht mit Anacon
 
 class VrepEnvironment():
     def __init__(self):
-        # Image
+        # Image Subscriber
         self.dvs_sub = rospy.Subscriber('dvsData', Int8MultiArray, self.dvs_callback)
         self.dvs_data = np.array([0, 0])
         self.resize_factor = [dvs_resolution[0]//resolution[0],
                               (dvs_resolution[1]-crop_bottom-crop_top)//resolution[1]]
 
-        # Position sub
+        # Position Subscriber
         self.pos_sub = rospy.Subscriber('transformData', Transform, self.pos_callback)
         self.pos_data = []
 
-        # Radius pub
+        # Distances Subscriber
+        self.distances_sub = rospy.Subscriber('distances', Float32MultiArray, self.distances_callback)
+        self.distances = []
+
+        # Radius Publisher
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
 
-        # Reset pub
+        # Reset Publisher
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
 
         self.steps = 0
@@ -40,6 +44,7 @@ class VrepEnvironment():
         self.radius_buffer = 0
 
         self.distance = 0
+        self.distance2 = 0
         self.section = 0
 
         self.reward = 0
@@ -98,6 +103,11 @@ class VrepEnvironment():
         self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
         return
 
+    def distances_callback(self, msg):
+        # Store incoming distances
+        self.distances = msg.data
+        return
+
     def reset(self):
         # Reset model
         self.radius_pub.publish(0.0)
@@ -143,6 +153,7 @@ class VrepEnvironment():
 
         # Get distance
         self.distance, self.section = self.getDistance(self.pos_data)
+        self.distance2 = 1.5 - self.distances[0]
 
         # Set reward signal
         # self.reward = self.distance
@@ -184,6 +195,7 @@ class VrepEnvironment():
             print "turn_pre: \t", self.turn_pre
             print "radius: \t", self.radius
             print "distance: \t", self.distance
+            print "distance2: \t", self.distance2
             print "reward: \t", self.reward
 #            print "state: \n", self.state
             print "--------------------------------"
