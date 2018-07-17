@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-session = "session_006"
+session = "session_001"
 path = "../data/" + session        # Path for saving data
 
 # Other
@@ -33,7 +33,7 @@ w0_min = 200.                       # Minimum initial random value
 w0_max = 201.                       # Maximum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
-reward_factor = 0.0025               # Reward factor modulating reward signal strength
+reward_factor = 0.0025              # Reward factor modulating reward signal strength
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 
