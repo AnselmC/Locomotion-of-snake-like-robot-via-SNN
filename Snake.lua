@@ -70,6 +70,8 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         joints_v[i]=simGetObjectHandle('Snake_vJoint_'..(i))
     end
 
+    distanceHandle=simGetDistanceHandle('Distance_Snake_Path')
+
     -- Get init position and orientation
     init_pos = simGetObjectPosition(robotHandle, -1)
     init_ori = simGetObjectOrientation(robotHandle, -1)
@@ -253,6 +255,9 @@ end
 
 if (sim_call_type==sim_childscriptcall_sensing) then
     -- Read and formate DVS data at each simulation step
+
+    result,smallestDistance=simHandleDistance(distanceHandle)
+    print("smallestDistance:\t", smallestDistance)
 
     if notFirstHere and not pluginNotFound then
         r,t0,t1=simReadVisionSensor(cameraHandle)

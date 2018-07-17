@@ -1,0 +1,21 @@
+{
+    "w0_min": 200.0, 
+    "reward_factor": 0.0025, 
+    "end_of_maze": "p05", 
+    "crop_top": 0, 
+    "img_resolution": [
+        128, 
+        128
+    ], 
+    "r_min": 1, 
+    "w_min": -3500.0, 
+    "w0_max": 201.0, 
+    "crop_bottom": 48, 
+    "training_length": 10000, 
+    "reset_distance": 1.2, 
+    "resolution": [
+        8, 
+        5
+    ], 
+    "w_max": 3500.0
+}

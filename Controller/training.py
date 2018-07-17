@@ -63,6 +63,7 @@ for i in range(p.training_length):
         break
 
 # Save training parameters
+params['end_of_maze'] = p.end_of_maze
 params['training_length'] = p.training_length
 params['reset_distance'] = p.reset_distance
 params['img_resolution'] = p.img_resolution

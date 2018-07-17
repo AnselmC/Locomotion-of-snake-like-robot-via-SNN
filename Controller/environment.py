@@ -46,8 +46,8 @@ class VrepEnvironment():
         self.state = []
 
         # TODO
-        self.positive_direction = False
-        # self.positive_direction = True
+        # self.positive_direction = False
+        self.positive_direction = True
 
         self.terminate = False
         self.terminate_position = 0
@@ -102,10 +102,10 @@ class VrepEnvironment():
         # Reset model
         self.radius_pub.publish(0.0)
         self.turn_pre = 0.0
-        # Change direction
 
+        # Change direction
         # TODO
-        self.positive_direction = not self.positive_direction
+        # self.positive_direction = not self.positive_direction
 
         self.reset_pub.publish(Bool(self.positive_direction))
 
@@ -129,7 +129,6 @@ class VrepEnvironment():
         if abs(self.turn_pre) < 0.001:
             self.radius = 0
         else:
-            # [Question] [r]=m, [r_min]=m/s --> [radius]=m/(m/s)=s
             self.radius = r_min/self.turn_pre
 
         # Publish mean turning radius every 5 steps
@@ -158,7 +157,7 @@ class VrepEnvironment():
         if (abs(self.distance) > reset_distance):
             print "Reset_distance reached: ", abs(self.distance)
             self.terminate = True
-        if (abs(self.pos_data[0]) > self.p05[0]):
+        if (abs(self.pos_data[0]) > self.p06[0]):
             print "End of maze reached: ", abs(self.pos_data[0])
             self.terminate = True
 
