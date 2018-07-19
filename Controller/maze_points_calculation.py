@@ -1,7 +1,7 @@
-import matplotlib.pylab as plt
-import numpy as np
-from numpy.linalg import norm
 import math
+
+import matplotlib.pylab as plt
+import pandas as pd
 
 length = 10
 
@@ -14,14 +14,14 @@ sin_length = length*math.sin(alpha_rad)
 def mirror_x(points):
     points_mirrored_x = []
     for point in points:
-        points_mirrored_x.append([point[0], -point[1]])
+        points_mirrored_x.append([point[0], -point[1], 0])
     points_mirrored_x.reverse()
     return points_mirrored_x
 
 def mirror_y(points):
     points_mirrored_y = []
     for point in points:
-        points_mirrored_y.append([-point[0], point[1]])
+        points_mirrored_y.append([-point[0], point[1], 0])
     points_mirrored_y.reverse()
     return points_mirrored_y
 
@@ -46,12 +46,26 @@ def print_points(points):
     for i in range(len(points)):
         print points[i]
 
-p00 = [0.5*length, 0.5*length]
-p01 = [p00[0] + cos_length, p00[1] + sin_length]
-p02 = [p01[0] + length, p01[1] + 0]
-p03 = [p02[0] + cos_length, p02[1] - sin_length]
+def create_csv(points):
+    df = pd.DataFrame(data=points)
+    df.to_csv(path_or_buf="../vrep-path.csv",
+              header=False,
+              index=False)
+
+p00 = [0.5*length,
+       0.5*length,
+       0]
+p01 = [p00[0] + cos_length,
+       p00[1] + sin_length,
+       0]
+p02 = [p01[0] + length,
+       p01[1] + 0,
+       0]
+p03 = [p02[0] + cos_length,
+       p02[1] - sin_length,
+       0]
 
 points_00_03 = [p00, p01, p02, p03]
 points_00_15 = mirror_x_y(points_00_03)
 
-print_points(points_00_15)
+create_csv(points_00_15)
