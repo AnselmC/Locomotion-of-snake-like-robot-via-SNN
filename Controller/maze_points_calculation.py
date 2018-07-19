@@ -1,52 +1,57 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jun 14 13:41:10 2018
-
-@author: christoph
-"""
-
 import matplotlib.pylab as plt
 import numpy as np
 from numpy.linalg import norm
 import math
 
-class maze_points_calculation():
-    def __init__(self):
+length = 10
 
-        self.length_wall = 10
-        self.snake_init_position = [0.0, 0.0]
+alpha_deg = 45
+alpha_rad = alpha_deg*math.pi/180
 
-        self.alpha1_deg = 20
-        self.alpha1_rad = self.alpha1_deg*math.pi/180
-        self.alpha2_deg = 30
-        self.alpha2_rad = self.alpha2_deg*math.pi/180
-        self.alpha3_deg = 40
-        self.alpha3_rad = self.alpha3_deg*math.pi/180
-        self.alpha4_deg = 50
-        self.alpha4_rad = self.alpha4_deg*math.pi/180
+cos_length = length*math.cos(alpha_rad)
+sin_length = length*math.sin(alpha_rad)
 
-        self.length_cos_1 = self.length_wall*math.cos(self.alpha1_rad)
-        self.length_sin_1 = self.length_wall*math.sin(self.alpha1_rad)
-        self.length_cos_2 = self.length_wall*math.cos(self.alpha2_rad)
-        self.length_sin_2 = self.length_wall*math.sin(self.alpha2_rad)
-        self.length_cos_3 = self.length_wall*math.cos(self.alpha3_rad)
-        self.length_sin_3 = self.length_wall*math.sin(self.alpha3_rad)
-        self.length_cos_4 = self.length_wall*math.cos(self.alpha4_rad)
-        self.length_sin_4 = self.length_wall*math.sin(self.alpha4_rad)
+def mirror_x(points):
+    points_mirrored_x = []
+    for point in points:
+        points_mirrored_x.append([point[0], -point[1]])
+    points_mirrored_x.reverse()
+    return points_mirrored_x
 
-        self.p00 = self.snake_init_position
-        self.p01 = [self.p00[0] + self.length_wall,  self.p00[1]]
-        self.p02 = [self.p01[0] + self.length_cos_1, self.p01[1] + self.length_sin_1]
-        self.p03 = [self.p02[0] + self.length_wall,  self.p02[1]]
-        self.p04 = [self.p03[0] + self.length_cos_2, self.p03[1] - self.length_sin_2]
-        self.p05 = [self.p04[0] + self.length_wall,  self.p04[1]]
-        self.p06 = [self.p05[0] + self.length_cos_3, self.p05[1] + self.length_sin_3]
-        self.p07 = [self.p06[0] + self.length_wall,  self.p06[1]]
-        self.p08 = [self.p07[0] + self.length_cos_4, self.p07[1] - self.length_sin_4]
-        self.p09 = [self.p08[0] + self.length_wall,  self.p08[1]]
+def mirror_y(points):
+    points_mirrored_y = []
+    for point in points:
+        points_mirrored_y.append([-point[0], point[1]])
+    points_mirrored_y.reverse()
+    return points_mirrored_y
 
-        self.points = [self.p00, self.p01, self.p02, self.p03, self.p04, self.p05, self.p06, self.p07, self.p08, self.p09]
+def mirror_x_y(points):
+    points_mirrored_x = mirror_x(points)
+    points = points + points_mirrored_x
+    points_mirrored_y = mirror_y(points)
+    points = points + points_mirrored_y
+    return points
 
-maze_points_calculation = maze_points_calculation()
+def plot_points(points):
+    for i in range(len(points)):
+        plt.plot(points[i][0], points[i][1], 'o', label="p"+str(i))
 
-print maze_points_calculation.points[6]
+    plt.legend(bbox_to_anchor=(1.1, 1),
+               bbox_transform=plt.gcf().transFigure)
+    plt.axis([-35,35,-15,15])
+    plt.show()
+    return
+
+def print_points(points):
+    for i in range(len(points)):
+        print points[i]
+
+p00 = [0.5*length, 0.5*length]
+p01 = [p00[0] + cos_length, p00[1] + sin_length]
+p02 = [p01[0] + length, p01[1] + 0]
+p03 = [p02[0] + cos_length, p02[1] - sin_length]
+
+points_00_03 = [p00, p01, p02, p03]
+points_00_15 = mirror_x_y(points_00_03)
+
+print_points(points_00_15)
