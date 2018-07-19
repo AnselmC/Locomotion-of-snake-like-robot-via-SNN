@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 
-session = "session_003"
+session = "session_001"
 path = "../data/" + session        # Path for saving data
-end_of_maze = "p06"
 
 # Other
-training_length = 15000             # Lenth of training procedure (1 step ~ 50 ms)
-modulo = 20
+training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
+modulo = 10000
+maze_width = 5
 reset_distance = 2.3                # Reset distance
-reset_position = 55.7
+reset_position = 1000
 rate = 20.                          # ROS publication rate motor speed
 
 # Input image

@@ -117,7 +117,7 @@ class VrepEnvironment():
         self.rate.sleep()
 
         # Get distance
-        self.distance = 2.5 - self.distances[0]
+        self.distance = maze_width/2 - self.distances[0]
 
         # Set reward signal
         if self.positive_direction is True:
