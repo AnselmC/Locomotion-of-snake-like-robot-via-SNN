@@ -70,8 +70,8 @@
           joints_v[i]=simGetObjectHandle('Snake_vJoint_'..(i))
       end
 
-      -- distanceHandle1=simGetDistanceHandle('Distance_Snake_Wall_1')
-      -- distanceHandle2=simGetDistanceHandle('Distance_Snake_Wall_2')
+      distanceHandle1=simGetDistanceHandle('Distance_Snake_Wall_1')
+      distanceHandle2=simGetDistanceHandle('Distance_Snake_Wall_2')
 
       -- Get init position and orientation
       init_pos = simGetObjectPosition(robotHandle, -1)
@@ -112,7 +112,7 @@
           turnRadiusSub=simExtRosInterface_subscribe('/turningRadius','std_msgs/Float32','setTurningRadius_cb')
           resetRobotSub=simExtRosInterface_subscribe('/resetRobot','std_msgs/Bool','resetRobot_cb')
           paramsPub=simExtRosInterface_advertise('/parameters', 'std_msgs/String')
-          distancePub=simExtRosInterface_advertise('/distances', 'std_msgs/Float32')
+          distancePub=simExtRosInterface_advertise('/distances', 'std_msgs/Float32MultiArray')
       end
 
       -- Initialize parameters
@@ -257,12 +257,12 @@
 
   if (sim_call_type==sim_childscriptcall_sensing) then
       -- Read and publish distances
-      -- result,smallestDistance1=simHandleDistance(distanceHandle1)
-      -- result,smallestDistance2=simHandleDistance(distanceHandle2)
+      result,smallestDistance1=simHandleDistance(distanceHandle1)
+      result,smallestDistance2=simHandleDistance(distanceHandle2)
 
-      -- smallestDistances={smallestDistance1, smallestDistance2}
+      smallestDistances={smallestDistance1, smallestDistance2}
 
-      -- simExtRosInterface_publish(distancePub,{data=smallestDistance1})
+      simExtRosInterface_publish(distancePub,{data=smallestDistances})
 
       -- Read and formate DVS data at each simulation step
       if notFirstHere and not pluginNotFound then

@@ -7,7 +7,7 @@ end_of_maze = "p06"
 # Other
 training_length = 15000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 20
-reset_distance = 1.2                # Reset distance
+reset_distance = 2.3                # Reset distance
 reset_position = 55.7
 rate = 20.                          # ROS publication rate motor speed
 
