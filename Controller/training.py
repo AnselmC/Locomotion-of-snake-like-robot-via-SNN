@@ -63,9 +63,11 @@ for i in range(p.training_length):
         break
 
 # Save training parameters
+params['comment'] = p.comment
 params['training_length'] = p.training_length
+params['maze_width'] = p.maze_width
 params['reset_distance'] = p.reset_distance
-params['reset_position'] = p.reset_position
+params['reset_steps'] = p.reset_steps
 params['img_resolution'] = p.img_resolution
 params['crop_top'] = p.crop_top
 params['crop_bottom'] = p.crop_bottom

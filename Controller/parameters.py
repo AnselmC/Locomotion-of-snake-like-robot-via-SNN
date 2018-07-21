@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 
-session = "session_001"
+session = "session_005"
 path = "../data/" + session        # Path for saving data
+comment = "x^3 reward"
 
 # Other
-training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
-modulo = 10000
-maze_width = 5
+training_length = 50000             # Lenth of training procedure (1 step ~ 50 ms)
+modulo = 200000
+maze_width = 5.0
 reset_distance = 2.3                # Reset distance
-reset_position = 1000
+reset_steps = 500
 rate = 20.                          # ROS publication rate motor speed
 
 # Input image
@@ -35,7 +36,7 @@ w0_min = 200.                       # Minimum initial random value
 w0_max = 201.                       # Maximum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
-reward_factor = 0.0025              # Reward factor modulating reward signal strength
+reward_factor = 0.00025             # Reward factor modulating reward signal strength
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 

@@ -31,11 +31,11 @@ for i in range(50000):
 
     # Feed output spikes into steering wheel model
     # Get state, distance, position, reward, termination, step
-    state, distance, pos_data, reward, terminate, step = env.step(n_l, n_r)
+    state, distance, pos_data, reward, t, step, terminate_position = env.step(n_l, n_r)
 
     # Store position, distance
-    distance.append(distance)
-    position.append(pos_data)
+    distances.append(distance)
+    positions.append(pos_data)
 
 # Save performance data
 h5f = h5py.File(path + '/rstdp_performance_data.h5', 'w')

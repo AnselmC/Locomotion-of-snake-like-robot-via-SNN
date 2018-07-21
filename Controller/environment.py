@@ -49,8 +49,8 @@ class VrepEnvironment():
         self.state = []
 
         # TODO
-        # self.positive_direction = False
-        self.positive_direction = True
+        self.positive_direction = False
+        # self.positive_direction = True
 
         self.terminate = False
         self.terminate_position = 0
@@ -65,7 +65,7 @@ class VrepEnvironment():
 
     def pos_callback(self, msg):
         # Store incoming position data
-        self.pos_data = np.array([msg.translation.x, msg.translation.y, time.time()])
+        self.pos_data = np.array([msg.translation.x, msg.translation.y])
         return
 
     def distances_callback(self, msg):
@@ -80,7 +80,7 @@ class VrepEnvironment():
 
         # Change direction
         # TODO
-        # self.positive_direction = not self.positive_direction
+        self.positive_direction = not self.positive_direction
 
         self.reset_pub.publish(Bool(self.positive_direction))
 
@@ -121,18 +121,30 @@ class VrepEnvironment():
 
         # Set reward signal
         if self.positive_direction is True:
-            self.reward = self.distance
+            self.reward = 3*(self.distance)**3
         else:
-            self.reward = -self.distance
+            self.reward = -3*(self.distance)**3
 
         # Get state
         self.state = self.getState()
 
+        # Check reset conditions
         if (abs(self.distance) > reset_distance):
-            print "Reset_distance reached: ", abs(self.distance)
+            print "reset_distance reached: ", abs(self.distance)
             self.terminate = True
-        if (abs(self.pos_data[0]) > reset_position):
-            print "End of maze reached: ", abs(self.pos_data[0])
+
+        # Boundaries of starting area
+        top_condition = self.pos_data[1] < 7.5
+        bottom_condition = self.pos_data[1] > 2.5
+        left_condition = self.pos_data[0] > -1
+        right_condition = self.pos_data[0] < 1
+
+        if (self.steps > reset_steps and
+            left_condition and
+            right_condition and
+            bottom_condition and
+            top_condition):
+            print "starting area reached"
             self.terminate = True
 
         t = self.terminate
@@ -140,7 +152,7 @@ class VrepEnvironment():
 
         if t is True:
             self.steps = 0
-            self.terminate_position = abs(self.pos_data[0])
+            self.terminate_position = self.pos_data
             self.reset()
             self.terminate = False
 
