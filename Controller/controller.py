@@ -31,7 +31,7 @@ for i in range(50000):
     n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,r,s_r)
 
     # Feed output spikes into steering wheel model
-    # Get state, distance, position, reward, termination, step
+    # Get state, distance, reward, termination, step
     s,d,r,s_r,t,n = env.step(n_l, n_r, n_slower, n_faster)
 
     # Store position, distance

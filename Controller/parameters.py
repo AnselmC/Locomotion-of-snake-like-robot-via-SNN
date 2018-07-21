@@ -6,17 +6,26 @@ import math
 session_no = '015'
 path = "../data/session_" + session_no        # Path for saving data
 
-# Other
-training_length = 15000             # Lenth of training procedure (1 step ~ 50 ms)
-modulo = 10
-max_steps = 1500                    # Maximum amount of steps per episode before the simulation is reset
-rate = 20.                          # ROS publication rate motor speed
-blind_steps = 20
-speed_change = 0.001
-max_speed_change = 0.06
 
+# Training parameters
+# Length of training (1 step ~50 ms)
+training_length = 15000
+# Maximum amount of steps per episode before reset
+max_steps = 1500
+# ROS publication rate
+rate = 20.
+# Every modulo steps parameters are printed
+modulo = 10
+# Number of simulation steps the snake has no vision of car before reset
+blind_steps = 20
+# Speed change factor
+speed_change = 0.1
+# Maximum speed change the snake can undergo
+max_speed_change = 0.06
+# Starting speed of snake
 v_start = 1.5
-reward_slope = 0.25
+# Slope of ...
+reward_slope = 25
 
 # Input image
 # Dimensions of mxn array are set by array = [m,n]
@@ -26,28 +35,51 @@ crop_bottom = 24                       # Crop at the top
 crop_top = 24                       # Crop at the bottom
 resolution = [(img_resolution[1]-crop_top-crop_bottom)//4, img_resolution[0]//4] 
 
+
+
 # Network parameters
-sim_time = 50.0                        # Length of network simulation during each step in ms
-t_refrac = 2.                        # Refractory period
-time_resolution = 0.1                # Network simulation time resolution
-iaf_params = {}                        # IAF neuron parameters
-poisson_params = {}                    # Poisson neuron parameters
-max_poisson_freq = 300.                # Maximum Poisson firing frequency for n_max
-max_spikes = 16.                    # number of events during each step for maximum poisson frequency
+# Length of simulation step in ms
+sim_time = 50.0
+# Refractory period
+t_refrac = 2.
+# Time resolution of network
+time_resolution = 0.1
+# Parameters for LIF neurons
+iaf_params = {}
+# Parameters for poisson generators
+poisson_params = {}
+# Maximum average firing frequency of poisson generators
+max_poisson_freq = 300.
+# Maximum amount of spikes of input neuron
+max_spikes = 16.
 
 # R-STDP parameters
-w_min = -2000.                            # Minimum weight value
-w_max = 2500.                        # Maximum weight value
-w0_min = 500.                        # Minimum initial random value
-w0_max = 501.                        # Maximum initial random value
-tau_n = 200.                        # Time constant of reward signal
-tau_c = 1000.                        # Time constant of eligibility trace
-reward_factor = 0.005                # Reward factor modulating reward signal strength
-reward_factor_speed = 0.005
-A_plus = 1.                         # Constant scaling strength of potentiaion
-A_minus = 1.                        # Constant scaling strength of depression
+# Minimum weight value
+w_min = -2000.
+# Maximum weight value
+w_max = 2500.
+# Minimum initial random value
+w0_min = 500.
+# Maximum initial random value
+w0_max = 501.
+# Time constant of reward signal
+tau_n = 200.
+# Time constant of eligibility trace
+tau_c = 1000.
+# Factor that dopamine modulator for turning is multiplied with
+turning_dopamine_factor = 0.005
+# Factor that dopamine modulator for speed is multiplied with
+speed_dopamine_factor = 0.005
+# Constant scaling strength of potentiation
+A_plus = 1.
+# Constant scaling strength of depression
+A_minus = 1.
+
 
 # Steering wheel model
-turn_pre = 0                        # Initial turn speed
-n_max = sim_time//t_refrac          # Maximum input activity
-r_min = 1                            # Minimum turning radius
+# Initial turn speed
+turn_pre = 0
+# Maximum output activity
+n_max = sim_time//t_refrac
+# Minimum turning radius
+r_min = 1

@@ -18,44 +18,35 @@ weights_slower = []
 weights_faster = []
 weights_i = []
 steps = []
-cumulative_motor_reward_per_episode = []
-cumulative_speed_reward_per_episode = []
-cumulative_motor_reward = 0
-cumulative_speed_reward = 0
 params = {}
-terminate = False
+terminate_early = False
 
-
+# Signal handler for terminating early
 def handler(signum, frame):
-    global terminate
-    terminate = True
+    global terminate_early
+    terminate_early = True
 
 signal.signal(signal.SIGINT, handler)
 
 
 # Initialize environment, get initial state, initial reward, initial speed reward
-s,r,s_r = env.reset()
+s,tdm,sdm = env.reset()
 
 for i in range(p.training_length):
 
     # Simulate network for 50 ms
     # get number of output spikes and network weights
-    n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,r,s_r)
+    n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,tdm,sdm)
 
     # Feed output spikes in steering wheel model
-    # Get state, distance, motor reward, speed reward, termination, step
-    s,d,r,s_r,t,n = env.step(n_l, n_r, n_slower, n_faster)
-
-    cumulative_motor_reward = cumulative_motor_reward + abs(r)
-    cumulative_speed_reward = cumulative_speed_reward + abs(s_r)
+    # Get state, motor reward, speed reward, termination, step
+    s,tdm,sdm,t,n = env.step(n_l, n_r, n_slower, n_faster)
     
     # Save weights every 100 simulation steps
     if i % 100 == 0:
         print "--------------------------------"
         print "-----------step: ", i, "-----------"
         print "--------------------------------"
-        print "cumulative_motor_reward:\t", cumulative_motor_reward
-        print "cumulative_speed_reward:\t", cumulative_speed_reward
         print "Left weights:\n", w_l
         print "Right weights:\n", w_r
         weights_l.append(w_l)
@@ -66,21 +57,15 @@ for i in range(p.training_length):
 
     # Save no. of steps every episode
     if t:
-        print "-----------terminate-----------"
+        print "-----------terminate_early-----------"
         steps.append(n)
         print "steps:\n", steps
-        cumulative_motor_reward_per_episode.append(cumulative_motor_reward)
-        cumulative_speed_reward_per_episode.append(cumulative_speed_reward)
-        print "cumulative_motor_reward_per_episode:\n", cumulative_motor_reward_per_episode
-        print "cumulative_speed_reward_per_episode:\n", cumulative_speed_reward_per_episode
-        cumulative_motor_reward = 0
-        cumulative_speed_reward = 0
         
-    if terminate:
+    if terminate_early:
         break
 
 # Save training parameters
-params['terminated_early'] = terminate
+params['terminate_early'] = terminate_early
 params['w_min'] = p.w_min
 params['w_max'] = p.w_max
 params['w0_min'] = p.w0_min

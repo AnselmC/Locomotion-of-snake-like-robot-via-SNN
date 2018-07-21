@@ -41,18 +41,18 @@ class SpikingNeuralNetwork():
         self.conn_slower = nest.GetConnections(target=[self.neuron_post[2]])
         self.conn_faster = nest.GetConnections(target=[self.neuron_post[3]])
 
-    def simulate(self, image_data, reward, speed_reward):
-        # Set reward for hidden layer neuron connections
+    def simulate(self, image_data, tdm, sdm):
+        # Set tdm for hidden layer neuron connections
         # for i in range(len(self.conn_hidden)):
         #     nest.SetStatus(self.conn_hidden[i], {"n":})
 
-        # Set reward signal for left and right neuron connections
-        nest.SetStatus(self.conn_l, {"n": -reward*p.reward_factor})
-        nest.SetStatus(self.conn_r, {"n": reward*p.reward_factor})
+        # Set tdm signal for left and right neuron connections
+        nest.SetStatus(self.conn_l, {"n": -tdm*p.turning_dopamine_factor})
+        nest.SetStatus(self.conn_r, {"n": tdm*p.turning_dopamine_factor})
 
-        # Set reward signal for faster and slower neuron connections
-        nest.SetStatus(self.conn_faster, {"n": -speed_reward*p.reward_factor_speed})
-        nest.SetStatus(self.conn_slower, {"n": speed_reward*p.reward_factor_speed})
+        # Set tdm signal for faster and slower neuron connections
+        nest.SetStatus(self.conn_faster, {"n": -sdm*p.speed_dopamine_factor})
+        nest.SetStatus(self.conn_slower, {"n": sdm*p.speed_dopamine_factor})
         # Set poisson neuron firing time span
         time = nest.GetKernelStatus("time")
         nest.SetStatus(self.spike_generators, {"origin": time})
