@@ -56,7 +56,7 @@ def plot_points(points):
 
     # plt.legend(bbox_to_anchor=(1.1, 1),
     #            bbox_transform=plt.gcf().transFigure)
-    plt.axis([-50,50,-50,50])
+    plt.axis([-50, 50, -50, 50])
     plt.show()
     return
 
@@ -70,7 +70,7 @@ def calculateDistance(snake_position, p1, p2):
 
 def create_csv(points):
     df = pd.DataFrame(data=points)
-    df.to_csv(path_or_buf="../vrep-path.csv",
+    df.to_csv(path_or_buf="../vrep-path-scenario_3.csv",
               header=False,
               index=False)
 
@@ -93,5 +93,8 @@ points_06_13 = shift_y(shift_x(mirror_y((points_00_03 + points_04_07), reverse=F
 points_00_13 = points_00_03 + [points_04_07[0], points_04_07[1]] + points_06_13
 points_15_28 = shift_y(shift_x(points_00_13, -length - cos_length), 2*length + sin_length)
 points_15_28.reverse()
-# plot_points(points_00_13 + points_15_28)
-print_points(points_00_13 + points_15_28)
+points_00_13.reverse()
+points_00_29 = shift_y([points_04_07[1]], -length) + points_00_13 + points_15_28 + shift_y([points_15_28[5]], length)
+points_00_29 = shift_y(points_00_29, -length/2)
+create_csv(points_00_29)
+# print_points(points_00_13 + points_15_28)
