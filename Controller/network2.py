@@ -46,8 +46,9 @@ class SpikingNeuralNetwork():
         # Set reward signal for hidden, left and right synapses
         for i in range(len(self.conn_hidden)):
             nest.SetStatus(self.conn_hidden[i], {"n":
-                    -reward*p.reward_factor*weights_l[i] +
-                    reward*p.reward_factor*weights_r[i]})
+                    (-reward*p.reward_factor*weights_l[i] +
+                    reward*p.reward_factor*weights_r[i]}))/
+                    (weights_l[i] + weights_r[i])
 
         nest.SetStatus(self.conn_l, {"n": -reward*p.reward_factor})
         nest.SetStatus(self.conn_r, {"n": reward*p.reward_factor})
