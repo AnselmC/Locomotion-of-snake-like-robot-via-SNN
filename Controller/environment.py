@@ -116,7 +116,7 @@ class VrepEnvironment():
 
         # Get radius and set speed
         radius = self.getRadius(n_l,n_r)
-        self.setSpeed(n_slower, n_faster)
+        self.setSpeed(n_faster, n_slower)
 
         # Publish turning radius and speed
         self.radius_pub.publish(radius)

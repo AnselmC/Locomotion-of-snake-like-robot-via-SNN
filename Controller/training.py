@@ -65,31 +65,34 @@ for i in range(p.training_length):
         break
 
 # Save training parameters
-params['terminate_early'] = terminate_early
-params['w_min'] = p.w_min
-params['w_max'] = p.w_max
-params['w0_min'] = p.w0_min
-params['w0_max'] = p.w0_max
-params['reward_factor'] = p.reward_factor
-params['training_length'] = p.training_length
-params['max_steps'] = p.max_steps
-params['v_start'] = p.v_start
-params['speed_change'] = p.speed_change
-params['max_speed_change'] = p.max_speed_change
-params['reward_factor_speed'] = p.reward_factor_speed
-params['blind_steps'] = p.blind_steps
-params['r_min'] = p.r_min
-params['reward_slope'] = p.reward_slope
+try:
+    params['terminate_early'] = terminate_early
+    params['w_min'] = p.w_min
+    params['w_max'] = p.w_max
+    params['w0_min'] = p.w0_min
+    params['w0_max'] = p.w0_max
+    params['turning_dopamine_factor'] = p.turning_dopamine_factor
+    params['training_length'] = p.training_length
+    params['max_steps'] = p.max_steps
+    params['v_start'] = p.v_start
+    params['speed_change'] = p.speed_change
+    params['max_speed_change'] = p.max_speed_change
+    params['speed_dopamine_factor'] = p.speed_dopamine_factor
+    params['blind_steps'] = p.blind_steps
+    params['r_min'] = p.r_min
+    params['reward_slope'] = p.reward_slope
 
-car_params = env.getParams()
+    car_params = env.getParams()
 
-# Save to single json file
-json_data = json.dumps(params, indent=4, sort_keys=True)
-with open(p.path+'/training_parameters.json','w') as file:
-    file.write(json_data)
-    json_data=json.loads(car_params.__str__())
-    json_data = json.dumps(json_data, indent=4, sort_keys=True)
-    file.write(json_data)
+    # Save to single json file
+    json_data = json.dumps(params, indent=4, sort_keys=True)
+    with open(p.path+'/training_parameters.json','w') as file:
+        file.write(json_data)
+        json_data=json.loads(car_params.__str__())
+        json_data = json.dumps(json_data, indent=4, sort_keys=True)
+        file.write(json_data)
+except:
+    pass
 
 # Save data
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
@@ -99,5 +102,4 @@ h5f.create_dataset('w_slower', data=weights_slower)
 h5f.create_dataset('w_faster', data=weights_faster)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
-h5f.create_dataset('cumulative_motor_reward_per_episode', data = cumulative_motor_reward_per_episode)
 h5f.close()
