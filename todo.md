@@ -12,13 +12,14 @@
 - Plot positive and negative direction steps seperately
 - Code rework + comments
   - Change 'from parameters import \*' to 'import parameters as params'
+- Doesn't the network also update its weight in controller.py?
+- Decaying reward_factor
 
 # Questions
 - Turning model
 
 Meeting on 07/20/2018
 - Title: Don't mention DVS
-- Introduction
 - Background
   - Theoretical Background
   - Related Network: more latest research
