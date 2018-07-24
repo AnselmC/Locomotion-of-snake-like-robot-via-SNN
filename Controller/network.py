@@ -55,7 +55,7 @@ class SpikingNeuralNetwork():
         # Get network weights
         weights_l = np.array(nest.GetStatus(self.conn_l, keys="weight")).reshape(p.resolution)
         weights_r = np.array(nest.GetStatus(self.conn_r, keys="weight")).reshape(p.resolution)
-        return n_l, n_r, weights_l, weights_r
+        return n_l, n_r, [weights_l, weights_r]
 
     def set_weights(self, weights_l, weights_r):
         # Translate weights into dictionary format

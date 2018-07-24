@@ -33,30 +33,39 @@ for i in range(p.training_length):
 
     # Simulate network for 50 ms
     # get number of output spikes and network weights
-    n_l, n_r, w_l, w_r = snn.simulate(state, reward)
+    n_l, n_r, weights = snn.simulate(state, reward)
+    w_l = weights[0]
+    w_r = weights[1]
 
     # Feed output spikes in model
     # Get state, distance, pos_data, reward, t, step
     state, distance, pos_data, reward, t, step, terminate_position = env.step(n_l, n_r)
 
+    # if (i % modulo == 0):
+    #     print "----------training.py----------"
+    #     print "-----------step: ", i, "-----------"
+    #     print "n_l: \t\t", n_l
+    #     print "n_r: \t\t", n_r
+    #     print "w_l: \n", w_l
+    #     print "w_r: \n", w_r
+    #     for j in range(len(weights[2])):
+    #         print "weight_hidden[", j,"]: \n", weights[2][j]
+    #     print "--------------------------------"
+
     # Save weights every 100 simulation steps
     if i % 100 == 0:
-        # print "----------training.py----------"
-        # print "-----------step: ", i, "-----------"
-        # print "Left weights:\n", w_l
-        # print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_i.append(i)
 
     # Save no. of steps every episode
     if t:
-        print "----------training.py----------"
-        print "-----------terminate-----------"
         steps.append(step)
         terminate_positions.append(terminate_position)
+        print "----------training.py----------"
+        print "-----------terminate-----------"
         print "steps:\n", steps
-        print "terminate_positions:\n", terminate_positions
+        # print "terminate_positions:\n", terminate_positions
         print "--------------------------------"
 
     if terminate:

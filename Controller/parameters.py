@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-session = "session_007"
+session = "session_005"
 path = "../data/" + session        # Path for saving data
-comment = "network2"
+comment = "network2, only positive direction"
 
 # Other
 training_length = 50000             # Lenth of training procedure (1 step ~ 50 ms)
-modulo = 200000
+modulo = 10
 maze_width = 5.0
 reset_distance = 2.3                # Reset distance
 reset_steps = 500
