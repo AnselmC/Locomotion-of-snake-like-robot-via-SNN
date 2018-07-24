@@ -66,32 +66,21 @@ for i in range(p.training_length):
 
 # Save training parameters
 try:
-    params['terminate_early'] = terminate_early
-    params['w_min'] = p.w_min
-    params['w_max'] = p.w_max
-    params['w0_min'] = p.w0_min
-    params['w0_max'] = p.w0_max
-    params['turning_dopamine_factor'] = p.turning_dopamine_factor
-    params['training_length'] = p.training_length
-    params['max_steps'] = p.max_steps
-    params['v_start'] = p.v_start
-    params['speed_change'] = p.speed_change
-    params['max_speed_change'] = p.max_speed_change
-    params['speed_dopamine_factor'] = p.speed_dopamine_factor
-    params['blind_steps'] = p.blind_steps
-    params['r_min'] = p.r_min
-    params['reward_slope'] = p.reward_slope
+    print "saving params"
+    params = p.params_dict
+    print params
 
     car_params = env.getParams()
-
     # Save to single json file
     json_data = json.dumps(params, indent=4, sort_keys=True)
+    print "converted to json"
     with open(p.path+'/training_parameters.json','w') as file:
         file.write(json_data)
-        json_data=json.loads(car_params.__str__())
-        json_data = json.dumps(json_data, indent=4, sort_keys=True)
-        file.write(json_data)
+            # json_data=json.loads(car_params.__str__())
+            # json_data = json.dumps(json_data, indent=4, sort_keys=True)
+            # file.write(json_data)
 except:
+    print "saving params failed"
     pass
 
 # Save data

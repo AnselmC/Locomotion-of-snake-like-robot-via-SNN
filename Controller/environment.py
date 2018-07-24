@@ -33,13 +33,16 @@ class VrepEnvironment():
         self.img = None
         self.cx = 0.0
         self.speed = v_start
+        self.radius = 0.
         self.pixel_ratio = 0.
         self.ideal_pixel_ratio = 0.
         self.steps = 0
+        self.total_steps = 0
         self.blind_steps_counter = 0
         self.turn_pre = 0.0
         self.car_params = None
         self.speed_buffer = 0
+        self.radius_buffer = 0
 
         # Open cv
         self.bridge = CvBridge()
@@ -113,13 +116,13 @@ class VrepEnvironment():
 
     def step(self, n_l, n_r, n_slower, n_faster):
         self.steps += 1
-
-        # Get radius and set speed
-        radius = self.getRadius(n_l,n_r)
+        self.total_steps += 1
+        # Set radius and set speed
+        self.setRadius(n_l,n_r)
         self.setSpeed(n_faster, n_slower)
 
         # Publish turning radius and speed
-        self.radius_pub.publish(radius)
+        self.radius_pub.publish(self.radius)
         self.rate.sleep()
         self.speed_pub.publish(self.speed)
         self.rate.sleep()
@@ -150,12 +153,12 @@ class VrepEnvironment():
             self.terminate = False
 
         if self.steps%modulo == 0:
-            self.printParameters(n_l, n_r, n_faster, n_slower, radius, tdm, sdm)
+            self.printParameters(n_l, n_r, n_faster, n_slower, tdm, sdm)
 
         # Return state, reward, speed reward, termination, steps
         return s,tdm,sdm,t,n
 
-    def printParameters(self, n_l, n_r, n_faster, n_slower, radius, tdm, sdm):
+    def printParameters(self, n_l, n_r, n_faster, n_slower, tdm, sdm):
             print "--------------------------------"
             print "-----------step: ", self.steps, "-----------"
             print "--------------------------------"
@@ -164,8 +167,8 @@ class VrepEnvironment():
             print "n_slower: \t", n_slower
             print "n_faster: \t", n_faster
             print "turn_pre: \t", self.turn_pre
-            print "radius: \t", radius
-            print "speed: \t\t", self.    speed
+            print "radius: \t", self.radius
+            print "speed: \t\t", self.speed
             print "cx: \t\t", self.cx
             print "Turning dopemine modulator: \t", tdm
             print "Speed dopamine modulator: \t", sdm
@@ -173,16 +176,20 @@ class VrepEnvironment():
     def getParams(self):
         return self.car_params
 
+    def timeModulateModulator(self, modulator, max_value):
+        return modulator*(-(max_value/(math.exp(-(5.0/training_length)*(self.total_steps-(training_length/2.0))))) + max_value)
+
     def getTurningDopamineModulator(self):
         # return 2/(1+math.exp(-4*self.cx))-1
-        return self.cx**3
+        modulator = self.cx**3
+        return self.timeModulateModulator(modulator,max_turning_dopamine_factor)
 
     def getSpeedDopamineModulator(self):
         # logistic function
-        # y = 2/(exp(-k(x-x0))+1) - 1
-        return 2/(math.exp(-reward_slope*(self.pixel_ratio - self.ideal_pixel_ratio))+1)-1
+        modulator = 2/(math.exp(-reward_slope*(self.pixel_ratio - self.ideal_pixel_ratio))+1)-1
+        return self.timeModulateModulator(modulator,max_speed_dopamine_factor)
 
-    def getRadius(self, n_l, n_r):
+    def setRadius(self, n_l, n_r):
         # Snake turning model
         m_l = n_l/n_max
         m_r = n_r/n_max
@@ -195,7 +202,12 @@ class VrepEnvironment():
         else:
             # [Question] [r]=m, [r_min]=m 
             radius = r_min/self.turn_pre
-        return radius
+
+        if(self.steps%10 != 0):
+            self.radius_buffer = self.radius_buffer + radius
+        else:
+            self.radius = self.radius_buffer/10
+            self.radius_buffer = 0
 
     def setSpeed(self, n_faster, n_slower):
         m_slower = n_slower/n_max

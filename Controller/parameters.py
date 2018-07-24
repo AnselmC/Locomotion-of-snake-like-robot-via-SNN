@@ -3,15 +3,15 @@
 import numpy as np
 import math
 
-session_no = '017'
+session_no = '021'
 path = "../data/session_" + session_no        # Path for saving data
-
+comment = 'with speed change'
 
 # Training parameters
 # Length of training (1 step ~50 ms)
-training_length = 45000
+training_length = 20000
 # Maximum amount of steps per episode before reset
-max_steps = 4000
+max_steps = 2000
 # ROS publication rate
 rate = 20.
 # Every modulo steps parameters are printed
@@ -23,7 +23,7 @@ speed_change = 0.1
 # Maximum speed change the snake can undergo
 max_speed_change = 0.06
 # Starting speed of snake
-v_start = 1.5
+v_start = 1.65
 # Slope of ...
 reward_slope = 25
 
@@ -46,6 +46,8 @@ t_refrac = 2.
 time_resolution = 0.1
 # Parameters for LIF neurons
 iaf_params = {}
+# Parameters for LIF hidden layer neurons
+iaf_params_hidden = {}
 # Parameters for poisson generators
 poisson_params = {}
 # Maximum average firing frequency of poisson generators
@@ -67,9 +69,9 @@ tau_n = 200.
 # Time constant of eligibility trace
 tau_c = 1000.
 # Factor that dopamine modulator for turning is multiplied with
-turning_dopamine_factor = 0.001
+max_turning_dopamine_factor = 0.003
 # Factor that dopamine modulator for speed is multiplied with
-speed_dopamine_factor = 0.001
+max_speed_dopamine_factor = 0.001
 # Constant scaling strength of potentiation
 A_plus = 1.
 # Constant scaling strength of depression
@@ -83,3 +85,6 @@ turn_pre = 0
 n_max = sim_time//t_refrac
 # Minimum turning radius
 r_min = 1
+
+params_dict = {}
+params_dict.update({k:v for k,v in locals().copy().iteritems() if k[:2] != '__' and k != 'params_dict' and k != 'np' and k!= 'path' and k != 'math'})
