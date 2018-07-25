@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-session = "session_005"
+session = "session_001"
 path = "../data/" + session        # Path for saving data
-comment = "x^3 reward"
+comment = "scenario_1"
 
 # Other
 training_length = 50000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 10
 maze_width = 5.0
 reset_distance = 2.3                # Reset distance
-reset_steps = 500
+reset_steps = 1500
 rate = 20.                          # ROS publication rate motor speed
 
 # Input image
@@ -33,8 +33,8 @@ max_spikes = 15.                    # number of events during each step for maxi
 # R-STDP parameters
 w_min = -3500.                      # Minimum weight value
 w_max = 3500.                       # Maximum weight value
-w0_min = 200.                      # Minimum initial random value
-w0_max = 201.                      # Maximum initial random value
+w0_min = w_min                      # Minimum initial random value
+w0_max = w_max                      # Maximum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
 reward_factor = 0.00025             # Reward factor modulating reward signal strength

@@ -49,8 +49,8 @@ class VrepEnvironment():
         self.state = []
 
         # TODO
-        self.positive_direction = False
-        # self.positive_direction = True
+        # self.positive_direction = False
+        self.positive_direction = True
 
         self.terminate = False
         self.terminate_position = 0
@@ -80,7 +80,7 @@ class VrepEnvironment():
 
         # Change direction
         # TODO
-        self.positive_direction = not self.positive_direction
+        # self.positive_direction = not self.positive_direction
 
         self.reset_pub.publish(Bool(self.positive_direction))
 
@@ -139,11 +139,12 @@ class VrepEnvironment():
         left_condition = self.pos_data[0] > -1
         right_condition = self.pos_data[0] < 1
 
-        if (self.steps > reset_steps and
-            left_condition and
-            right_condition and
-            bottom_condition and
-            top_condition):
+        # if (self.steps > reset_steps and
+        #     left_condition and
+        #     right_condition and
+        #     bottom_condition and
+        #     top_condition):
+        if (self.steps > reset_steps):
             print "starting area reached"
             self.terminate = True
 
