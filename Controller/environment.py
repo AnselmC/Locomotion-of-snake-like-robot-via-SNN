@@ -119,7 +119,7 @@ class VrepEnvironment():
         self.total_steps += 1
         # Set radius and set speed
         self.setRadius(n_l,n_r)
-        self.setSpeed(n_faster, n_slower)
+        #self.setSpeed(n_faster, n_slower)
 
         # Publish turning radius and speed
         self.radius_pub.publish(self.radius)
@@ -177,7 +177,8 @@ class VrepEnvironment():
         return self.car_params
 
     def timeModulateModulator(self, modulator, max_value):
-        return modulator*(-(max_value/(math.exp(-(5.0/training_length)*(self.total_steps-(training_length/2.0))))) + max_value)
+        # return modulator*(-(max_value/(math.exp(-(5.0/training_length)*(self.total_steps-(training_length/2.0))))) + max_value)
+        return modulator*max_value
 
     def getTurningDopamineModulator(self):
         # return 2/(1+math.exp(-4*self.cx))-1

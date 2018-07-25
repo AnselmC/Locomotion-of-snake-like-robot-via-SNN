@@ -3,15 +3,15 @@
 import numpy as np
 import math
 
-session_no = '021'
+session_no = '022'
 path = "../data/session_" + session_no        # Path for saving data
-comment = 'with speed change'
+comment = 'without speed change'
 
 # Training parameters
 # Length of training (1 step ~50 ms)
-training_length = 20000
+training_length = 35000
 # Maximum amount of steps per episode before reset
-max_steps = 2000
+max_steps = 4000
 # ROS publication rate
 rate = 20.
 # Every modulo steps parameters are printed
