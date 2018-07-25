@@ -28,8 +28,6 @@ for i in range(50000):
     # Simulate network for 50 ms
     # Get left and right output spikes, get weights
     n_l, n_r = snn.run(state)
-    # w_l = weights[0]
-    # w_r = weights[1]
 
     # Feed output spikes into steering wheel model
     # Get state, distance, position, reward, termination, step
