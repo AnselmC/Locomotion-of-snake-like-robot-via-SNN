@@ -126,3 +126,8 @@ class SpikingNeuralNetwork():
         nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)
         return
+
+    def calculate_reward_hidden(self, weight_l, weight_r, reward):
+        reward_hidden = ((-reward*p.reward_factor*weight_l +
+                         reward*p.reward_factor*weight_r)/(weight_l + weight_r))
+        return reward_hidden

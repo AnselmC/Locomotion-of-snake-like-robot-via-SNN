@@ -12,6 +12,7 @@ env = VrepEnvironment()
 
 weights_r = []
 weights_l = []
+weights_hidden = []
 weights_i = []
 steps = []
 terminate_positions = []
@@ -36,6 +37,7 @@ for i in range(p.training_length):
     n_l, n_r, weights = snn.simulate(state, reward)
     w_l = weights[0]
     w_r = weights[1]
+    w_h = weights[2]
 
     # Feed output spikes in model
     # Get state, distance, pos_data, reward, t, step
@@ -48,14 +50,15 @@ for i in range(p.training_length):
     #     print "n_r: \t\t", n_r
     #     print "w_l: \n", w_l
     #     print "w_r: \n", w_r
-    #     for j in range(len(weights[2])):
-    #         print "weight_hidden[", j,"]: \n", weights[2][j]
+    #     for j in range(len(w_h)):
+    #         print "weight_hidden[", j,"]: \n", w_h[j]
     #     print "--------------------------------"
 
     # Save weights every 100 simulation steps
     if i % 100 == 0:
         weights_l.append(w_l)
         weights_r.append(w_r)
+        weights_hidden.append(w_h)
         weights_i.append(i)
 
     # Save no. of steps every episode
@@ -97,6 +100,7 @@ with open(p.path+'/training_parameters.json', 'w') as file:
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
+h5f.create_dataset('w_h', data=weights_hidden)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data=steps)
 h5f.create_dataset('terminate_positions', data=terminate_positions)
