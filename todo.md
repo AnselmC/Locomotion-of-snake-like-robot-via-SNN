@@ -8,11 +8,8 @@
   - w0_max
   - reward_factor
 - New maze form so that the snake makes a right and a left circle in on direction and a left and then a right circle in the other; the testing case is to travel the whole maze
-- End training if snaked managed to reach starting area again in both directions two times
-- Plot positive and negative direction steps seperately
 - Code rework + comments
   - Change 'from parameters import \*' to 'import parameters as params'
-- Doesn't the network also update its weight in controller.py?
 - Decaying reward_factor
 
 # Questions
@@ -27,4 +24,4 @@ Meeting on 07/20/2018
 - Make Snake picture more elegant
 - Make flowchart text bigger
 - 3 scenarios:
-- Theory contribution: Hidden layer with backpropagation
+- Theory contribution: Hidden layer with reward backpropagation

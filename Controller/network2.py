@@ -53,7 +53,9 @@ class SpikingNeuralNetwork():
             # print "conn_hidden[", i, "]: ", self.calculate_reward_hidden(weights_l[i], weights_r[i], reward)
 
         nest.SetStatus(self.conn_l, {"n": -reward*p.reward_factor})
+        # print "conn_l: ", -reward*p.reward_factor
         nest.SetStatus(self.conn_r, {"n": reward*p.reward_factor})
+        # print "conn_r: ", reward*p.reward_factor
 
         # Set poisson neuron firing time span
         time = nest.GetKernelStatus("time")
