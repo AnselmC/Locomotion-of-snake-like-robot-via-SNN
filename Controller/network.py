@@ -57,6 +57,29 @@ class SpikingNeuralNetwork():
         weights_r = np.array(nest.GetStatus(self.conn_r, keys="weight")).reshape(p.resolution)
         return n_l, n_r, [weights_l, weights_r]
 
+    def run(self, dvs_data):
+        # Set poisson neuron firing time span
+        time = nest.GetKernelStatus("time")
+        nest.SetStatus(self.spike_generators, {"origin": time})
+        nest.SetStatus(self.spike_generators, {"stop": p.sim_time})
+        # Set poisson neuron firing frequency
+        dvs_data = dvs_data.reshape(dvs_data.size)
+        for i in range(dvs_data.size):
+            rate = dvs_data[i]/p.max_spikes
+            rate = np.clip(rate,0,1)*p.max_poisson_freq
+            nest.SetStatus([self.spike_generators[i]], {"rate": rate})
+        # Run network
+        nest.Prepare()
+        nest.Run(p.sim_time)
+        nest.Cleanup()
+        # Get left and right output spikes
+        n_l = nest.GetStatus(self.spike_detector,keys="n_events")[0]
+        n_r = nest.GetStatus(self.spike_detector,keys="n_events")[1]
+        # Reset output spike detector
+        nest.SetStatus(self.spike_detector, {"n_events": 0})
+        # Get network weights
+        return n_l, n_r
+
     def set_weights(self, weights_l, weights_r):
         # Translate weights into dictionary format
         w_l = []
