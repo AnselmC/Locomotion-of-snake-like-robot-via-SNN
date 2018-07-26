@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-session = "session_005"
+session = "session_006"
 path = "../data/" + session        # Path for saving data
-comment = "x^3 reward"
+comment = "higher w_min, w_max, w0_min, w0_max"
 
 # Other
 training_length = 50000             # Lenth of training procedure (1 step ~ 50 ms)
@@ -31,13 +31,13 @@ max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
-w_min = -3500.                      # Minimum weight value
-w_max = 3500.                       # Maximum weight value
-w0_min = 200.                      # Minimum initial random value
-w0_max = 201.                      # Maximum initial random value
+w_max = 10000.                       # Maximum weight value
+w_min = -w_max                      # Minimum weight value
+w0_max = w_max/5                      # Maximum initial random value
+w0_min = -w0_max                      # Minimum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
-reward_factor = 0.00025             # Reward factor modulating reward signal strength
+reward_factor = 0.000025             # Reward factor modulating reward signal strength
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 
