@@ -54,8 +54,8 @@ for i in range(p.training_length):
     #         print "weight_hidden[", j,"]: \n", w_h[j]
     #     print "--------------------------------"
 
-    # Save weights every 100 simulation steps
-    if i % 100 == 0:
+    # Save weights every 10 simulation steps
+    if i % 10 == 0:
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_hidden.append(w_h)

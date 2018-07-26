@@ -31,13 +31,13 @@ max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
-w_min = -3500.                      # Minimum weight value
 w_max = 3500.                       # Maximum weight value
-w0_min = w_min/7                      # Minimum initial random value
+w_min = -w_max                      # Minimum weight value
 w0_max = w_max/7                      # Maximum initial random value
+w0_min = -w0_max                      # Minimum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
-reward_factor = 0.000025             # Reward factor modulating reward signal strength
+reward_factor = 0.00025             # Reward factor modulating reward signal strength
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 

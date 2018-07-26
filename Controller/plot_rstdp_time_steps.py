@@ -17,29 +17,19 @@ steps = np.array(h5f['steps'], dtype = float)
 xlim1 = steps.size
 ylim1 = steps.max(axis=0)*1.1
 
-# xlim2 = terminate_positions.size
-# ylim2 = terminate_positions.max(axis=0)*1.1
-
-fig = plt.figure(figsize=(7,12))
+fig = plt.figure(figsize=(10,10))
 
 ax1 = plt.subplot(111)
 ax1.set_ylabel('Time Steps')
+ax1.set_xlabel('Episode')
 ax1.set_xlim((0,xlim1))
 ax1.set_ylim((0, ylim1))
 plt.grid(linestyle=':')
 plt.plot(steps, linewidth=1.0)
 
-# ax2 = plt.subplot(212, sharex=ax1)
-# ax2.set_xlabel('Episode')
-# ax2.set_ylabel('terminate_positions')
-# ax2.set_xlim((0,xlim1))
-# ax2.set_ylim((0, ylim2))
-# plt.grid(linestyle=':')
-# plt.plot(terminate_positions, linewidth=1.0)
-
 fig.tight_layout()
 
-filename = "maze_" + session + "_training.png"
+filename = "maze_" + session + "_time_steps.png"
 filepath = "../plots/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

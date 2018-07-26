@@ -19,7 +19,7 @@ for weight in w_h:
 	weights_h.append(np.flipud(weight[-1].T))
 # print weights_l.shape
 
-fig = plt.figure(figsize=(params.resolution[0]*6,params.resolution[1]*6))
+fig = plt.figure(figsize=(params.resolution[0]*3,params.resolution[1]*3))
 
 def plt_subplot(index, title, weights):
 	ax = plt.subplot(index)

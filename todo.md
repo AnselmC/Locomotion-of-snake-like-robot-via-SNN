@@ -7,10 +7,12 @@
   - w0_min
   - w0_max
   - reward_factor
-- New maze form so that the snake makes a right and a left circle in on direction and a left and then a right circle in the other; the testing case is to travel the whole maze
+  - w_min
+  - w_max
 - Code rework + comments
   - Change 'from parameters import \*' to 'import parameters as params'
 - Decaying reward_factor
+- Plot steps in negative and positive direction
 
 # Questions
 - Turning model
