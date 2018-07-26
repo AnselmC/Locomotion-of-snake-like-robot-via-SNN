@@ -2,14 +2,14 @@
 
 session = "session_001"
 path = "../data/" + session        # Path for saving data
-comment = "scenario_1"
+comment = "scenario_1, uniform distributed weights"
 
 # Other
-training_length = 50000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 10000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 10
 maze_width = 5.0
 reset_distance = 2.3                # Reset distance
-reset_steps = 1500
+reset_steps = 1000
 rate = 20.                          # ROS publication rate motor speed
 
 # Input image
@@ -33,11 +33,11 @@ max_spikes = 15.                    # number of events during each step for maxi
 # R-STDP parameters
 w_max = 3500.                       # Maximum weight value
 w_min = -w_max                      # Minimum weight value
-w0_max = w_max/7                      # Maximum initial random value
-w0_min = -w0_max                      # Minimum initial random value
+w0_max = 201.                      # Maximum initial random value
+w0_min = 200.                      # Minimum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
-reward_factor = 0.00025             # Reward factor modulating reward signal strength
+reward_factor = 0.0025             # Reward factor modulating reward signal strength
 A_plus = 1.                         # Constant scaling strength of potentiaion
 A_minus = 1.                        # Constant scaling strength of depression
 

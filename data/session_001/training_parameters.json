@@ -1,6 +1,6 @@
 {
-    "comment": "scenario_1", 
-    "w0_min": -3500.0, 
+    "comment": "scenario_1, uniform distributed weights", 
+    "w0_min": 200.0, 
     "reward_factor": 0.00025, 
     "crop_top": 0, 
     "maze_width": 5.0, 
@@ -8,11 +8,11 @@
         128, 
         128
     ], 
-    "reset_steps": 1500, 
+    "reset_steps": 1000, 
     "w_min": -3500.0, 
-    "w0_max": 3500.0, 
+    "w0_max": 201.0, 
     "crop_bottom": 48, 
-    "training_length": 50000, 
+    "training_length": 10000, 
     "reset_distance": 2.3, 
     "resolution": [
         8, 
