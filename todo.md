@@ -14,6 +14,9 @@
 
 # Questions
 - Turning model
+- Hidden layer idea
+- Snake falls through floor
+- Spike detectors in hidden layer
 
 Meeting on 07/20/2018
 - Title: Don't mention DVS

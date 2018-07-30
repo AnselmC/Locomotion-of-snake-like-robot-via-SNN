@@ -89,6 +89,8 @@ class SpikingNeuralNetwork():
         for w in weights_r.reshape(weights_r.size):
             w_r.append({'weight': w})
         # Set left and right network weights
+        print "w_l.shape: \n", len(w_l)
+        print "w_r.shape: \n", len(w_r)
         nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)
         return

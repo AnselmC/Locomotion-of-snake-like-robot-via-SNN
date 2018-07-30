@@ -1,6 +1,6 @@
 {
-    "comment": "higher w_min, w_max, w0_min, w0_max", 
-    "w0_min": -2000.0, 
+    "comment": "Try to reproduce succes of session_005", 
+    "w0_min": 200.0, 
     "reward_factor": 0.00025, 
     "crop_top": 0, 
     "maze_width": 5.0, 
@@ -9,15 +9,15 @@
         128
     ], 
     "reset_steps": 500, 
-    "w_min": -10000.0, 
-    "w0_max": 2000.0, 
+    "w_min": -3500.0, 
+    "w0_max": 201.0, 
     "crop_bottom": 48, 
-    "training_length": 30000, 
+    "training_length": 50000, 
     "reset_distance": 2.3, 
     "resolution": [
         8, 
         5
     ], 
     "r_min": 1, 
-    "w_max": 10000.0
+    "w_max": 3500.0
 }
