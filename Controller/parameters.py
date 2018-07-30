@@ -3,7 +3,7 @@
 import numpy as np
 import math
 
-session_no = '022'
+session_no = '027'
 path = "../data/session_" + session_no        # Path for saving data
 comment = 'without speed change'
 
@@ -11,7 +11,7 @@ comment = 'without speed change'
 # Length of training (1 step ~50 ms)
 training_length = 35000
 # Maximum amount of steps per episode before reset
-max_steps = 4000
+max_steps = 2500
 # ROS publication rate
 rate = 20.
 # Every modulo steps parameters are printed
@@ -31,9 +31,10 @@ reward_slope = 25
 # Dimensions of mxn array are set by array = [m,n]
 # Therefore, when going through an image array from a coordinate perspective with variables x,y you do so by array[y,x]
 img_resolution = [64,64]            # Original DVS frame resolution
-crop_bottom = 24                       # Crop at the top
-crop_top = 24                       # Crop at the bottom
-resolution = [(img_resolution[1]-crop_top-crop_bottom)//4, img_resolution[0]//4] 
+crop_bottom = 28                       # Crop at the top
+crop_top = 28                       # Crop at the bottom
+pixels_per_neuron_per_axis = 8
+resolution = [(img_resolution[1]-crop_top-crop_bottom)//pixels_per_neuron_per_axis, img_resolution[0]//pixels_per_neuron_per_axis]
 
 
 
@@ -57,16 +58,16 @@ max_spikes = 16.
 
 # R-STDP parameters
 # Minimum weight value
-w_min = -2000.
-# Maximum weight value
 w_max = 2500.
+# Maximum weight value
+w_min = -w_max
 # Minimum initial random value
-w0_min = 500.
+w0_min = 100.
 # Maximum initial random value
-w0_max = 501.
-# Time constant of reward signal
+w0_max = 1000.
+# Time constant of reward signal in ms
 tau_n = 200.
-# Time constant of eligibility trace
+# Time constant of eligibility trace in ms
 tau_c = 1000.
 # Factor that dopamine modulator for turning is multiplied with
 max_turning_dopamine_factor = 0.003

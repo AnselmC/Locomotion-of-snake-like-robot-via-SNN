@@ -50,7 +50,7 @@ class VrepEnvironment():
         #Rospy
         rospy.init_node('rstdp_controller')
         self.rate = rospy.Rate(rate)
-        
+
 
     # Callback functions
     def params_callback(self, msg):
@@ -92,7 +92,7 @@ class VrepEnvironment():
             self.blind_steps_counter = 0
             self.terminate = False
             # normalized centroid position
-            self.cx = 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0 
+            self.cx = 2*M['m10']/(M['m00']*img_resolution[1]) - 1.0
 
         cv.imshow('image',self.img)
         cv.waitKey(2)
@@ -119,7 +119,7 @@ class VrepEnvironment():
         self.total_steps += 1
         # Set radius and set speed
         self.setRadius(n_l,n_r)
-        #self.setSpeed(n_faster, n_slower)
+        # self.setSpeed(n_faster, n_slower)
 
         # Publish turning radius and speed
         self.radius_pub.publish(self.radius)
@@ -138,7 +138,7 @@ class VrepEnvironment():
         n = self.steps
 
         # Terminating conditions
-        # Terminate if speed turns negative   
+        # Terminate if speed turns negative
         if self.speed < 0:
             self.terminate = True
         # Terminate if robot reaches reset distance
@@ -155,8 +155,8 @@ class VrepEnvironment():
         if self.steps%modulo == 0:
             self.printParameters(n_l, n_r, n_faster, n_slower, tdm, sdm)
 
-        # Return state, reward, speed reward, termination, steps
-        return s,tdm,sdm,t,n
+        # Return state, reward, speed reward, termination, steps, radius, dist_to_middle
+        return s,tdm,sdm,t,n, self.radius, self.cx
 
     def printParameters(self, n_l, n_r, n_faster, n_slower, tdm, sdm):
             print "--------------------------------"
@@ -201,7 +201,7 @@ class VrepEnvironment():
         if abs(self.turn_pre) < 0.001:
             radius = 0
         else:
-            # [Question] [r]=m, [r_min]=m 
+            # [Question] [r]=m, [r_min]=m
             radius = r_min/self.turn_pre
 
         if(self.steps%10 != 0):
@@ -214,16 +214,16 @@ class VrepEnvironment():
         m_slower = n_slower/n_max
         m_faster = n_faster/n_max
         # # Snake speed v1
-        if(self.steps%10 != 0):
+        if(self.steps%20 != 0):
             self.speed_buffer = self.speed_buffer + (m_faster-m_slower)*speed_change
         else:
-            if(abs(self.speed_buffer/10) > 0.1*self.speed):
+            if(abs(self.speed_buffer/20) > 0.01*self.speed):
                 if(self.speed_buffer > 0):
                     self.speed_buffer = self.speed
                 else:
                     self.speed_buffer = -self.speed
-            self.speed = self.speed + self.speed_buffer/10
-            self.speed_buffer = 0     
+            self.speed = self.speed + self.speed_buffer/20
+            self.speed_buffer = 0
         # Snake speed v2
         # if(self.steps%10 !=0):
         #     if(n_faster > n_slower):
@@ -242,7 +242,7 @@ class VrepEnvironment():
         #         else:
         #             self.speed_buffer = -max_speed_change
         #     self.speed = self.speed + self.speed_buffer
-        #     self.speed_buffer = 0   
+        #     self.speed_buffer = 0
 
     def getState(self):
         # 4x16

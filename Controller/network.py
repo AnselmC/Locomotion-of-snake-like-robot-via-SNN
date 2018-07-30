@@ -15,8 +15,7 @@ class SpikingNeuralNetwork():
         # Create Poisson neurons
         self.spike_generators = nest.Create("poisson_generator", p.resolution[0]*p.resolution[1], params=p.poisson_params)
         self.neuron_pre = nest.Create("parrot_neuron", p.resolution[0]*p.resolution[1])
-        # Create hidden layer
-        self.neuron_hidden = nest.Create("iaf_psc_alpha", (p.resolution[0]//2)*p.resolution[1], params=p.iaf_params_hidden)
+
         # Create motor IAF neurons
         self.neuron_post = nest.Create("iaf_psc_alpha", 4, params=p.iaf_params)
         # Create Output spike detector
@@ -37,8 +36,6 @@ class SpikingNeuralNetwork():
         self.conn_faster = nest.GetConnections(target=[self.neuron_post[3]])
 
     def simulate(self, image_data, tdm, sdm):
-
-
         # Set tdm signal for left and right neuron connections
         nest.SetStatus(self.conn_l, {"n": -tdm})
         nest.SetStatus(self.conn_r, {"n": tdm})
@@ -53,6 +50,7 @@ class SpikingNeuralNetwork():
         # Set poisson neuron firing frequency
         image_data = image_data.reshape(image_data.size)
         for i in range(image_data.size):
+            #print image_data[i]
             rate = image_data[i]/p.max_spikes
             rate = np.clip(rate,0,1)*p.max_poisson_freq
             nest.SetStatus([self.spike_generators[i]], {"rate": rate})
@@ -73,7 +71,32 @@ class SpikingNeuralNetwork():
 
         return n_l, n_r, n_slower, n_faster, weights_l, weights_r, weights_slower, weights_faster
 
-    def set_weights(self, weights_l, weights_r, weights_slower, weights_faster):
+    def run(self, image_data):
+        # Set poisson neuron firing time span
+        time = nest.GetKernelStatus("time")
+        nest.SetStatus(self.spike_generators, {"origin": time})
+        nest.SetStatus(self.spike_generators, {"stop": p.sim_time})
+        # Set poisson neuron firing frequency
+        image_data = image_data.reshape(image_data.size)
+        for i in range(image_data.size):
+            rate = image_data[i]/p.max_spikes
+            rate = np.clip(rate,0,1)*p.max_poisson_freq
+            nest.SetStatus([self.spike_generators[i]], {"rate": rate})
+        # Run network
+        nest.Prepare()
+        nest.Run(p.sim_time)
+        nest.Cleanup()
+        # Get left and right output spikes
+        n_l = nest.GetStatus(self.spike_detector,keys="n_events")[0]
+        n_r = nest.GetStatus(self.spike_detector,keys="n_events")[1]
+        n_slower = nest.GetStatus(self.spike_detector,keys="n_events")[2]
+        n_faster = nest.GetStatus(self.spike_detector,keys="n_events")[3]
+        # Reset output spike detector
+        nest.SetStatus(self.spike_detector, {"n_events": 0})
+        # Get network weights
+        return n_l, n_r, n_slower, n_faster
+
+    def set_weights(self, weights_l, weights_r):
         # Translate weights into dictionary format
         w_l = []
         for w in weights_l.reshape(weights_l.size):
@@ -81,15 +104,18 @@ class SpikingNeuralNetwork():
         w_r = []
         for w in weights_r.reshape(weights_r.size):
             w_r.append({'weight': w})
-        w_slower = []
-        for w in weights_slower.reshape(weights_slower.size):
-            w_slower.append({'weight':w})
-        w_faster = []
-        for w in weights_faster.reshape(weights_faster.size):
-            w_faster.append({'weight':w})
+        # w_slower = []
+        # for w in weights_slower.reshape(weights_slower.size):
+        #     w_slower.append({'weight':w})
+        # w_faster = []
+        # for w in weights_faster.reshape(weights_faster.size):
+        #     w_faster.append({'weight':w})
         # Set left and right network weights
-        nest.SetStatus(self.conn_l, w_l)
+        print w_l
+        print w_r
+        print self.conn_l
+        #nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)
-        nest.SetStatus(self.conn_slower, w_slower)
-        nest.SetStatus(self.conn_faster, w_faster)
+        # nest.SetStatus(self.conn_slower, w_slower)
+        # nest.SetStatus(self.conn_faster, w_faster)
         return

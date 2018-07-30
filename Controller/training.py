@@ -18,6 +18,9 @@ weights_slower = []
 weights_faster = []
 weights_i = []
 steps = []
+radius = []
+dist_to_middle = []
+dopamine = []
 params = {}
 terminate_early = False
 
@@ -39,9 +42,9 @@ for i in range(p.training_length):
     n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,tdm,sdm)
 
     # Feed output spikes in steering wheel model
-    # Get state, motor reward, speed reward, termination, step
-    s,tdm,sdm,t,n = env.step(n_l, n_r, n_slower, n_faster)
-    
+    # Get state, motor reward, speed reward, termination, step, radius, dist_to_middle
+    s,tdm,sdm,t,n,r,d = env.step(n_l, n_r, n_slower, n_faster)
+
     # Save weights every 100 simulation steps
     if i % 100 == 0:
         print "--------------------------------"
@@ -55,12 +58,16 @@ for i in range(p.training_length):
         weights_faster.append(w_faster)
         weights_i.append(i)
 
+    # Save some params every step
+    dopamine.append(tdm)
+    radius.append(r)
+    dist_to_middle.append(d)
     # Save no. of steps every episode
     if t:
         print "-----------terminate_early-----------"
         steps.append(n)
         print "steps:\n", steps
-        
+
     if terminate_early:
         break
 
@@ -69,16 +76,11 @@ try:
     print "saving params"
     params = p.params_dict
     print params
-
-    car_params = env.getParams()
     # Save to single json file
     json_data = json.dumps(params, indent=4, sort_keys=True)
     print "converted to json"
     with open(p.path+'/training_parameters.json','w') as file:
         file.write(json_data)
-            # json_data=json.loads(car_params.__str__())
-            # json_data = json.dumps(json_data, indent=4, sort_keys=True)
-            # file.write(json_data)
 except:
     print "saving params failed"
     pass
@@ -91,4 +93,7 @@ h5f.create_dataset('w_slower', data=weights_slower)
 h5f.create_dataset('w_faster', data=weights_faster)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
+h5f.create_dataset('radius', data = radius)
+h5f.create_dataset('dist_to_middle', data = dist_to_middle)
+h5f.create_dataset('dopamine', data = dopamine)
 h5f.close()

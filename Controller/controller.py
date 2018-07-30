@@ -17,7 +17,7 @@ w_slower = np.array(h5f['w_slower'], dtype=float)[-1]
 w_faster = np.array(h5f['w_faster'], dtype=float)[-1]
 
 # Set network weights
-snn.set_weights(w_l, w_r, w_slower, w_faster)
+snn.set_weights(w_l, w_r)
 
 distance = []
 
@@ -28,7 +28,7 @@ for i in range(15000):
 
     # Simulate network for 50 ms
     # Get left and right output spikes, get weights
-    n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,tdm,sdm)
+    n_l, n_r, n_slower, n_faster = snn.run(s)
 
     # Feed output spikes in steering wheel model
     # Get state, motor reward, speed reward, termination, step
