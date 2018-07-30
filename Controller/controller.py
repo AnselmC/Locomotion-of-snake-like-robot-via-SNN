@@ -33,7 +33,7 @@ for i in range(50000):
 
     # Feed output spikes into steering wheel model
     # Get state, distance, position, reward, termination, step
-    state, distance, pos_data, reward, t, step, terminate_position = env.step(n_l, n_r)
+    state, distance, pos_data, reward, t, step, terminate_position, travelled_distances = env.step(n_l, n_r)
 
     # Store position, distance
     distances.append(distance)

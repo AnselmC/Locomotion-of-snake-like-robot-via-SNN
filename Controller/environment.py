@@ -31,6 +31,10 @@ class VrepEnvironment():
         self.distances_sub = rospy.Subscriber('distances', Float32MultiArray, self.distances_callback)
         self.distances = []
 
+        # Travelled distance Subscriber
+        self.travelled_distance = rospy.Subscriber('travelledDistance', Float32, self.travelled_distance_callback)
+        self.travelled_distance = 0
+
         # Radius Publisher
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
 
@@ -71,6 +75,11 @@ class VrepEnvironment():
     def distances_callback(self, msg):
         # Store incoming distances
         self.distances = msg.data
+        return
+
+    def travelled_distance_callback(self.msg):
+        # Store incoming travelled distance
+        self.travelled_distance = msg.data
         return
 
     def reset(self):
@@ -176,7 +185,7 @@ class VrepEnvironment():
 #             print "--------------------------------"
 
         # Return state, distance, pos_data, reward, terminate, steps
-        return self.state, self.distance, self.pos_data, self.reward, t, n, self.terminate_position
+        return self.state, self.distance, self.pos_data, self.reward, t, n, self.terminate_position, self.travelled_distance
 
     def getState(self):
         new_state = np.zeros((resolution[0], resolution[1]), dtype=int)

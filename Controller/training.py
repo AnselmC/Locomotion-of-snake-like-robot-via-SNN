@@ -15,6 +15,7 @@ weights_l = []
 weights_i = []
 steps = []
 terminate_positions = []
+travelled_distances = []
 params = {}
 terminate = False
 
@@ -39,7 +40,7 @@ for i in range(p.training_length):
 
     # Feed output spikes in model
     # Get state, distance, pos_data, reward, t, step
-    state, distance, pos_data, reward, t, step, terminate_position = env.step(n_l, n_r)
+    state, distance, pos_data, reward, t, step, terminate_position, travelled_distance = env.step(n_l, n_r)
 
     # if (i % modulo == 0):
     #     print "----------training.py----------"
@@ -62,10 +63,11 @@ for i in range(p.training_length):
     if t:
         steps.append(step)
         terminate_positions.append(terminate_position)
+        travelled_distances.append(travelled_distance)
         print "----------training.py----------"
         print "-----------terminate-----------"
         print "steps:\n", steps
-        # print "terminate_positions:\n", terminate_positions
+        print "travelled_distances:\n", travelled_distances
         print "--------------------------------"
 
     if terminate:

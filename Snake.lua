@@ -1,3 +1,12 @@
+  function calculate_travelled_distance(travelled_distance, position_old, position)
+    delta_x = positon.[1] - position_old.[1]
+    delta_y = position.[2] - position_old[2]
+    delta_z = position.[3] - position_old[3]
+
+    delta_distance = (delta_x^2 + delta_y^2 + delta_z^2)^0.5
+    travelled_distance = travelled_distance + delta_distance
+    return travelled_distance
+
   function setTurningRadius_cb(msg)
       -- Turning Radius subscriber callback
       radius = msg.data
@@ -113,6 +122,7 @@
           resetRobotSub=simExtRosInterface_subscribe('/resetRobot','std_msgs/Bool','resetRobot_cb')
           paramsPub=simExtRosInterface_advertise('/parameters', 'std_msgs/String')
           distancePub=simExtRosInterface_advertise('/distances', 'std_msgs/Float32MultiArray')
+          travelledDistancePub=simExtRosInterface_advertise('/travelledDistance','std_msgs/Float32')
       end
 
       -- Initialize parameters
@@ -132,6 +142,11 @@
       -- linear reduction parameters (set y = 0 and z = 1 for disabling)
       y = simGetScriptSimulationParameter(sim_handle_self, "y")
       z = 1 - y
+
+      -- For travelled distance calculation
+      position_old = {}
+      position = {}
+      travelled_distance = 0
 
       -- set of control Parameters:
       -- w: temporal frequency: traveling speed of the wave
@@ -242,7 +257,11 @@
 
       simSetJointTargetPosition(joints_v[1], -head_dir*(1-math.exp(p*t)))
 
+      position_old = position
       position=simGetObjectPosition(robotHandle,-1)
+      travelled_distance = calculate_travelled_distance(travelled_distance, position_old, position)
+      simExtRosInterface_publish(travelledDistancePub, {data=travelled_distance})
+
       quaternion=simGetObjectQuaternion(robotHandle,-1)
       simExtRosInterface_publish(transformPub, {translation={x=position[1],y=position[2],z=position[3]},rotation={x=quaternion[1],y=quaternion[2],z=quaternion[3],w=quaternion[4]}})
 
