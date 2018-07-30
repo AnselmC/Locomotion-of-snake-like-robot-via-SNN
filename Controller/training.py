@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from network import *
+from network_hidden import *
 from environment import *
 import parameters as p
 import h5py
@@ -39,11 +39,11 @@ for i in range(p.training_length):
 
     # Simulate network for 50 ms
     # get number of output spikes and network weights
-    n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,tdm,sdm)
+    n_l, n_r, w_l, w_r = snn.simulate(s,tdm)
 
     # Feed output spikes in steering wheel model
     # Get state, motor reward, speed reward, termination, step, radius, dist_to_middle
-    s,tdm,sdm,t,n,r,d = env.step(n_l, n_r, n_slower, n_faster)
+    s,tdm,t,n,r,d = env.step(n_l, n_r)
 
     # Save weights every 100 simulation steps
     if i % 100 == 0:
@@ -54,8 +54,6 @@ for i in range(p.training_length):
         print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
-        weights_slower.append(w_slower)
-        weights_faster.append(w_faster)
         weights_i.append(i)
 
     # Save some params every step
@@ -89,8 +87,6 @@ except:
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
-h5f.create_dataset('w_slower', data=weights_slower)
-h5f.create_dataset('w_faster', data=weights_faster)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
 h5f.create_dataset('radius', data = radius)

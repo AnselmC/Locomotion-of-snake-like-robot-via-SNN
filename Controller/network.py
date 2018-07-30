@@ -111,8 +111,7 @@ class SpikingNeuralNetwork():
         # for w in weights_faster.reshape(weights_faster.size):
         #     w_faster.append({'weight':w})
         # Set left and right network weights
-        print w_l
-        print w_r
+        print self.conn_r
         print self.conn_l
         #nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)

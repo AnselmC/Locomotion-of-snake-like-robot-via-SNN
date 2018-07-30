@@ -3,9 +3,9 @@
 import numpy as np
 import math
 
-session_no = '027'
+session_no = '029'
 path = "../data/session_" + session_no        # Path for saving data
-comment = 'without speed change'
+comment = 'without speed change, with hidden layer'
 
 # Training parameters
 # Length of training (1 step ~50 ms)
@@ -54,7 +54,7 @@ poisson_params = {}
 # Maximum average firing frequency of poisson generators
 max_poisson_freq = 300.
 # Maximum amount of spikes of input neuron
-max_spikes = 16.
+max_spikes = float(pixels_per_neuron_per_axis**2)
 
 # R-STDP parameters
 # Minimum weight value

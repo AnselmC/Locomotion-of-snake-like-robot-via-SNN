@@ -13,8 +13,6 @@ env = VrepEnvironment()
 h5f = h5py.File(path + '/rstdp_data.h5', 'r')
 w_l = np.array(h5f['w_l'], dtype=float)[-1]
 w_r = np.array(h5f['w_r'], dtype=float)[-1]
-w_slower = np.array(h5f['w_slower'], dtype=float)[-1]
-w_faster = np.array(h5f['w_faster'], dtype=float)[-1]
 
 # Set network weights
 snn.set_weights(w_l, w_r)
@@ -32,7 +30,7 @@ for i in range(15000):
 
     # Feed output spikes in steering wheel model
     # Get state, motor reward, speed reward, termination, step
-    s,tdm,sdm,t,n = env.step(n_l, n_r, n_slower, n_faster)
+    s,tdm,t,n = env.step(n_l, n_r)
 
     # Store position, distance
     #distance.append(d)

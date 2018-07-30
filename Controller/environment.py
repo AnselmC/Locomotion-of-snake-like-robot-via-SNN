@@ -20,7 +20,6 @@ class VrepEnvironment():
     def __init__(self):
         # Subscriber and publisher set up
         self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
-        self.params_sub = rospy.Subscriber('parameters', String, self.params_callback)
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
         self.speed_pub = rospy.Publisher('speed', Float32, queue_size=1)
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
@@ -52,10 +51,6 @@ class VrepEnvironment():
         self.rate = rospy.Rate(rate)
 
 
-    # Callback functions
-    def params_callback(self, msg):
-        self.car_params = msg.data
-        return
 
     def image_callback(self, msg):
     # Process incoming image data
@@ -114,7 +109,7 @@ class VrepEnvironment():
         return np.zeros((resolution[0],resolution[1]),dtype=int), 0., 0.
 
 
-    def step(self, n_l, n_r, n_slower, n_faster):
+    def step(self, n_l, n_r):
         self.steps += 1
         self.total_steps += 1
         # Set radius and set speed
@@ -153,25 +148,22 @@ class VrepEnvironment():
             self.terminate = False
 
         if self.steps%modulo == 0:
-            self.printParameters(n_l, n_r, n_faster, n_slower, tdm, sdm)
+            self.printParameters(n_l, n_r, tdm)
 
         # Return state, reward, speed reward, termination, steps, radius, dist_to_middle
-        return s,tdm,sdm,t,n, self.radius, self.cx
+        return s,tdm,t,n, self.radius, self.cx
 
-    def printParameters(self, n_l, n_r, n_faster, n_slower, tdm, sdm):
+    def printParameters(self, n_l, n_r, tdm):
             print "--------------------------------"
             print "-----------step: ", self.steps, "-----------"
             print "--------------------------------"
             print "n_l: \t\t", n_l
             print "n_r: \t\t", n_r
-            print "n_slower: \t", n_slower
-            print "n_faster: \t", n_faster
             print "turn_pre: \t", self.turn_pre
             print "radius: \t", self.radius
             print "speed: \t\t", self.speed
             print "cx: \t\t", self.cx
             print "Turning dopemine modulator: \t", tdm
-            print "Speed dopamine modulator: \t", sdm
 
     def getParams(self):
         return self.car_params
