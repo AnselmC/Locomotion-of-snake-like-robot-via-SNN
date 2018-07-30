@@ -156,14 +156,15 @@ class VrepEnvironment():
             self.reset()
             self.terminate = False
 
-#         if (self.steps % modulo == 0):
-#             print "---------environment.py---------"
-#             print "-----------step: ", self.steps, "-----------"
-#             # print "dvs_data: \n", self.dvs_data
+        if (self.steps % modulo == 0):
+            print "---------environment.py---------"
+            print "-----------step: ", self.steps, "-----------"
+            # print "dvs_data: \n", self.dvs_data
+            print "state: \n", self.state
 #             print "pos_data[0]: \t", abs(self.pos_data[0])
 #             print "pos_data[1]: \t", self.pos_data[1]
-#             print "n_l: \t\t", n_l
-#             print "n_r: \t\t", n_r
+            print "n_l: \t\t", n_l
+            print "n_r: \t\t", n_r
 #             print "a: \t\t", a
 #             print "c: \t\t", c
 #             print "turn_pre: \t", self.turn_pre
@@ -172,7 +173,6 @@ class VrepEnvironment():
 #             print "distances[1]: \t", self.distances[1]
 #             print "distance: \t", self.distance
 #             print "reward: \t", self.reward
-# #            print "state: \n", self.state
 #             print "--------------------------------"
 
         # Return state, distance, pos_data, reward, terminate, steps

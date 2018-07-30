@@ -14,9 +14,11 @@
 
 # Questions
 - Turning model
-- Hidden layer idea
+- Feedback Hidden layer idea
 - Snake falls through floor
-- Spike detectors in hidden layer
+- What metrics to plot in discussion
+- getState function Claus
+- max_spikes calculation
 
 Meeting on 07/20/2018
 - Title: Don't mention DVS
