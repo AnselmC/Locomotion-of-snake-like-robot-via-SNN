@@ -16,7 +16,7 @@ weights_l = []
 weights_i = []
 steps = []
 terminate_positions = []
-params = {}
+parameters = {}
 terminate = False
 
 
@@ -77,15 +77,15 @@ for i in range(params.training_length):
 # Save training parameters
 try:
     print "saving params"
-    params = params.params_dict
-    print params
+    parameters = params.params_dict
+    print parameters
     # Save to single json file
-    json_data = json.dumps(params, indent=4, sort_keys=True)
+    json_data = json.dumps(parameters, indent=4, sort_keys=True)
     print "converted to json"
     with open(params.path+'/training_parameters.json','w') as file:
         file.write(json_data)
 except:
-    print "saving params failed"
+    print "saving parameters failed"
     pass
 
 # Save training data

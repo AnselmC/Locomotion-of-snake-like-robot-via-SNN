@@ -122,8 +122,8 @@ class VrepEnvironment():
 
     def calculate_and_publish_radius(self, n_l, n_r):
         # Snake turning model
-        m_l = n_l/n_max
-        m_r = n_r/n_max
+        m_l = n_l/params.n_max
+        m_r = n_r/params.n_max
         a = m_r - m_l
         c = math.sqrt((m_l**2 + m_r**2)/2.0)
 

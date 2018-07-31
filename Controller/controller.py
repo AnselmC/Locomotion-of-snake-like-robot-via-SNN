@@ -3,6 +3,7 @@
 import h5py
 import json
 import signal
+import numpy as np
 
 import network as net
 import environment as env
@@ -12,7 +13,7 @@ snn = net.SpikingNeuralNetwork()
 env = env.VrepEnvironment()
 
 # Read network weights
-h5f = h5py.File(path + '/rstdp_data.h5', 'r')
+h5f = h5py.File(params.path + '/rstdp_data.h5', 'r')
 w_l = np.array(h5f['w_l'], dtype=float)[-1]
 w_r = np.array(h5f['w_r'], dtype=float)[-1]
 
@@ -28,7 +29,7 @@ terminate_positions = []
 # Initialize environment, get initial state, initial reward
 state, reward = env.reset()
 
-for i in range(50000):
+for i in range(11000):
 
     # Simulate network for 50 ms
     # Get left and right output spikes, get weights
@@ -48,12 +49,12 @@ for i in range(50000):
     terminate_positions.append(terminate_position)
 
 # Save performance data
-h5f = h5py.File(path + '/rstdp_performance_data.h5', 'w')
+h5f = h5py.File(params.path + '/rstdp_performance_data.h5', 'w')
 h5f.create_dataset('distances', data=distances)
 h5f.create_dataset('positions', data=positions)
 h5f.create_dataset('rewards', data=rewards)
 h5f.create_dataset('steps', data=steps)
-h5f.create_dataset('terminate_positions', data=terminate_positions)
+# h5f.create_dataset('terminate_positions', data=terminate_positions)
 h5f.create_dataset('travelled_distances', data=travelled_distances)
 h5f.create_dataset('vrep_steps', data=vrep_steps)
 h5f.close()
