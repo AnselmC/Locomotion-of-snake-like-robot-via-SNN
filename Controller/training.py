@@ -17,12 +17,12 @@ weights_i = []
 steps = []
 terminate_positions = []
 parameters = {}
-terminate = False
+terminate_early = False
 
 
 def handler(signum, frane):
-    global terminate
-    terminate = True
+    global terminate_early
+    terminate_early = True
 
 
 signal.signal(signal.SIGINT, handler)
@@ -71,7 +71,7 @@ for i in range(params.training_length):
         print "travelled_distances:\n", travelled_distances
         print "--------------------------------"
 
-    if terminate:
+    if terminate_early:
         break
 
 # Save training parameters
