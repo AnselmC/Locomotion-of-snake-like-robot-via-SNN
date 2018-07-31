@@ -12,6 +12,8 @@ w_l = np.array(h5f['w_l'], dtype=float)
 w_r = np.array(h5f['w_r'], dtype=float)
 w_i = np.array(h5f['w_i'], dtype=float)
 
+print w_l.shape
+
 xlabels = ['Simulation Time [1 step = 50 ms]','Simulation Time [1 step = 50 ms]']
 ylabels = ['Weights Left Motor Neuron', 'Weights Right Motor Neuron']
 
@@ -35,7 +37,7 @@ for i in range(len(data)):
 
 fig.tight_layout()
 
-filename = params.session + "_steps_distance.png"
+filename = params.session + "_weights_over_steps.png"
 filepath = "../plots/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

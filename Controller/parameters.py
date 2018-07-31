@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-session = "session_004"
+session = "session_006"
 path = "../data/" + session        # Path for saving data
-comment = "max_poisson_freq = 256, max_spikes = 16."
+comment = "w0_max = 500, w0_min = -w0_max"
 
 # Other
 training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
@@ -27,14 +27,14 @@ time_resolution = 0.1               # Network simulation time resolution
 iaf_params = {}                     # IAF neuron parameters
 iaf_params_hidden = {}
 poisson_params = {}                 # Poisson neuron parameters
-max_poisson_freq = 256              # Maximum Poisson firing frequency for n_max
-max_spikes = 16.                    # number of events during each step for maximum poisson frequency
+max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
+max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
-w_max = 3500.                       # Maximum weight value
+w_max = 3000.                       # Maximum weight value
 w_min = -w_max                      # Minimum weight value
-w0_max = 201.                      # Maximum initial random value
-w0_min = 200.                      # Minimum initial random value
+w0_max = 500.                      # Maximum initial random value
+w0_min = -w0_max                      # Minimum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
 reward_factor = 0.00025           # Reward factor modulating reward signal strength
