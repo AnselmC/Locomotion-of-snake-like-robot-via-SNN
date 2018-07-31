@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-session = "session_012"
+session = "session_013"
 path = "../data/" + session        # Path for saving data
-comment = "max_spikes = 256, max_poisson_freq = 512"
+comment = "travelled_distance test"
 
 # Other
 training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
@@ -27,8 +27,8 @@ time_resolution = 0.1               # Network simulation time resolution
 iaf_params = {}                     # IAF neuron parameters
 iaf_params_hidden = {}
 poisson_params = {}                 # Poisson neuron parameters
-max_poisson_freq = 512              # Maximum Poisson firing frequency for n_max
-max_spikes = 256.                    # number of events during each step for maximum poisson frequency
+max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
+max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
 w_max = 3500.                       # Maximum weight value
