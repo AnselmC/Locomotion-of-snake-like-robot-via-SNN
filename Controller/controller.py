@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
-import numpy as np
-from network import *
-from environment import *
-from parameters import *
 import h5py
+import json
+import signal
 
-snn = SpikingNeuralNetwork()
-env = VrepEnvironment()
+import network as net
+import environment as env
+import parameters as params
+
+snn = net.SpikingNeuralNetwork()
+env = env.VrepEnvironment()
 
 # Read network weights
 h5f = h5py.File(path + '/rstdp_data.h5', 'r')
@@ -23,7 +25,7 @@ rewards = []
 steps = []
 terminate_positions = []
 
-# Initialize environment, get state, get reward
+# Initialize environment, get initial state, initial reward
 state, reward = env.reset()
 
 for i in range(50000):
@@ -31,11 +33,10 @@ for i in range(50000):
     # Simulate network for 50 ms
     # Get left and right output spikes, get weights
     n_l, n_r = snn.run(state)
-    # w_l = weights[0]
-    # w_r = weights[1]
 
     # Feed output spikes in model
-    # Get state, distance, pos_data, reward, t, step
+    # Get state, distance, pos_data, reward, terminate, steps,
+    # terminate_position, travelled_distances, vrep_steps
     (state, distance, pos_data, reward, t, step,
      terminate_position, travelled_distances, vrep_steps) = env.step(n_l, n_r)
 
