@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from network_hidden import *
+from network import *
 from environment import *
 import parameters as p
 import h5py
@@ -14,8 +14,6 @@ env = VrepEnvironment()
 
 weights_r = []
 weights_l = []
-weights_slower = []
-weights_faster = []
 weights_i = []
 steps = []
 radius = []
@@ -33,7 +31,7 @@ signal.signal(signal.SIGINT, handler)
 
 
 # Initialize environment, get initial state, initial reward, initial speed reward
-s,tdm,sdm = env.reset()
+s,tdm = env.reset()
 
 for i in range(p.training_length):
 
@@ -62,7 +60,7 @@ for i in range(p.training_length):
     dist_to_middle.append(d)
     # Save no. of steps every episode
     if t:
-        print "-----------terminate_early-----------"
+        print "-----------Terminate episode-----------"
         steps.append(n)
         print "steps:\n", steps
 

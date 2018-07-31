@@ -3,9 +3,9 @@
 import numpy as np
 import math
 
-session_no = '029'
+session_no = '001'
 path = "../data/session_" + session_no        # Path for saving data
-comment = 'without speed change, with hidden layer'
+comment = 'without speed change, without hidden layer'
 
 # Training parameters
 # Length of training (1 step ~50 ms)
@@ -70,7 +70,7 @@ tau_n = 200.
 # Time constant of eligibility trace in ms
 tau_c = 1000.
 # Factor that dopamine modulator for turning is multiplied with
-max_turning_dopamine_factor = 0.003
+max_turning_dopamine_factor = 0.0015
 # Factor that dopamine modulator for speed is multiplied with
 max_speed_dopamine_factor = 0.001
 # Constant scaling strength of potentiation

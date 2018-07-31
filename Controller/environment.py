@@ -106,7 +106,7 @@ class VrepEnvironment():
         #self.startLeft = not self.startLeft
         self.reset_pub.publish(Bool(True))
         time.sleep(1)
-        return np.zeros((resolution[0],resolution[1]),dtype=int), 0., 0.
+        return np.zeros((resolution[0],resolution[1]),dtype=int), 0.
 
 
     def step(self, n_l, n_r):
@@ -123,10 +123,8 @@ class VrepEnvironment():
         self.rate.sleep()
 
         # Set dopamine signals
-        # Turning dopamine modulator (tdm)
-        tdm = self.getTurningDopamineModulator()
         # Speed dopamine modulator (sdm)
-        sdm = self.getSpeedDopamineModulator()
+        tdm = self.getTurningDopamineModulator()
 
         # Get state and save stepno.
         s = self.getState()
@@ -176,11 +174,6 @@ class VrepEnvironment():
         # return 2/(1+math.exp(-4*self.cx))-1
         modulator = self.cx**3
         return self.timeModulateModulator(modulator,max_turning_dopamine_factor)
-
-    def getSpeedDopamineModulator(self):
-        # logistic function
-        modulator = 2/(math.exp(-reward_slope*(self.pixel_ratio - self.ideal_pixel_ratio))+1)-1
-        return self.timeModulateModulator(modulator,max_speed_dopamine_factor)
 
     def setRadius(self, n_l, n_r):
         # Snake turning model

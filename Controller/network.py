@@ -17,9 +17,9 @@ class SpikingNeuralNetwork():
         self.neuron_pre = nest.Create("parrot_neuron", p.resolution[0]*p.resolution[1])
 
         # Create motor IAF neurons
-        self.neuron_post = nest.Create("iaf_psc_alpha", 4, params=p.iaf_params)
+        self.neuron_post = nest.Create("iaf_psc_alpha", 2, params=p.iaf_params)
         # Create Output spike detector
-        self.spike_detector = nest.Create("spike_detector", 4, params={"withtime": True})
+        self.spike_detector = nest.Create("spike_detector", 2, params={"withtime": True})
         # Create R-STDP synapses
         self.syn_dict = {"model": "stdp_dopamine_synapse",
                         "weight": {"distribution": "uniform", "low": p.w0_min, "high": p.w0_max}}
@@ -31,18 +31,12 @@ class SpikingNeuralNetwork():
         # Create connection handles for left and right motor neurons
         self.conn_l = nest.GetConnections(target=[self.neuron_post[0]])
         self.conn_r = nest.GetConnections(target=[self.neuron_post[1]])
-        # Create connection handles for slower and faster neurons
-        self.conn_slower = nest.GetConnections(target=[self.neuron_post[2]])
-        self.conn_faster = nest.GetConnections(target=[self.neuron_post[3]])
 
-    def simulate(self, image_data, tdm, sdm):
+    def simulate(self, image_data, tdm):
         # Set tdm signal for left and right neuron connections
         nest.SetStatus(self.conn_l, {"n": -tdm})
         nest.SetStatus(self.conn_r, {"n": tdm})
 
-        # Set tdm signal for faster and slower neuron connections
-        nest.SetStatus(self.conn_faster, {"n": -sdm})
-        nest.SetStatus(self.conn_slower, {"n": sdm})
         # Set poisson neuron firing time span
         time = nest.GetKernelStatus("time")
         nest.SetStatus(self.spike_generators, {"origin": time})
@@ -59,17 +53,13 @@ class SpikingNeuralNetwork():
         # Get left and right output spikes
         n_l = nest.GetStatus(self.spike_detector,keys="n_events")[0]
         n_r = nest.GetStatus(self.spike_detector,keys="n_events")[1]
-        n_slower = nest.GetStatus(self.spike_detector,keys="n_events")[2]
-        n_faster = nest.GetStatus(self.spike_detector,keys="n_events")[3]
         # Reset output spike detector
         nest.SetStatus(self.spike_detector, {"n_events": 0})
         # Get network weights
         weights_l = np.array(nest.GetStatus(self.conn_l, keys="weight")).reshape(p.resolution)
         weights_r = np.array(nest.GetStatus(self.conn_r, keys="weight")).reshape(p.resolution)
-        weights_faster = np.array(nest.GetStatus(self.conn_faster, keys="weight")).reshape(p.resolution)
-        weights_slower = np.array(nest.GetStatus(self.conn_slower, keys="weight")).reshape(p.resolution)
 
-        return n_l, n_r, n_slower, n_faster, weights_l, weights_r, weights_slower, weights_faster
+        return n_l, n_r, weights_l, weights_r
 
     def run(self, image_data):
         # Set poisson neuron firing time span
@@ -89,12 +79,10 @@ class SpikingNeuralNetwork():
         # Get left and right output spikes
         n_l = nest.GetStatus(self.spike_detector,keys="n_events")[0]
         n_r = nest.GetStatus(self.spike_detector,keys="n_events")[1]
-        n_slower = nest.GetStatus(self.spike_detector,keys="n_events")[2]
-        n_faster = nest.GetStatus(self.spike_detector,keys="n_events")[3]
         # Reset output spike detector
         nest.SetStatus(self.spike_detector, {"n_events": 0})
         # Get network weights
-        return n_l, n_r, n_slower, n_faster
+        return n_l, n_r
 
     def set_weights(self, weights_l, weights_r):
         # Translate weights into dictionary format
@@ -104,17 +92,7 @@ class SpikingNeuralNetwork():
         w_r = []
         for w in weights_r.reshape(weights_r.size):
             w_r.append({'weight': w})
-        # w_slower = []
-        # for w in weights_slower.reshape(weights_slower.size):
-        #     w_slower.append({'weight':w})
-        # w_faster = []
-        # for w in weights_faster.reshape(weights_faster.size):
-        #     w_faster.append({'weight':w})
-        # Set left and right network weights
-        print self.conn_r
-        print self.conn_l
-        #nest.SetStatus(self.conn_l, w_l)
+
+        nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)
-        # nest.SetStatus(self.conn_slower, w_slower)
-        # nest.SetStatus(self.conn_faster, w_faster)
         return
