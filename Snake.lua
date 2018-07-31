@@ -29,6 +29,7 @@ end
 function resetRobot_cb(msg)
     -- Publish travelled_distance
     simExtRosInterface_publish(travelledDistancePub, {data=travelled_distance})
+    simExtRosInterface_publish(stepsPub, {data=step})
 
     -- Reset robot subscriber callback
     -- get all objects in the model
