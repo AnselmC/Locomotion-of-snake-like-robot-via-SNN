@@ -10,7 +10,7 @@ from numpy.linalg import norm
 from std_msgs.msg import Int8MultiArray, Float32, Bool, String, Float32MultiArray
 from geometry_msgs.msg import Transform
 
-from parameters import *
+import parameters as params
 
 sys.path.append('/usr/lib/python2.7/dist-packages')  # weil ROS nicht mit Anaconda installiert
 
@@ -22,8 +22,11 @@ class VrepEnvironment():
                                         Int8MultiArray,
                                         self.dvs_callback)
         self.dvs_data = np.array([0, 0])
-        self.resize_factor = [dvs_resolution[0]//resolution[0],
-                              (dvs_resolution[1]-crop_bottom-crop_top)//resolution[1]]
+        self.resize_factor = [params.dvs_resolution[0]//params.resolution[0],
+                              (params.dvs_resolution[1]
+                               - params.crop_bottom
+                               - params.crop_top)
+                              //params.resolution[1]]
 
         # Position Subscriber
         self.pos_sub = rospy.Subscriber('transformData',
@@ -49,15 +52,17 @@ class VrepEnvironment():
                                           self.steps_callback)
         self.vrep_steps = []
 
-        # Radius Publisher
-        self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
-
         # Reset Publisher
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
 
+        # Radius Publisher
+        self.radius_pub = rospy.Publisher('turningRadius',
+                                          Float32,
+                                          queue_size=1)
+
         self.steps = 0
 
-        self.turn_pre = turn_pre
+        self.turn_pre = params.turn_pre
         self.radius = 0
         self.radius_buffer = 0
 
@@ -72,7 +77,7 @@ class VrepEnvironment():
         self.terminate_position = 0
 
         rospy.init_node('rstdp_controller')
-        self.rate = rospy.Rate(rate)
+        self.rate = rospy.Rate(params.rate)
 
     def dvs_callback(self, msg):
         # Store incoming DVS data
@@ -107,19 +112,18 @@ class VrepEnvironment():
         # Change direction
         self.positive_direction = not self.positive_direction
 
+        # Publish direction
         self.reset_pub.publish(Bool(self.positive_direction))
 
         time.sleep(1)
-        return np.zeros((resolution[0], resolution[1]), dtype=int), 0.
 
-    def step(self, n_l, n_r):
+        # Return initial state and reward
+        return np.zeros((params.resolution[0], params.resolution[1]), dtype=int), 0.
 
-        self.steps += 1
-
+    def calculate_and_publish_radius(self, n_l, n_r):
         # Snake turning model
         m_l = n_l/n_max
         m_r = n_r/n_max
-        # TODO:
         a = m_r - m_l
         c = math.sqrt((m_l**2 + m_r**2)/2.0)
 
@@ -128,7 +132,7 @@ class VrepEnvironment():
         if abs(self.turn_pre) < 0.001:
             self.radius = 0
         else:
-            self.radius = r_min/self.turn_pre
+            self.radius = params.r_min/self.turn_pre
 
         # Publish mean turning radius every 5 steps
         if (self.steps % 5 != 0):
@@ -140,30 +144,40 @@ class VrepEnvironment():
         self.radius_pub.publish(self.radius)
         self.rate.sleep()
 
-        # Get distance
-        self.distance = maze_width/2 - self.distances[0]
+    def calculate_reward(self, distance):
+        return 3*(distance)**3
+
+    def step(self, n_l, n_r):
+        self.steps += 1
+
+        self.calculate_and_publish_radius(n_l, n_r)
+
+        # Calculate distance to center
+        self.distance = params.maze_width/2 - self.distances[0]
 
         # Set reward signal
         if self.positive_direction is True:
-            self.reward = 3*(self.distance)**3
+            self.reward = self.calculate_reward(self.distance)
         else:
-            self.reward = -3*(self.distance)**3
+            self.reward = -self.calculate_reward(self.distance)
 
         # Get state
         self.state = self.getState()
 
         # Check reset conditions
-        if (abs(self.distance) > reset_distance):
+        # Condition 1: distance greater than reset_distance
+        if (abs(self.distance) > params.reset_distance):
             print "reset_distance reached: ", abs(self.distance)
             self.terminate = True
 
+        # Condition 2: Starting area reached again
         # Boundaries of starting area
         top_condition = self.pos_data[1] < 7.5
         bottom_condition = self.pos_data[1] > 2.5
         left_condition = self.pos_data[0] > -1
         right_condition = self.pos_data[0] < 1
 
-        if (self.steps > reset_steps and
+        if (self.steps > params.reset_steps and
             left_condition and
             right_condition and
             bottom_condition and
@@ -199,18 +213,19 @@ class VrepEnvironment():
             # print "reward: \t", self.reward
             # print "--------------------------------"
 
-        # Return state, distance, pos_data, reward, terminate, steps
+        # Return state, distance, pos_data, reward, terminate, steps,
+        # terminate_position, travelled_distances, vrep_steps
         return (self.state, self.distance, self.pos_data, self.reward, t, n,
                 self.terminate_position, self.travelled_distances,
                 self.vrep_steps)
 
     def getState(self):
-        new_state = np.zeros((resolution[0], resolution[1]), dtype=int)
+        new_state = np.zeros((params.resolution[0], params.resolution[1]), dtype=int)
         for i in range(len(self.dvs_data)//2):
             try:
-                if crop_bottom <= self.dvs_data[i*2+1] < (dvs_resolution[1]-crop_top):
+                if params.crop_bottom <= self.dvs_data[i*2+1] < (params.dvs_resolution[1]-params.crop_top):
                     idx = ((self.dvs_data[i*2])//self.resize_factor[0],
-                           (self.dvs_data[i*2+1]-crop_bottom)//self.resize_factor[1])
+                           (self.dvs_data[i*2+1]-params.crop_bottom)//self.resize_factor[1])
                     new_state[idx] += 1
             except:
                 pass
