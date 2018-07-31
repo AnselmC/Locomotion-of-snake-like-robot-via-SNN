@@ -43,7 +43,7 @@ ax3.set_title('Evolution of distance')
 ax3.set_ylabel('Distance to middle')
 ax3.set_xlabel('Timestep')
 ax3.set_ylim((dist_to_middle.min(axis=0)*1.1, dist_to_middle.max(axis=0)*1.1))
-plt.plot(dist_to_middle, linewidth=1.0)
+plt.plot(np.absolute(dist_to_middle), linewidth=1.0)
 xlim2 = w_i.max(axis=0)
 # ymin2 = w_faster.min()*1.1
 # ymax2 = w_faster.max()*1.1

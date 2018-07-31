@@ -20,6 +20,7 @@ class VrepEnvironment():
     def __init__(self):
         # Subscriber and publisher set up
         self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
+        self.steps_sub = rospy.Subscriber('stepPub', Float32, self.steps_callback)
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
         self.speed_pub = rospy.Publisher('speed', Float32, queue_size=1)
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
@@ -42,7 +43,7 @@ class VrepEnvironment():
         self.car_params = None
         self.speed_buffer = 0
         self.radius_buffer = 0
-
+        self.vrep_steps = []
         # Open cv
         self.bridge = CvBridge()
 
@@ -50,7 +51,8 @@ class VrepEnvironment():
         rospy.init_node('rstdp_controller')
         self.rate = rospy.Rate(rate)
 
-
+    def steps_callback(self, msg):
+        self.vrep_steps.append(msg.data)
 
     def image_callback(self, msg):
     # Process incoming image data
