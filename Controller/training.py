@@ -1,21 +1,18 @@
 #!/usr/bin/env python
 
-from network_hidden import *
+from network import *
 from environment import *
 import parameters as p
 import h5py
 import json
 import signal
 
-
-
 snn = SpikingNeuralNetwork()
 env = VrepEnvironment()
 
 weights_r = []
 weights_l = []
-weights_slower = []
-weights_faster = []
+weights_hidden = []
 weights_i = []
 steps = []
 radius = []
@@ -33,13 +30,13 @@ signal.signal(signal.SIGINT, handler)
 
 
 # Initialize environment, get initial state, initial reward, initial speed reward
-s,tdm,sdm = env.reset()
+s,tdm = env.reset()
 
 for i in range(p.training_length):
 
     # Simulate network for 50 ms
     # get number of output spikes and network weights
-    n_l, n_r, w_l, w_r = snn.simulate(s,tdm)
+    n_l, n_r, w_l, w_r, w_h = snn.simulate(s,tdm)
 
     # Feed output spikes in steering wheel model
     # Get state, motor reward, speed reward, termination, step, radius, dist_to_middle
@@ -54,15 +51,16 @@ for i in range(p.training_length):
         print "Right weights:\n", w_r
         weights_l.append(w_l)
         weights_r.append(w_r)
+        weights_hidden.append(w_h)
         weights_i.append(i)
 
     # Save some params every step
     dopamine.append(tdm)
     radius.append(r)
-    dist_to_middle.append(d)
+    dist_to_middle.append(abs(d))
     # Save no. of steps every episode
     if t:
-        print "-----------terminate_early-----------"
+        print "-----------Terminate episode-----------"
         steps.append(n)
         print "steps:\n", steps
 
@@ -87,6 +85,7 @@ except:
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
+h5f.create_dataset('w_h', data=weights_hidden)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
 h5f.create_dataset('radius', data = radius)
