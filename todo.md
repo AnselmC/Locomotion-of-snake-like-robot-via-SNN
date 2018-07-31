@@ -21,7 +21,7 @@
 - What metrics to plot in discussion
 - getState function Claus
 - max_spikes calculation
-- Timing analysis
+- Timing analysis, VREP and SNN out of syn
 
 Meeting on 07/20/2018
 - Title: Don't mention DVS

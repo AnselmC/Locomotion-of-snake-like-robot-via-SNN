@@ -6,7 +6,7 @@ comment = "travelled_distance test"
 
 # Other
 training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
-modulo = 10
+modulo = 50
 maze_width = 5.0
 reset_distance = 2.3                # Reset distance
 reset_steps = 500
@@ -48,7 +48,7 @@ r_min = 1                           # Minimum turning radius
 
 params_dict = {}
 params_dict.update({k:v for k,v in locals().copy().iteritems()
-                    if k[:2] != '__' 
+                    if k[:2] != '__'
                     and k != 'params_dict'
                     and k != 'np'
                     and k!= 'path'

@@ -31,9 +31,10 @@ for i in range(50000):
     # w_l = weights[0]
     # w_r = weights[1]
 
-    # Feed output spikes into steering wheel model
-    # Get state, distance, position, reward, termination, step
-    state, distance, pos_data, reward, t, step, terminate_position, travelled_distances = env.step(n_l, n_r)
+    # Feed output spikes in model
+    # Get state, distance, pos_data, reward, t, step
+    (state, distance, pos_data, reward, t, step,
+     terminate_position, travelled_distances, vrep_steps) = env.step(n_l, n_r)
 
     # Store position, distance
     distances.append(distance)

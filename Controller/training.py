@@ -15,7 +15,6 @@ weights_l = []
 weights_i = []
 steps = []
 terminate_positions = []
-travelled_distances = []
 params = {}
 terminate = False
 
@@ -40,7 +39,8 @@ for i in range(p.training_length):
 
     # Feed output spikes in model
     # Get state, distance, pos_data, reward, t, step
-    state, distance, pos_data, reward, t, step, terminate_position, travelled_distance = env.step(n_l, n_r)
+    (state, distance, pos_data, reward, t, step,
+     terminate_position, travelled_distances, vrep_steps) = env.step(n_l, n_r)
 
     # if (i % modulo == 0):
     #     print "----------training.py----------"
@@ -63,10 +63,10 @@ for i in range(p.training_length):
     if t:
         steps.append(step)
         terminate_positions.append(terminate_position)
-        travelled_distances.append(travelled_distance)
         print "----------training.py----------"
         print "-----------terminate-----------"
         print "steps:\n", steps
+        print "vrep_steps:\n", vrep_steps
         print "travelled_distances:\n", travelled_distances
         print "--------------------------------"
 
@@ -93,6 +93,7 @@ h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data=steps)
+h5f.create_dataset('vrep_steps', data=vrep_steps)
 h5f.create_dataset('terminate_positions', data=terminate_positions)
 h5f.create_dataset('travelled_distances', data=travelled_distances)
 h5f.close()

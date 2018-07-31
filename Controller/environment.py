@@ -18,22 +18,36 @@ sys.path.append('/usr/lib/python2.7/dist-packages')  # weil ROS nicht mit Anacon
 class VrepEnvironment():
     def __init__(self):
         # Image Subscriber
-        self.dvs_sub = rospy.Subscriber('dvsData', Int8MultiArray, self.dvs_callback)
+        self.dvs_sub = rospy.Subscriber('dvsData',
+                                        Int8MultiArray,
+                                        self.dvs_callback)
         self.dvs_data = np.array([0, 0])
         self.resize_factor = [dvs_resolution[0]//resolution[0],
                               (dvs_resolution[1]-crop_bottom-crop_top)//resolution[1]]
 
         # Position Subscriber
-        self.pos_sub = rospy.Subscriber('transformData', Transform, self.pos_callback)
+        self.pos_sub = rospy.Subscriber('transformData',
+                                        Transform,
+                                        self.pos_callback)
         self.pos_data = []
 
         # Distances Subscriber
-        self.distances_sub = rospy.Subscriber('distances', Float32MultiArray, self.distances_callback)
+        self.distances_sub = rospy.Subscriber('distances',
+                                              Float32MultiArray,
+                                              self.distances_callback)
         self.distances = []
 
         # Travelled distance Subscriber
-        self.travelled_distance = rospy.Subscriber('travelledDistance', Float32, self.travelled_distance_callback)
-        self.travelled_distance = 0
+        self.travelled_distance_sub = rospy.Subscriber('travelledDistance',
+                                                       Float32,
+                                                       self.travelled_distance_callback)
+        self.travelled_distances = []
+
+        # V-REP steps Subscriber
+        self.steps_sub = rospy.Subscriber('steps',
+                                          Float32,
+                                          self.steps_callback)
+        self.vrep_steps = []
 
         # Radius Publisher
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
@@ -52,9 +66,7 @@ class VrepEnvironment():
         self.reward = 0
         self.state = []
 
-        # TODO
         self.positive_direction = False
-        # self.positive_direction = True
 
         self.terminate = False
         self.terminate_position = 0
@@ -79,7 +91,12 @@ class VrepEnvironment():
 
     def travelled_distance_callback(self, msg):
         # Store incoming travelled distance
-        self.travelled_distance = msg.data
+        self.travelled_distances.append(msg.data)
+        return
+
+    def steps_callback(self, msg):
+        # Store incoming travelled distance
+        self.vrep_steps.append(msg.data)
         return
 
     def reset(self):
@@ -88,7 +105,6 @@ class VrepEnvironment():
         self.turn_pre = 0.0
 
         # Change direction
-        # TODO
         self.positive_direction = not self.positive_direction
 
         self.reset_pub.publish(Bool(self.positive_direction))
@@ -105,7 +121,6 @@ class VrepEnvironment():
         m_r = n_r/n_max
         # TODO:
         a = m_r - m_l
-#        a = m_l - m_r
         c = math.sqrt((m_l**2 + m_r**2)/2.0)
 
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
@@ -185,14 +200,17 @@ class VrepEnvironment():
             # print "--------------------------------"
 
         # Return state, distance, pos_data, reward, terminate, steps
-        return self.state, self.distance, self.pos_data, self.reward, t, n, self.terminate_position, self.travelled_distance
+        return (self.state, self.distance, self.pos_data, self.reward, t, n,
+                self.terminate_position, self.travelled_distances,
+                self.vrep_steps)
 
     def getState(self):
         new_state = np.zeros((resolution[0], resolution[1]), dtype=int)
         for i in range(len(self.dvs_data)//2):
             try:
                 if crop_bottom <= self.dvs_data[i*2+1] < (dvs_resolution[1]-crop_top):
-                    idx = ((self.dvs_data[i*2])//self.resize_factor[0], (self.dvs_data[i*2+1]-crop_bottom)//self.resize_factor[1])
+                    idx = ((self.dvs_data[i*2])//self.resize_factor[0],
+                           (self.dvs_data[i*2+1]-crop_bottom)//self.resize_factor[1])
                     new_state[idx] += 1
             except:
                 pass

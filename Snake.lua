@@ -27,6 +27,9 @@ function publishParameters()
 end
 
 function resetRobot_cb(msg)
+    -- Publish travelled_distance
+    simExtRosInterface_publish(travelledDistancePub, {data=travelled_distance})
+
     -- Reset robot subscriber callback
     -- get all objects in the model
     allModelObjects=simGetObjectsInTree(robotHandle)
@@ -54,8 +57,11 @@ function resetRobot_cb(msg)
 
     simSetThreadAutomaticSwitch(true)
 
-    -- reset t, travelled_distance
+    -- reset t, step, travelled_distance
     t = 0
+    step = 0
+    position_old = simGetObjectPosition(robotHandle,-1)
+    position = simGetObjectPosition(robotHandle,-1)
     travelled_distance = 0
 
     if (comments == true) then
@@ -67,6 +73,7 @@ function resetRobot_cb(msg)
             print("ori["..(i).."]:", ori[i])
         end
         print("msg.data:\t", msg.data)
+        print("travelled_distance:\t", travelled_distance)
         print("--------------------------------")
     end
 end
@@ -126,6 +133,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
         paramsPub=simExtRosInterface_advertise('/parameters', 'std_msgs/String')
         distancePub=simExtRosInterface_advertise('/distances', 'std_msgs/Float32MultiArray')
         travelledDistancePub=simExtRosInterface_advertise('/travelledDistance','std_msgs/Float32')
+        stepsPub=simExtRosInterface_advertise('/steps','std_msgs/Float32')
     end
 
     -- Initialize parameters
@@ -263,7 +271,6 @@ if (sim_call_type==sim_childscriptcall_actuation) then
     position_old = position
     position = simGetObjectPosition(robotHandle,-1)
     travelled_distance = calculate_travelled_distance(travelled_distance, position_old, position)
-    simExtRosInterface_publish(travelledDistancePub, {data=travelled_distance})
 
     quaternion=simGetObjectQuaternion(robotHandle,-1)
     simExtRosInterface_publish(transformPub, {translation={x=position[1],y=position[2],z=position[3]},rotation={x=quaternion[1],y=quaternion[2],z=quaternion[3],w=quaternion[4]}})
