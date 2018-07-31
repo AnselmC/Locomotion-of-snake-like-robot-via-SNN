@@ -20,13 +20,13 @@ snn.set_weights(w_l, w_r)
 distance = []
 
 # Initialize environment, get initial state, initial reward, initial speed reward
-s,tdm,sdm = env.reset()
+s,tdm = env.reset()
 
 for i in range(15000):
 
     # Simulate network for 50 ms
     # Get left and right output spikes, get weights
-    n_l, n_r, n_slower, n_faster = snn.run(s)
+    n_l, n_r = snn.run(s)
 
     # Feed output spikes in steering wheel model
     # Get state, motor reward, speed reward, termination, step
