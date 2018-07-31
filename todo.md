@@ -22,8 +22,25 @@
     - vrep_steps: 2490
     - distance:   75.72
   - session_006: w0_max = 500, w0_min = -w0_max
+    - episodes:   47
+    - steps:      10359
+    - vrep_steps: 14301
+    - distance:   417.32
   - session_007: double reward_factor = 0.0005
+    - episodes:   20
+    - steps:      6307
+    - vrep_steps: 8947
+    - distance:   268.17
   - session_008: half reward_factor = 0.000125
+    - episodes:   7
+    - steps:      2008
+    - vrep_steps: 2863
+    - distance:   86.05
+  - session_009: higher resolution (/8 instead of /16) + w_max = 5000, w_min = -w_max
+    - episodes:   2
+    - steps:      507
+    - vrep_steps: 688
+    - distance:   20.86
 - Testing scenario
 - Code rework + comments
   - Snake Lua script remove comments
@@ -36,10 +53,14 @@
 - Feedback Hidden layer idea
 - Snake falls through floor
 - What metrics to plot in discussion
+  - cumulative reward/ error
 - getState function Claus
 - max_spikes calculation
 - Timing analysis, VREP and SNN out of sync
-- testing scneario
+- testing scenario
+  - height of the wall
+  - texture of the walls
+  - QR Code to mark the boundary
 
 Meeting on 07/20/2018
 - Title: Don't mention DVS

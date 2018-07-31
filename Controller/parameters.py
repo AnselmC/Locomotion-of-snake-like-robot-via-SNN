@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 
-session = "session_006"
+session = "session_009"
 path = "../data/" + session        # Path for saving data
-comment = "w0_max = 500, w0_min = -w0_max"
+comment = "higher resolution (/8 instead of /16) + w_max = 5000, w_min = -w_max"
 
 # Other
-training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 50
 maze_width = 5.0
 reset_distance = 2.3                # Reset distance
@@ -17,8 +17,8 @@ img_resolution = [128, 128]          # Original DVS frame resolution
 dvs_resolution = img_resolution
 crop_top = 0                        # Crop at the top
 crop_bottom = 48                    # Crop at the bottom
-resolution = [img_resolution[0]/16,
-              (img_resolution[1]-crop_top-crop_bottom)/16]            # Resolution of reduced image
+resolution = [img_resolution[0]/8,
+              (img_resolution[1]-crop_top-crop_bottom)/8]            # Resolution of reduced image
 
 # Network parameters
 sim_time = 50.0                     # Length of network simulation during each step in ms
@@ -31,10 +31,10 @@ max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
-w_max = 3000.                       # Maximum weight value
+w_max = 5000.                       # Maximum weight value
 w_min = -w_max                      # Minimum weight value
-w0_max = 500.                      # Maximum initial random value
-w0_min = -w0_max                      # Minimum initial random value
+w0_max = 201.                      # Maximum initial random value
+w0_min = 200.                      # Minimum initial random value
 tau_n = 200.                        # Time constant of reward signal
 tau_c = 1000.                       # Time constant of eligibility trace
 reward_factor = 0.00025           # Reward factor modulating reward signal strength
