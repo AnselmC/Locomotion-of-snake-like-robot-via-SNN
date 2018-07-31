@@ -86,8 +86,8 @@ class SpikingNeuralNetwork():
         n_l = nest.GetStatus(self.spike_detector_l,keys="n_events")[0]
         n_r = nest.GetStatus(self.spike_detector_r,keys="n_events")[0]
         # Reset output spike detector
-        nest.SetStatus(self.spike_detector_l, {"n_events": 0})
-        nest.SetStatus(self.spike_detector_r, {"n_events": 0})
+        nest.SetStatus(self.spike_detector_l, {"n_events": 0})[0]
+        nest.SetStatus(self.spike_detector_r, {"n_events": 0})[0]
 
         return n_l, n_r, weights_l, weights_r, weights_hidden
 
@@ -107,15 +107,15 @@ class SpikingNeuralNetwork():
         nest.Run(p.sim_time)
         nest.Cleanup()
         # Get left and right output spikes
-        n_l = nest.GetStatus(self.spike_detector_l,keys="n_events")
-        n_r = nest.GetStatus(self.spike_detector_r,keys="n_events")
+        n_l = nest.GetStatus(self.spike_detector_l,keys="n_events")[0]
+        n_r = nest.GetStatus(self.spike_detector_r,keys="n_events")[0]
         # Reset output spike detector
         nest.SetStatus(self.spike_detector_l, {"n_events": 0})
         nest.SetStatus(self.spike_detector_r, {"n_events": 0})
         # Get network weights
         return n_l, n_r
 
-    def set_weights(self, weights_l, weights_r):
+    def set_weights(self, weights_l, weights_r, weights_h):
         # Translate weights into dictionary format
         w_l = []
         for w in weights_l.reshape(weights_l.size):
