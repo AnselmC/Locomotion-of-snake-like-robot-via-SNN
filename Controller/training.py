@@ -88,7 +88,7 @@ except:
     print "saving params failed"
     pass
 
-# Save data
+# Save training data
 h5f = h5py.File(params.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
