@@ -45,3 +45,11 @@ A_minus = 1.                        # Constant scaling strength of depression
 turn_pre = 0.0                      # Initial turn speed
 n_max = sim_time//t_refrac          # Maximum input activity
 r_min = 1                           # Minimum turning radius
+
+params_dict = {}
+params_dict.update({k:v for k,v in locals().copy().iteritems()
+                    if k[:2] != '__' 
+                    and k != 'params_dict'
+                    and k != 'np'
+                    and k!= 'path'
+                    and k != 'math'})

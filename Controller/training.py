@@ -74,26 +74,18 @@ for i in range(p.training_length):
         break
 
 # Save training parameters
-params['comment'] = p.comment
-params['training_length'] = p.training_length
-params['maze_width'] = p.maze_width
-params['reset_distance'] = p.reset_distance
-params['reset_steps'] = p.reset_steps
-params['img_resolution'] = p.img_resolution
-params['crop_top'] = p.crop_top
-params['crop_bottom'] = p.crop_bottom
-params['resolution'] = p.resolution
-params['w_min'] = p.w_min
-params['w_max'] = p.w_max
-params['w0_min'] = p.w0_min
-params['w0_max'] = p.w0_max
-params['reward_factor'] = p.reward_factor
-params['r_min'] = p.r_min
-
-# Save to separate json files
-json_data = json.dumps(params, indent=4)
-with open(p.path+'/training_parameters.json', 'w') as file:
-    file.write(json_data)
+try:
+    print "saving params"
+    params = p.params_dict
+    print params
+    # Save to single json file
+    json_data = json.dumps(params, indent=4, sort_keys=True)
+    print "converted to json"
+    with open(p.path+'/training_parameters.json','w') as file:
+        file.write(json_data)
+except:
+    print "saving params failed"
+    pass
 
 # Save data
 h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
