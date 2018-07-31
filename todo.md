@@ -1,6 +1,15 @@
 # TODO
+- Freeze development, reset data and plots and systematically test hyperparameters:
+  - session_001: baseline
+  - session_002: higher resolution (/8 instead of /16)
+  - session_003: lower resolution (/32 instead of /16)
+  - session_004: max_poisson_freq = 256, max_spikes = 16.
+  - session_005: w_max = 5000, w_min = -w_max
+  - session_006: w0_max = 500, w0_min = -w0_max
+  - session_006: double reward_factor = 0.0005
+  - session_006: half reward_factor = 0.000125
 
-- Calculate traveled length of the Snake (Sum over the distance between the pos_data of 10 steps)
+
 - Try the following hyperparameters:
   - DVS Parameters
   - Cropped resolution
@@ -11,7 +20,6 @@
 - Code rework + comments
   - Change 'from parameters import \*' to 'import parameters as params'
   - Snake Lua script
-- Decaying reward_factor
 - Mark episodes on weights change over time plot
 
 # Questions

@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-session = "session_013"
+session = "session_001"
 path = "../data/" + session        # Path for saving data
-comment = "travelled_distance test"
+comment = "baseline"
 
 # Other
 training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
@@ -32,7 +32,7 @@ max_spikes = 15.                    # number of events during each step for maxi
 
 # R-STDP parameters
 w_max = 3500.                       # Maximum weight value
-w_min = -3500.                      # Minimum weight value
+w_min = -w_max                      # Minimum weight value
 w0_max = 201.                      # Maximum initial random value
 w0_min = 200.                      # Minimum initial random value
 tau_n = 200.                        # Time constant of reward signal
