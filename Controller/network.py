@@ -118,12 +118,32 @@ class SpikingNeuralNetwork():
     def set_weights(self, weights_l, weights_r, weights_h):
         # Translate weights into dictionary format
         w_l = []
+        print weights_l.shape
+        print weights_r.shape
+        print weights_h.shape
         for w in weights_l.reshape(weights_l.size):
             w_l.append({'weight': w})
         w_r = []
         for w in weights_r.reshape(weights_r.size):
             w_r.append({'weight': w})
-        # Set left and right network weights
+
+        w_h_l = []
+        w_h_r = []
+        # Go through hidden neurons
+        for i in range(weights_h.shape[0]/2):
+            w_dict_l = []
+            w_dict_r = []
+            # Go through weights per hidden neuron
+            for j in range(weights_h.shape[1]):
+                w_dict_l.append({'weight':weights_h[i][j]})
+                w_dict_r.append({'weight':weights_h[i+weights_h.shape[0]/2][j]})
+            w_h_l.append(w_dict_l)
+            w_h_r.append(w_dict_r)
+        # Set left, right and hidden network weights
         nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)
+        
+        for i in range(len(self.conn_hidden_l)):
+            nest.SetStatus(self.conn_hidden_l[i], w_h_l[i])
+            nest.SetStatus(self.conn_hidden_r[i], w_h_r[i])
         return
