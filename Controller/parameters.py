@@ -3,7 +3,7 @@
 import numpy as np
 import math
 
-session_no = '002'
+session_no = '001'
 path = "../data/session_" + session_no        # Path for saving data
 comment = 'without speed change, without hidden layer'
 
@@ -31,8 +31,8 @@ reward_slope = 25
 # Dimensions of mxn array are set by array = [m,n]
 # Therefore, when going through an image array from a coordinate perspective with variables x,y you do so by array[y,x]
 img_resolution = [64,64]            # Original DVS frame resolution
-crop_bottom = 24                       # Crop at the top
-crop_top = 24                       # Crop at the bottom
+crop_bottom = 28                       # Crop at the top
+crop_top = 28                       # Crop at the bottom
 pixels_per_neuron_per_axis = 8
 resolution = [(img_resolution[1]-crop_top-crop_bottom)//pixels_per_neuron_per_axis, img_resolution[0]//pixels_per_neuron_per_axis]
 
