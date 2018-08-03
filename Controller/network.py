@@ -86,8 +86,8 @@ class SpikingNeuralNetwork():
         n_l = nest.GetStatus(self.spike_detector_l,keys="n_events")[0]
         n_r = nest.GetStatus(self.spike_detector_r,keys="n_events")[0]
         # Reset output spike detector
-        nest.SetStatus(self.spike_detector_l, {"n_events": 0})[0]
-        nest.SetStatus(self.spike_detector_r, {"n_events": 0})[0]
+        nest.SetStatus(self.spike_detector_l, {"n_events": 0})
+        nest.SetStatus(self.spike_detector_r, {"n_events": 0})
 
         return n_l, n_r, weights_l, weights_r, weights_hidden
 
@@ -142,7 +142,7 @@ class SpikingNeuralNetwork():
         # Set left, right and hidden network weights
         nest.SetStatus(self.conn_l, w_l)
         nest.SetStatus(self.conn_r, w_r)
-        
+
         for i in range(len(self.conn_hidden_l)):
             nest.SetStatus(self.conn_hidden_l[i], w_h_l[i])
             nest.SetStatus(self.conn_hidden_r[i], w_h_r[i])
