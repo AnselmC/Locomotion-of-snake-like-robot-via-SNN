@@ -1,52 +1,55 @@
 # TODO
-- Freeze development, reset data and plots and systematically test hyperparameters with scenario_2_texture_concrete:
-  - session_001: baseline
-    - episodes:   6
-    - steps:      2220
-    - vrep_steps: 2452
-    - distance:   73.87
-  - session_002: higher resolution (/8 instead of /16)    --> learns faster
-    - episodes:   1
-    - steps:      349
-    - vrep_steps: 470
-    - distance:   14.65
-  - session_003: lower resolution (/32 instead of /16)    --> doesn't learn
-  - session_004: max_poisson_freq = 256, max_spikes = 16.
-    - episodes:   10
-    - steps:      3374
-    - vrep_steps: 4527
-    - distance:   136.32
-  - session_005: w_max = 5000, w_min = -w_max
-    - episodes:   5
-    - steps:      2244
-    - vrep_steps: 2490
-    - distance:   75.72
-  - session_006: w0_max = 500, w0_min = -w0_max
-    - episodes:   47
-    - steps:      10359
-    - vrep_steps: 14301
-    - distance:   417.32
-  - session_007: double reward_factor = 0.0005
-    - episodes:   20
-    - steps:      6307
-    - vrep_steps: 8947
-    - distance:   268.17
-  - session_008: half reward_factor = 0.000125
-    - episodes:   7
-    - steps:      2008
-    - vrep_steps: 2863
-    - distance:   86.05
-  - session_009: higher resolution (/8 instead of /16) + w_max = 5000, w_min = -w_max
-    - episodes:   2
-    - steps:      507
-    - vrep_steps: 688
-    - distance:   20.86
+- Train controller on different wall heights and test it on other heights
+  - session_010: train on scenario_2
+    - test on scenario_0_1
+    - test on scenario_1
+    - test on scenario_1_5
+    - test on scenario_2
+    - test on scenario_3
+  - session_011: train on scenario_0_1
+    - test on scenario_0_1
+    - test on scenario_1
+    - test on scenario_1_5
+    - test on scenario_2
+    - test on scenario_3
+  - session_012: train on scenario_1
+    - test on scenario_0_1
+    - test on scenario_1
+    - test on scenario_1_5
+    - test on scenario_2
+    - test on scenario_3
+  - session_013: train on scenario_1_5
+    - test on scenario_0_1
+    - test on scenario_1
+    - test on scenario_1_5
+    - test on scenario_2
+    - test on scenario_3
+  - session_014: train on scenario_3
+    - test on scenario_0_1
+    - test on scenario_1
+    - test on scenario_1_5
+    - test on scenario_2
+    - test on scenario_3
+  - session_015: test best of the above with different texture
+
 - Testing scenario
+  - Different wall heights: 0.1m, 1m, 1.5m, 2m, 3m
+  - Different heights in same scenario
 - Code rework + comments
   - Snake Lua script remove comments
   - Remove debug comments
 - Mark episodes on weights change over time plot
 - Add training length in VREP
+- In Latex
+  - Revise flowcharts: implementation changes, bigger texts
+  - Training flowchart based on controller
+  - Matplotlib plots
+  - Better Snake Figure
+  - Hyperparameter evaluation Figures
+  - Maze Figure
+  - Abstract
+  - Intro
+  - Conclusion
 
 # Questions
 - Turning model

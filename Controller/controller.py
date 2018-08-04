@@ -25,6 +25,8 @@ positions = []
 rewards = []
 steps = []
 terminate_positions = []
+travelled_distances = []
+vrep_steps = []
 
 # Initialize environment, get initial state, initial reward
 state, reward = env.reset()
@@ -39,7 +41,7 @@ for i in range(11000):
     # Get state, distance, pos_data, reward, terminate, steps,
     # terminate_position, travelled_distances, vrep_steps
     (state, distance, pos_data, reward, t, step,
-     terminate_position, travelled_distances, vrep_steps) = env.step(n_l, n_r)
+     terminate_position, travelled_distance, vrep_step) = env.step(n_l, n_r)
 
     # Store position, distance
     distances.append(distance)
@@ -49,7 +51,9 @@ for i in range(11000):
     terminate_positions.append(terminate_position)
 
 # Save performance data
-h5f = h5py.File(params.path + '/rstdp_performance_data.h5', 'w')
+
+filename = '/rstdp_performance_data_' + params.test_on + '.h5'
+h5f = h5py.File(params.path + filename, 'w')
 h5f.create_dataset('distances', data=distances)
 h5f.create_dataset('positions', data=positions)
 h5f.create_dataset('rewards', data=rewards)

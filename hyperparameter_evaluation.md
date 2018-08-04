@@ -1,0 +1,44 @@
+# Hyperparameter evaluation
+
+Freeze development, reset data and plots and systematically test hyperparameters with scenario_2_texture_concrete:
+- session_001: baseline
+  - episodes:   6
+  - steps:      2220
+  - vrep_steps: 2452
+  - distance:   73.87
+- session_002: higher resolution (/8 instead of /16)
+  - episodes:   1
+  - steps:      349
+  - vrep_steps: 470
+  - distance:   14.65
+- session_003: lower resolution (/32 instead of /16)
+- session_004: max_poisson_freq = 256, max_spikes = 16.
+  - episodes:   10
+  - steps:      3374
+  - vrep_steps: 4527
+  - distance:   136.32
+- session_005: w_max = 5000, w_min = -w_max
+  - episodes:   5
+  - steps:      2144
+  - vrep_steps: 2390
+  - distance:   65.72
+- session_006: w0_max = 500, w0_min = -w0_max
+  - episodes:   47
+  - steps:      10359
+  - vrep_steps: 14301
+  - distance:   417.32
+- session_007: double reward_factor = 0.0005
+  - episodes:   20
+  - steps:      6307
+  - vrep_steps: 8947
+  - distance:   268.17
+- session_008: halve reward_factor = 0.000125
+  - episodes:   7
+  - steps:      2008
+  - vrep_steps: 2863
+  - distance:   86.05
+- session_009: higher resolution (/8 instead of /16) + w_max = 5000, w_min = -w_max
+  - episodes:   2
+  - steps:      507
+  - vrep_steps: 688
+  - distance:   20.86
