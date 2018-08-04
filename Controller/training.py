@@ -38,6 +38,7 @@ for i in range(params.training_length):
     n_l, n_r, weights = snn.simulate(state, reward)
     w_l = weights[0]
     w_r = weights[1]
+    w_h = weights[2]
 
     # Get state, distance, pos_data, reward, terminate, steps,
     # terminate_position, travelled_distances, vrep_steps
@@ -59,9 +60,10 @@ for i in range(params.training_length):
     if i % 100 == 0:
         weights_l.append(w_l)
         weights_r.append(w_r)
+        weights_hidden.append(w_h)
         weights_i.append(i)
 
-    # Save # steps every episode
+    # Save #steps every episode
     if t:
         steps.append(step)
         terminate_positions.append(terminate_position)
@@ -93,6 +95,7 @@ except:
 h5f = h5py.File(params.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
+h5f.create_dataset('w_h', data=weights_hidden)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data=steps)
 h5f.create_dataset('vrep_steps', data=vrep_steps)

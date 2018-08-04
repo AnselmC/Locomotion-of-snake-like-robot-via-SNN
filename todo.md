@@ -6,6 +6,7 @@
 - Mark episodes on weights change over time plot
 - Add training length in VREP
 - Set_weights function
+- Save reward, radius and distance every step
 
 # Questions
 - Turning model

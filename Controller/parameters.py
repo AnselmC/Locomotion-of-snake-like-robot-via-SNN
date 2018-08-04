@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
-session = "session_009"
+session = "session_001"
 path = "../data/" + session        # Path for saving data
-comment = "higher resolution (/8 instead of /16) + w_max = 5000, w_min = -w_max"
+comment = "Hidden Test"
 
 # Other
 training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
@@ -17,8 +17,8 @@ img_resolution = [128, 128]          # Original DVS frame resolution
 dvs_resolution = img_resolution
 crop_top = 0                        # Crop at the top
 crop_bottom = 48                    # Crop at the bottom
-resolution = [img_resolution[0]/8,
-              (img_resolution[1]-crop_top-crop_bottom)/8]            # Resolution of reduced image
+resolution = [img_resolution[0]/16,
+              (img_resolution[1]-crop_top-crop_bottom)/16]            # Resolution of reduced image
 
 # Network parameters
 sim_time = 50.0                     # Length of network simulation during each step in ms
@@ -29,6 +29,8 @@ iaf_params_hidden = {}
 poisson_params = {}                 # Poisson neuron parameters
 max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
+neurons_hidden_l = 8
+neurons_hidden_r = neurons_hidden_l
 
 # R-STDP parameters
 w_max = 5000.                       # Maximum weight value

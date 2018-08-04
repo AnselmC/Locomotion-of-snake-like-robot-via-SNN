@@ -10,8 +10,16 @@ h5f = h5py.File(params.path + '/rstdp_data.h5', 'r')
 
 w_l = np.array(h5f['w_l'], dtype=float)
 w_r = np.array(h5f['w_r'], dtype=float)
-weights_l = np.flipud(w_l[-1].T)
-weights_r = np.flipud(w_r[-1].T)
+w_h = np.array(h5f['w_h'], dtype = float)
+print w_h.shape
+
+weights_l = np.flipud(w_l[-1].T).reshape(1,params.neurons_hidden_l)
+weights_r = np.flipud(w_r[-1].T).reshape(1,params.neurons_hidden_r)
+weights_h = []
+for weight in w_h:
+    weights_h.append(np.flipud(weight[-1].T))
+
+print weights_h[0].shape
 
 titles = ['Left Weights','Right Weights']
 
