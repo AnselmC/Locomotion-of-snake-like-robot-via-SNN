@@ -29,7 +29,7 @@ iaf_params_hidden = {}
 poisson_params = {}                 # Poisson neuron parameters
 max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
 max_spikes = 15.                    # number of events during each step for maximum poisson frequency
-neurons_hidden_l = 8
+neurons_hidden_l = 4
 neurons_hidden_r = neurons_hidden_l
 
 # R-STDP parameters

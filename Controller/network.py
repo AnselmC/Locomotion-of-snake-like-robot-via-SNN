@@ -53,11 +53,12 @@ class SpikingNeuralNetwork():
         weights_l = np.array(nest.GetStatus(self.conn_l, keys="weight"))
         weights_r = np.array(nest.GetStatus(self.conn_r, keys="weight"))
         # Get network weights to input layer
-        weights_hidden = []
+        weights_hidden_l = []
+        weights_hidden_r = []
         for i in range(len(self.conn_hidden_l)):
-            weights_hidden.append(np.array(nest.GetStatus(self.conn_hidden_l[i], keys="weight")))
-            for i in range(len(self.conn_hidden_r)):
-                weights_hidden.append(np.array(nest.GetStatus(self.conn_hidden_r[i], keys="weight")))
+            weights_hidden_l.append(np.array(nest.GetStatus(self.conn_hidden_l[i], keys="weight")))
+        for i in range(len(self.conn_hidden_r)):
+            weights_hidden_r.append(np.array(nest.GetStatus(self.conn_hidden_r[i], keys="weight")))
 
         # Set reward signal for left and right neuron connections
         nest.SetStatus(self.conn_l, {"n": -reward*params.reward_factor})
@@ -90,7 +91,7 @@ class SpikingNeuralNetwork():
         nest.SetStatus(self.spike_detector_l, {"n_events": 0})
         nest.SetStatus(self.spike_detector_r, {"n_events": 0})
 
-        return n_l, n_r, [weights_l, weights_r, weights_hidden]
+        return n_l, n_r, [weights_l, weights_r, weights_hidden_l, weights_hidden_r]
 
     def run(self, dvs_data):
         # Set poisson neuron firing time span
