@@ -38,7 +38,6 @@
 - Code rework + comments
   - Snake Lua script remove comments
   - Remove debug comments
-- Mark episodes on weights change over time plot
 - Add training length in VREP
 - In Latex
   - Revise flowcharts: implementation changes, bigger texts

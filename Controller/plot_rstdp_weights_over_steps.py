@@ -11,8 +11,14 @@ h5f = h5py.File(params.path + '/rstdp_data.h5', 'r')
 w_l = np.array(h5f['w_l'], dtype=float)
 w_r = np.array(h5f['w_r'], dtype=float)
 w_i = np.array(h5f['w_i'], dtype=float)
+steps = np.array(h5f['steps'], dtype = float)
 
-print w_l.shape
+steps_cumulative = np.zeros(steps.size)
+
+sum = 0
+for k in range(steps.size):
+    sum += steps[k]
+    steps_cumulative[k] = sum
 
 xlabels = ['Simulation Time [1 step = 50 ms]','Simulation Time [1 step = 50 ms]']
 ylabels = ['Weights Left Motor Neuron', 'Weights Right Motor Neuron']
@@ -29,6 +35,8 @@ def plt_weights_over_steps(index, xlabel, ylabel, data):
     for i in range(data.shape[1]):
         for j in range(data.shape[2]):
             plt.plot(w_i, data[:,i,j])
+    for k in range(steps_cumulative.size):
+        plt.axvline(x=steps_cumulative[k])
 
 fig = plt.figure(figsize=(10, 5*len(data)))
 

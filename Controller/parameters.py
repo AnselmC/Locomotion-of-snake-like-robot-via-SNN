@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-session = "session_010"
+session = "session_013"
 test_on = ""
 path = "../data/" + session        # Path for saving data
 comment = "train on scenario_1_5"
