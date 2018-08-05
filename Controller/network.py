@@ -56,9 +56,9 @@ class SpikingNeuralNetwork():
         weights_hidden_l = []
         weights_hidden_r = []
         for i in range(len(self.conn_hidden_l)):
-            weights_hidden_l.append(np.array(nest.GetStatus(self.conn_hidden_l[i], keys="weight")))
+            weights_hidden_l.append(np.array(nest.GetStatus(self.conn_hidden_l[i], keys="weight")).reshape(params.resolution))
         for i in range(len(self.conn_hidden_r)):
-            weights_hidden_r.append(np.array(nest.GetStatus(self.conn_hidden_r[i], keys="weight")))
+            weights_hidden_r.append(np.array(nest.GetStatus(self.conn_hidden_r[i], keys="weight")).reshape(params.resolution))
 
         # Set reward signal for left and right neuron connections
         nest.SetStatus(self.conn_l, {"n": -reward*params.reward_factor})

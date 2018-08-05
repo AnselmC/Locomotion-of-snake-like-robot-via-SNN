@@ -12,33 +12,31 @@ w_l = np.array(h5f['w_l'], dtype=float)
 w_r = np.array(h5f['w_r'], dtype=float)
 w_h_l = np.array(h5f['w_h_l'], dtype = float)
 w_h_r = np.array(h5f['w_h_r'], dtype = float)
-print w_h_l.shape
-print w_h_r.shape
 
 weights_l = np.flipud(w_l[-1].T).reshape(1,params.neurons_hidden_l)
 weights_r = np.flipud(w_r[-1].T).reshape(1,params.neurons_hidden_r)
 
 weights_h_l = []
 for weight in w_h_l:
-    weights_h_l.append((np.flipud(weight[-1].T)).reshape(params.resolution[1], params.resolution[0]))
+    weights_h_l.append((np.flipud(weight[-1].T)))
 weights_h_r = []
 for weight in w_h_r:
-    weights_h_r.append((np.flipud(weight[-1].T)).reshape(params.resolution[1], params.resolution[0]))
+    weights_h_r.append((np.flipud(weight[-1].T)))
 
 titles_left = []
 data_left = []
 for i in range(params.neurons_hidden_l):
-    titles_left.append(('weights_h_l[' + str(i) + ']'))
+    titles_left.append(('w_h_l[' + str(i) + ']'))
     data_left.append(weights_h_l[i])
-titles_left.append('weights_l')
+titles_left.append('w_l')
 data_left.append(weights_l)
 
 titles_right = []
 data_right = []
 for i in range(params.neurons_hidden_r):
-    titles_right.append(('weights_h_r[' + str(i) + ']'))
+    titles_right.append(('w_h_r[' + str(i) + ']'))
     data_right.append(weights_h_r[i])
-titles_right.append('weights_r')
+titles_right.append('w_r')
 data_right.append(weights_r)
 
 nrows = params.neurons_hidden_l + 1
