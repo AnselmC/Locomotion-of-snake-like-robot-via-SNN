@@ -5,7 +5,7 @@ path = "../data/" + session        # Path for saving data
 comment = "Hidden Test"
 
 # Other
-training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 50000             # Lenth of training procedure (1 step ~ 50 ms)
 modulo = 50
 maze_width = 5.0
 reset_distance = 2.3                # Reset distance
