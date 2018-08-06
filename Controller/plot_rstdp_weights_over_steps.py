@@ -31,7 +31,7 @@ ylabels_right.append('w_r')
 nrows = params.neurons_hidden_l + 1
 ncols = 2
 
-fig = plt.figure(figsize=(10, 5*nrows))
+fig = plt.figure(figsize=(20, 5*nrows))
 
 def plt_hidden_weights_over_steps(index, xlabel, ylabel, data, hidden_index):
     ax = plt.subplot(nrows, ncols, index)
