@@ -113,7 +113,6 @@ class VrepEnvironment():
         self.steps += 1
         self.total_steps += 1
         # Set radius and set speed
-        print n_l
         self.setRadius(n_l,n_r)
         # self.setSpeed(n_faster, n_slower)
 
