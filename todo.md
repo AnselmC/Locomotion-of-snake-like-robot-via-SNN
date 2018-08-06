@@ -32,6 +32,7 @@
     - test on scenario_3
   - session_015: test best of the above with different texture
 
+- Add time in reward calculation
 - Testing scenario
   - Different wall heights: 0.1m, 1m, 1.5m, 2m, 3m
   - Different heights in same scenario
