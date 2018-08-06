@@ -30,7 +30,7 @@
         8, 
         5
     ], 
-    "reward_factor": 0.00025, 
+    "reward_factor": 0.0025, 
     "session": "session_002", 
     "sim_time": 50.0, 
     "t_refrac": 2.0, 
