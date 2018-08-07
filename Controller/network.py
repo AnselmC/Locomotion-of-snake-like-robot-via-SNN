@@ -59,9 +59,9 @@ class SpikingNeuralNetwork():
     def simulate(self, dvs_data, reward):
         # Set reward signal for left and right network
         nest.SetStatus(self.conn_l,
-                       {"n": -reward*params.reward_factor})
+                       {"n": -reward})
         nest.SetStatus(self.conn_r,
-                       {"n": reward*params.reward_factor})
+                       {"n": reward})
         # Set poisson neuron firing time span
         time = nest.GetKernelStatus("time")
         nest.SetStatus(self.spike_generators,

@@ -145,7 +145,7 @@ class VrepEnvironment():
         self.rate.sleep()
 
     def calculate_reward(self, distance):
-        return 3*(distance)**3
+        return 3*(distance)**3*params.reward_factor
 
     def step(self, n_l, n_r):
         self.steps += 1
