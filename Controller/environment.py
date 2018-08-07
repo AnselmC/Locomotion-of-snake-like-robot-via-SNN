@@ -20,6 +20,7 @@ class VrepEnvironment():
     def __init__(self):
         # Subscriber and publisher set up
         self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
+        self.steps_sub = rospy.Subscriber('steps', Float32, self.steps_callback)
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
         self.speed_pub = rospy.Publisher('speed', Float32, queue_size=1)
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
@@ -42,7 +43,7 @@ class VrepEnvironment():
         self.car_params = None
         self.speed_buffer = 0
         self.radius_buffer = 0
-
+        self.vrep_steps = []
         # Open cv
         self.bridge = CvBridge()
 
@@ -50,7 +51,9 @@ class VrepEnvironment():
         rospy.init_node('rstdp_controller')
         self.rate = rospy.Rate(rate)
 
-
+    def steps_callback(self, msg):
+        print "Getting steps"
+        self.vrep_steps.append(msg.data)
 
     def image_callback(self, msg):
     # Process incoming image data
@@ -113,7 +116,6 @@ class VrepEnvironment():
         self.steps += 1
         self.total_steps += 1
         # Set radius and set speed
-        print n_l
         self.setRadius(n_l,n_r)
         # self.setSpeed(n_faster, n_slower)
 
@@ -156,13 +158,13 @@ class VrepEnvironment():
             print "--------------------------------"
             print "-----------step: ", self.steps, "-----------"
             print "--------------------------------"
-            print "n_l: \t\t", n_l
-            print "n_r: \t\t", n_r
-            print "turn_pre: \t", self.turn_pre
-            print "radius: \t", self.radius
-            print "speed: \t\t", self.speed
-            print "cx: \t\t", self.cx
-            print "Turning dopamine modulator: \t", tdm
+            # print "n_l: \t\t", n_l
+            # print "n_r: \t\t", n_r
+            # print "turn_pre: \t", self.turn_pre
+            # print "radius: \t", self.radius
+            # print "speed: \t\t", self.speed
+            # print "cx: \t\t", self.cx
+            # print "Turning dopamine modulator: \t", tdm
 
     def getParams(self):
         return self.car_params
