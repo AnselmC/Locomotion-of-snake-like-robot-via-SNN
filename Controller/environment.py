@@ -20,7 +20,7 @@ class VrepEnvironment():
     def __init__(self):
         # Subscriber and publisher set up
         self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
-        self.steps_sub = rospy.Subscriber('stepPub', Float32, self.steps_callback)
+        self.steps_sub = rospy.Subscriber('steps', Float32, self.steps_callback)
         self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
         self.speed_pub = rospy.Publisher('speed', Float32, queue_size=1)
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
@@ -52,6 +52,7 @@ class VrepEnvironment():
         self.rate = rospy.Rate(rate)
 
     def steps_callback(self, msg):
+        print "Getting steps"
         self.vrep_steps.append(msg.data)
 
     def image_callback(self, msg):
@@ -150,20 +151,20 @@ class VrepEnvironment():
         if self.steps%modulo == 0:
             self.printParameters(n_l, n_r, tdm)
 
-        # Return state, reward, speed reward, termination, steps, radius, dist_to_middle
+        # Return state, reward, speed reward, termination, steps, radius, dist_to_middle, vrep steps
         return s,tdm,t,n, self.radius, self.cx
 
     def printParameters(self, n_l, n_r, tdm):
             print "--------------------------------"
             print "-----------step: ", self.steps, "-----------"
             print "--------------------------------"
-            print "n_l: \t\t", n_l
-            print "n_r: \t\t", n_r
-            print "turn_pre: \t", self.turn_pre
-            print "radius: \t", self.radius
-            print "speed: \t\t", self.speed
-            print "cx: \t\t", self.cx
-            print "Turning dopemine modulator: \t", tdm
+            # print "n_l: \t\t", n_l
+            # print "n_r: \t\t", n_r
+            # print "turn_pre: \t", self.turn_pre
+            # print "radius: \t", self.radius
+            # print "speed: \t\t", self.speed
+            # print "cx: \t\t", self.cx
+            # print "Turning dopemine modulator: \t", tdm
 
     def getParams(self):
         return self.car_params

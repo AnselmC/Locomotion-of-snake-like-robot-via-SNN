@@ -3,15 +3,15 @@
 import numpy as np
 import math
 
-session_no = '001'
+session_no = '004'
 path = "../data/session_" + session_no        # Path for saving data
-comment = 'without speed change, without hidden layer'
+comment = ''
 
 # Training parameters
 # Length of training (1 step ~50 ms)
 training_length = 25000
 # Maximum amount of steps per episode before reset
-max_steps = 2500
+max_steps = training_length
 # ROS publication rate
 rate = 20.
 # Every modulo steps parameters are printed
@@ -64,7 +64,7 @@ w_min = -w_max
 # Minimum initial random value
 w0_min = 100.
 # Maximum initial random value
-w0_max = 1000.
+w0_max = 500.
 # Time constant of reward signal in ms
 tau_n = 200.
 # Time constant of eligibility trace in ms
