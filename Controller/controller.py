@@ -31,7 +31,7 @@ vrep_steps = []
 # Initialize environment, get initial state, initial reward
 state, reward = env.reset()
 
-for i in range(11000):
+for i in range(params.testing_length):
 
     # Simulate network for 50 ms
     # Get left and right output spikes, get weights
@@ -41,7 +41,7 @@ for i in range(11000):
     # Get state, distance, pos_data, reward, terminate, steps,
     # terminate_position, travelled_distances, vrep_steps
     (state, distance, pos_data, reward, t, step,
-     terminate_position, travelled_distance, vrep_step) = env.step(n_l, n_r)
+     terminate_position, travelled_distances, vrep_steps) = env.step(n_l, n_r)
 
     # Store position, distance
     distances.append(distance)
