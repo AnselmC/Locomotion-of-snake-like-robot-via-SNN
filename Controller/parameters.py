@@ -9,9 +9,9 @@ comment = 'without speed change'
 
 # Training parameters
 # Length of training (1 step ~50 ms)
-training_length = 35000
+training_length = 25000
 # Maximum amount of steps per episode before reset
-max_steps = 2500
+max_steps = training_length
 # ROS publication rate
 rate = 20.
 # Every modulo steps parameters are printed
