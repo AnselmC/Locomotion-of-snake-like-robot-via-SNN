@@ -23,7 +23,7 @@ df_2 = pd.DataFrame(data=np.array([vrep_steps, travelled_distances]).T,
 
 filename_1 = params.session + "_" + params.test_on + "_df_1.csv"
 filename_2 = params.session + "_" + params.test_on + "_df_2.csv"
-filepath_1 = "../data/" + filename_1
-filepath_2 = "../data/" + filename_2
+filepath_1 = "../csv/" + filename_1
+filepath_2 = "../csv/" + filename_2
 df_1.to_csv(path_or_buf=filepath_1)
 df_2.to_csv(path_or_buf=filepath_2)

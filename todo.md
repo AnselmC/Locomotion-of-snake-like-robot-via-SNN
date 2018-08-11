@@ -1,22 +1,39 @@
 # TODO
 - Train controller on different wall heights and test it on other heights
   - session_010: train on scenario_2
+    - test on scenario_0_5: X
     - test on scenario_1
     - test on scenario_1_5
     - test on scenario_2
+    - test on scenario_2_5
+  - session_011: train on scenario_2_5
+    -  test on scenario_0_5  
+    - test on scenario_1
+    - test on scenario_1_5
+    - test on scenario_2
+    - test on scenario_2_5
   - session_012: train on scenario_1
+    -  test on scenario_0_5  
     - test on scenario_1
     - test on scenario_1_5
     - test on scenario_2
+    - test on scenario_2_5
   - session_013: train on scenario_1_5
+    -  test on scenario_0_5  
     - test on scenario_1
     - test on scenario_1_5
     - test on scenario_2
+    - test on scenario_2_5
+  - session_014: train on scenario_0_5
+    - test on scenario_0_5:
+    - test on scenario_1:   
+    - test on scenario_1_5: X
+    - test on scenario_2:   X
+    - test on scenario_2_5
   - session_015: test best of the above with different texture
 
-- Add time in reward calculation
 - Testing scenario
-  - Different wall heights: 0.1m, 1m, 1.5m, 2m, 3m
+  - Different wall heights: 0.5m, 1m, 1.5m, 2m, 2.5m
   - Different heights in same scenario
 - Code rework + comments
   - Snake Lua script remove comments
