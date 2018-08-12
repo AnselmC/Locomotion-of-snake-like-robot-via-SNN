@@ -8,20 +8,20 @@ import pandas as pd
 
 import parameters as params
 
-session = "session_010"
-train_on = "scenario_2"
+session = "session_014"
+train_on = "scenario_0_5"
 scenarios = [
-             # 'scenario_0_5',
-             # 'scenario_1',
-             'scenario_1_5',
-             'scenario_2',
-             'scenario_2_5',
-             'scenario_3',
+             'scenario_0_5',
+             'scenario_1',
+             # 'scenario_1_5',
+             # 'scenario_2',
+             # 'scenario_2_5',
+             # 'scenario_3',
             ]
 
 filenames = []
 for scenario in scenarios:
-    filenames.append(params.session + "_test on " + scenario + "_df_1.csv")
+    filenames.append(session + "_test on " + scenario + "_df_1.csv")
 
 filepaths = []
 for filename in filenames:

@@ -1,4 +1,4 @@
-# Hyperparameter evaluation
+# Hyperparameter Evaluation
 
 Freeze development, reset data and plots and systematically test hyperparameters with scenario_2_texture_concrete:
 - session_001: baseline

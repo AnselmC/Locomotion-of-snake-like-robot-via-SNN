@@ -51,7 +51,6 @@ for i in range(params.testing_length):
     terminate_positions.append(terminate_position)
 
 # Save performance data
-
 filename = '/rstdp_performance_data_' + params.test_on + '.h5'
 h5f = h5py.File(params.path + filename, 'w')
 h5f.create_dataset('distances', data=distances)
