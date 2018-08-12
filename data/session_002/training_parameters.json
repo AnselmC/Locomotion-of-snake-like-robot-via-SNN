@@ -3,8 +3,8 @@
     "A_plus": 1.0, 
     "blind_steps": 20, 
     "comment": "", 
-    "crop_bottom": 24, 
-    "crop_top": 24, 
+    "crop_bottom": 28, 
+    "crop_top": 28, 
     "iaf_params": {}, 
     "iaf_params_hidden": {}, 
     "img_resolution": [
@@ -24,11 +24,11 @@
     "r_min": 1, 
     "rate": 20.0, 
     "resolution": [
-        4, 
+        2, 
         16
     ], 
     "reward_slope": 25, 
-    "session_no": "002", 
+    "session_no": "001", 
     "sim_time": 50.0, 
     "speed_change": 0.1, 
     "t_refrac": 2.0, 
@@ -38,8 +38,8 @@
     "training_length": 25000, 
     "turn_pre": 0, 
     "v_start": 1.65, 
-    "w0_max": 500.0, 
-    "w0_min": 100.0, 
+    "w0_max": 501.0, 
+    "w0_min": 500.0, 
     "w_max": 2500.0, 
     "w_min": -2500.0
 }
