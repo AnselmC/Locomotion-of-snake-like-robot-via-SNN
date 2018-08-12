@@ -7,6 +7,7 @@
 - Code rework + comments
   - Snake Lua script remove comments
   - Remove debug comments
+  - Clean Repository
 - Add training length in VREP
 - In Latex
   - New thesis title
@@ -30,18 +31,12 @@
   - Revise step function flowchart (Figure 4.8b)
     - Bigger text
     - Check if it is correct
-  - For section 5.2.1
-    - Add Hyperparameter table
-    - Put 3 steps_distance plots into one Figure
   - Add training flowchart
-  - Write section 5.2.2 Different heights
-    With the above described hyperparameters, three more controllers were trained.
-    Besides the one for the scenario with 2m high walls, controllers for a height of 0.5m, 1m and 1.5m were trained in order to determine which of them copes best with different heights during testing.
-    Table TODO depicts the steps and travelled distance needed until the snake is able to finish the maze in both direction.
-    The steps and distance over episode, weights over steps and final weights plot for the controllers can be found in the ref{appendix} TODO
   - Write section 5.3 Testing
-    The four controllers described section TODO are evaluated by testing them with scenarios with different wall heights.
   - Write Conclusion and Outlook
+  - Appendix
+    - Simulation parameters table (Ref at Table 5.1)
+    - Plots for the 0.5, 1.0 and 2.0 controller (Ref at Section 5.2.2)
 
 # Questions
 - Turning model
