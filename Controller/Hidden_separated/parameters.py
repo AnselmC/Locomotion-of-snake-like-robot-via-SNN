@@ -3,8 +3,8 @@
 import numpy as np
 import math
 
-session_no = '002'
-path = "../../data_hidden/session_" + session_no        # Path for saving data
+session_no = '001'
+path = "../../data_hidden_separated/session_" + session_no        # Path for saving data
 comment = ''
 
 # Training parameters
@@ -33,7 +33,7 @@ reward_slope = 25
 img_resolution = [64,64]            # Original DVS frame resolution
 crop_bottom = 28                       # Crop at the top
 crop_top = 28                       # Crop at the bottom
-pixels_per_neuron_per_axis = 4
+pixels_per_neuron_per_axis = 2
 resolution = [(img_resolution[1]-crop_top-crop_bottom)//pixels_per_neuron_per_axis, img_resolution[0]//pixels_per_neuron_per_axis]
 
 

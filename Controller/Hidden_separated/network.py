@@ -56,10 +56,10 @@ class SpikingNeuralNetwork():
         # Get network weights to input layer
         weights_hidden = []
         for i in range(len(self.conn_hidden_l)):
-            weights_hidden.append(np.array(nest.GetStatus(self.conn_hidden_l[i], keys="weight")))
+            weights_hidden.append(np.array(nest.GetStatus(self.conn_hidden_l[i], keys="weight")).reshape(p.resolution))
 
         for i in range(len(self.conn_hidden_r)):
-            weights_hidden.append(np.array(nest.GetStatus(self.conn_hidden_r[i], keys="weight")))
+            weights_hidden.append(np.array(nest.GetStatus(self.conn_hidden_r[i], keys="weight")).reshape(p.resolution))
 
         # Set tdm signal for left and right neuron connections
         nest.SetStatus(self.conn_l, {"n": -tdm})
@@ -120,6 +120,8 @@ class SpikingNeuralNetwork():
         w_l = []
         print weights_l.shape
         print weights_r.shape
+        print weights_h.shape
+        weights_h = weights_h.reshape(weights_h.shape[0],weights_h.shape[1]*weights_h.shape[2])
         print weights_h.shape
         for w in weights_l.reshape(weights_l.size):
             w_l.append({'weight': w})

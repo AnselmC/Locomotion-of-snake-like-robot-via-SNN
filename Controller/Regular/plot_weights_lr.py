@@ -11,10 +11,10 @@ h5f = h5py.File(path + '/training_data.h5', 'r')
 w_l = np.array(h5f['w_l'], dtype=float)
 w_r = np.array(h5f['w_r'], dtype=float)
 w_i = np.array(h5f['w_i'], dtype=float)
-
+print w_r.shape
 weights_l = np.flipud(w_l[-1])
 weights_r = np.flipud(w_r[-1])
-
+print weights_l.shape
 fig = plt.figure(figsize=(12,12))
 
 xlim = w_i.max(axis=0)
@@ -65,7 +65,7 @@ ax4.set_xlabel('Simulation Time [1 step = 50 ms]')
 
 fig.tight_layout()
 
-filename = 'session_' + session_no + '_weights_left_right.png'
-filepath = '../plots/' + filename
+filename = 'session_' + session_no + '_weights_lr_regular.png'
+filepath = '../../plots/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)
