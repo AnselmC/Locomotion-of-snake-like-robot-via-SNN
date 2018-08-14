@@ -93,7 +93,7 @@ except:
     pass
 
 # Save data
-h5f = h5py.File(p.path + '/rstdp_data.h5', 'w')
+h5f = h5py.File(p.path + '/training_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_h', data=weights_hidden)
@@ -104,4 +104,3 @@ h5f.create_dataset('radius', data = radius)
 h5f.create_dataset('avg_dist_to_middle', data = avg_dist_to_middle)
 h5f.create_dataset('dopamine', data = dopamine)
 h5f.close()
-

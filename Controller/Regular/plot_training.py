@@ -5,7 +5,7 @@ import h5py
 from parameters import *
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
-filepath = '../data/session_'
+filepath = '../../data/session_'
 h5f = h5py.File(filepath + '001' + '/training_data.h5', 'r')
 h5f2 = h5py.File(filepath + '002' + '/training_data.h5', 'r')
 h5f3 = h5py.File(filepath + '003' + '/training_data.h5', 'r')
@@ -135,6 +135,6 @@ plt.grid(True)
 fig.tight_layout()
 
 filename = 'training.png'
-filepath = '../plots/' + filename
+filepath = '../../plots/regular/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

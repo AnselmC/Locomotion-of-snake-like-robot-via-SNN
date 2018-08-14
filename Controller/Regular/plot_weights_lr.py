@@ -65,7 +65,7 @@ ax4.set_xlabel('Simulation Time [1 step = 50 ms]')
 
 fig.tight_layout()
 
-filename = 'session_' + session_no + '_weights_lr_regular.png'
-filepath = '../../plots/' + filename
+filename = 'session_' + session_no + '_weights_lr.png'
+filepath = '../../plots/regular/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)
