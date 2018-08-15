@@ -15,7 +15,6 @@ weights_r = []
 weights_l = []
 weights_i = []
 steps = []
-terminate_positions = []
 parameters = {}
 terminate_early = False
 
@@ -39,9 +38,9 @@ for i in range(params.training_length):
     w_r = weights[1]
 
     # Get state, distance, pos_data, reward, terminate, steps,
-    # terminate_position, travelled_distances, vrep_steps
+    # travelled_distances, vrep_steps
     (state, distance, pos_data, reward, t, step,
-     terminate_position, travelled_distances, vrep_steps) = env.step(n_l, n_r)
+     travelled_distances, vrep_steps) = env.step(n_l, n_r)
 
     # if (i % modulo == 0):
     #     print "----------training.py----------"
@@ -63,7 +62,6 @@ for i in range(params.training_length):
     # Save # steps every episode
     if t:
         steps.append(step)
-        terminate_positions.append(terminate_position)
         print "----------training.py----------"
         print "-----------terminate-----------"
         print "steps:\n", steps
@@ -95,6 +93,5 @@ h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data=steps)
 h5f.create_dataset('vrep_steps', data=vrep_steps)
-h5f.create_dataset('terminate_positions', data=terminate_positions)
 h5f.create_dataset('travelled_distances', data=travelled_distances)
 h5f.close()

@@ -74,7 +74,6 @@ class VrepEnvironment():
         self.positive_direction = False
 
         self.terminate = False
-        self.terminate_position = 0
 
         rospy.init_node('rstdp_controller')
         self.rate = rospy.Rate(params.rate)
@@ -190,7 +189,6 @@ class VrepEnvironment():
 
         if t is True:
             self.steps = 0
-            self.terminate_position = self.pos_data
             self.reset()
             self.terminate = False
 
@@ -214,10 +212,9 @@ class VrepEnvironment():
             # print "--------------------------------"
 
         # Return state, distance, pos_data, reward, terminate, steps,
-        # terminate_position, travelled_distances, vrep_steps
+        # travelled_distances, vrep_steps
         return (self.state, self.distance, self.pos_data, self.reward, t, n,
-                self.terminate_position, self.travelled_distances,
-                self.vrep_steps)
+                self.travelled_distances, self.vrep_steps)
 
     def getState(self):
         new_state = np.zeros((params.resolution[0], params.resolution[1]), dtype=int)
