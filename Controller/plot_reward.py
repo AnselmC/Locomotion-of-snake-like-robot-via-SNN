@@ -22,4 +22,8 @@ plt.xlim(-2.8, 2.8)
 plt.ylim(-0.015, 0.015)
 plt.ylabel('Reward')
 plt.legend(loc='upper center')
-plt.show()
+
+filename = "reward.pdf"
+filepath = "/home/christoph/Pictures/" + filename
+plt.savefig(filepath, bbox_inches='tight')
+plt.show(filepath)

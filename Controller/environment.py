@@ -147,20 +147,22 @@ class VrepEnvironment():
         return 3*(distance)**3*params.reward_factor
 
     def step(self, n_l, n_r):
+        # Increment steps
         self.steps += 1
 
+        # Snake turning model
         self.calculate_and_publish_radius(n_l, n_r)
 
         # Calculate distance to center
         self.distance = params.maze_width/2 - self.distances[0]
 
-        # Set reward signal
+        # Set reward
         if self.positive_direction is True:
             self.reward = self.calculate_reward(self.distance)
         else:
             self.reward = -self.calculate_reward(self.distance)
 
-        # Get state
+        # Get state from DVS frame
         self.state = self.getState()
 
         # Check reset conditions

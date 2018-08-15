@@ -32,7 +32,7 @@ for i in range(len(data)):
 
 fig.tight_layout()
 
-filename = params.session + "_steps.png"
+filename = params.session + "_steps.pdf"
 filepath = "../plots/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

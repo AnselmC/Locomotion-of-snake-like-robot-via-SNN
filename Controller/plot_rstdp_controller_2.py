@@ -9,16 +9,16 @@ import pandas as pd
 import parameters as params
 
 # Select session and train on
-session = "session_010"
-train_on = "_2"
+session = "session_014"
+train_on = "_0_5"
 # Select succesful scenarios
 scenarios = [
-             # 'scenario_0_5',
-             # 'scenario_1',
-             'scenario_1_5',
-             'scenario_2',
-             'scenario_2_5',
-             'scenario_3',
+             'scenario_0_5',
+             'scenario_1',
+             # 'scenario_1_5',
+             # 'scenario_2',
+             # 'scenario_2_5',
+             # 'scenario_3',
             ]
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
@@ -120,7 +120,7 @@ for i in range(len(scenarios)):
 plt.subplots_adjust(wspace=0.)
 # fig.tight_layout()
 
-filename_png = "controller" + train_on + "_performance.png"
+filename_png = "controller" + train_on + "_performance.pdf"
 filepath_png = "../plots/" + filename_png
 plt.savefig(filepath_png, bbox_inches='tight')
 plt.show(filepath_png)

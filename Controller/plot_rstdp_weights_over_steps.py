@@ -45,7 +45,7 @@ for i in range(len(data)):
 
 fig.tight_layout()
 
-filename = params.session + "_weights_over_steps.png"
+filename = params.session + "_weights_over_steps.pdf"
 filepath = "../plots/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

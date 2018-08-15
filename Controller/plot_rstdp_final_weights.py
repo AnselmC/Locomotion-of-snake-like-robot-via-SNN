@@ -32,7 +32,7 @@ for i in range(len(data)):
 
 fig.tight_layout()
 
-filename = params.session + "_final_weights.png"
+filename = params.session + "_final_weights.pdf"
 filepath = "../plots/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

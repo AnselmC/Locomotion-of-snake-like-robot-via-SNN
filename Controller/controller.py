@@ -2,7 +2,6 @@
 
 import h5py
 import json
-import signal
 import numpy as np
 
 import network as net
@@ -29,7 +28,7 @@ w_r = np.array(h5f['w_r'], dtype=float)[-1]
 # Set network weights
 snn.set_weights(w_l, w_r)
 
-# Initialize environment, get state, reward
+# Initialize environment, get initial state and reward
 state, reward = env.reset()
 
 for i in range(params.testing_length):
@@ -38,12 +37,13 @@ for i in range(params.testing_length):
     n_l, n_r = snn.run(state)
 
     # Perform a step
+    # Get state, distance, pos_data, reward, terminate, steps, travelled_distances, vrep_steps
     # Get state, distance, pos_data, reward, terminate, steps,
     # travelled_distances, vrep_steps
     (state, distance, pos_data, reward, t, step,
      travelled_distances, vrep_steps) = env.step(n_l, n_r)
-
-    # Store position, distance
+     
+    # Store position, distance, reward, step
     distances.append(distance)
     positions.append(pos_data)
     rewards.append(reward)

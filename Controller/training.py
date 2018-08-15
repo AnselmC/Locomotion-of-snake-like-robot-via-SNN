@@ -8,15 +8,16 @@ import network as net
 import environment as env
 import parameters as params
 
-snn = net.SpikingNeuralNetwork()
-env = env.VrepEnvironment()
-
+# Arrays to store training data
 weights_r = []
 weights_l = []
 weights_i = []
 steps = []
 parameters = {}
 terminate_early = False
+
+snn = net.SpikingNeuralNetwork()
+env = env.VrepEnvironment()
 
 
 def handler(signum, frane):
@@ -26,17 +27,17 @@ def handler(signum, frane):
 
 signal.signal(signal.SIGINT, handler)
 
-# Initialize environment, get initial state, initial reward
+# Initialize environment, get initial state and reward
 state, reward = env.reset()
 
 for i in range(params.training_length):
 
-    # Simulate network for 50 ms
-    # Get number of output spikes and network weights
+    # Run network for 50 ms: Get left and right output spikes, get weights
     n_l, n_r, weights = snn.simulate(state, reward)
     w_l = weights[0]
     w_r = weights[1]
 
+    # Perform a step
     # Get state, distance, pos_data, reward, terminate, steps,
     # travelled_distances, vrep_steps
     (state, distance, pos_data, reward, t, step,
