@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-session = "session_013"
+session = "session_001"
 test_on = ""
 path = "../data/" + session        # Path for saving data
 comment = "train on scenario_0_5"
@@ -19,8 +19,8 @@ img_resolution = [128, 128]          # Original DVS frame resolution
 dvs_resolution = img_resolution
 crop_top = 0                        # Crop at the top
 crop_bottom = 48                    # Crop at the bottom
-resolution = [img_resolution[0]/8,
-              (img_resolution[1]-crop_top-crop_bottom)/8]            # Resolution of reduced image
+resolution = [img_resolution[0]/16,
+              (img_resolution[1]-crop_top-crop_bottom)/16]            # Resolution of reduced image
 
 # Network parameters
 sim_time = 50.0                     # Length of network simulation during each step in ms

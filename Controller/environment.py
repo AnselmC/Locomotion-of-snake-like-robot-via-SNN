@@ -194,11 +194,11 @@ class VrepEnvironment():
             self.reset()
             self.terminate = False
 
-        # if (self.steps % modulo == 0):
+        if (self.steps % 50 == 0):
         #     print "---------environment.py---------"
         #     print "-----------step: ", self.steps, "-----------"
             # print "dvs_data: \n", self.dvs_data
-            # print "state: \n", self.state
+            print "state: \n", self.state
             # print "pos_data[0]: \t", abs(self.pos_data[0])
             # print "pos_data[1]: \t", self.pos_data[1]
             # print "n_l: \t\t", n_l
