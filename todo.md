@@ -1,4 +1,9 @@
 # TODO
+- session_001: Train on scenario_2
+- session_002: Train on scenario_2, high resolution
+- session_003: Train on scenario_2, high resolution, max_spikes=64
+
+
 
 - Code rework + comments
   - Snake Lua script remove comments

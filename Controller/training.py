@@ -63,12 +63,10 @@ for i in range(params.training_length):
     # Save # steps every episode
     if t:
         steps.append(step)
-        print "----------training.py----------"
-        print "-----------terminate-----------"
+        print "step:\t", i
         print "steps:\n", steps
         print "vrep_steps:\n", vrep_steps
         print "travelled_distances:\n", travelled_distances
-        print "--------------------------------"
 
     if terminate_early:
         break
