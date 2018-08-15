@@ -1,13 +1,10 @@
 # TODO
 
-- Testing scenario
-  - Different heights in same scenario
 - Code rework + comments
   - Snake Lua script remove comments
   - Remove debug comments
   - Remove pos_data Subscriber in environment
   - Clean Repository
-- Add training length in VREP
 - In Latex
   - (!) New thesis title
   - (!) Write Abstract
