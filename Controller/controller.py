@@ -3,6 +3,7 @@
 import h5py
 import json
 import numpy as np
+import signal
 
 import network as net
 import environment as env
@@ -16,6 +17,11 @@ steps = []
 terminate_positions = []
 travelled_distances = []
 vrep_steps = []
+terminate_early = False
+
+def handler(signum, frane):
+    global terminate_early
+    terminate_early = True
 
 snn = net.SpikingNeuralNetwork()
 env = env.VrepEnvironment()
@@ -42,12 +48,15 @@ for i in range(params.testing_length):
     # travelled_distances, vrep_steps
     (state, distance, pos_data, reward, t, step,
      travelled_distances, vrep_steps) = env.step(n_l, n_r)
-     
+
     # Store position, distance, reward, step
     distances.append(distance)
     positions.append(pos_data)
     rewards.append(reward)
     steps.append(step)
+
+    if terminate_early:
+        break
 
 # Save performance data
 filename = '/rstdp_performance_data_' + params.test_on + '.h5'

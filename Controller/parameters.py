@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 
-session = "session_003"
-test_on = ""
+session = "session_002"
+test_on = "3"
 path = "../data/" + session        # Path for saving data
-comment = "Train on scenario_2, high resolution, max_spikes=64"
+comment = "Train on scenario_2, high resolution"
 
 # Other
 training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
-testing_length = 15000
+testing_length = 10000
 modulo = 50
 maze_width = 5.0
 reset_distance = 2.3                # Reset distance

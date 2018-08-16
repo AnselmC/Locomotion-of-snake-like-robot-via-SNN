@@ -9,23 +9,24 @@ import pandas as pd
 import parameters as params
 
 # Select session and train on
-session = "session_014"
-train_on = "_0_5"
+session = "session_002"
+train_on = "_2"
 # Select succesful scenarios
 scenarios = [
-             'scenario_0_5',
-             'scenario_1',
-             # 'scenario_1_5',
-             # 'scenario_2',
-             # 'scenario_2_5',
-             # 'scenario_3',
+             '0_5',
+             '1',
+             '1_5',
+             '2',
+             '2_5',
+             '3',
             ]
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+
 # Create filenames from scenarios
 filenames = []
 for scenario in scenarios:
-    filenames.append(session + "_test on " + scenario + "_df_1.csv")
+    filenames.append(session + "_" + scenario + "_df_1.csv")
 
 # Create filepaths from filenames
 filepaths = []
@@ -50,7 +51,7 @@ print steps_array
 
 # Select one succesful episode per df
 for i in range(len(scenarios)):
-    dfs[i] = dfs[i][steps_array[i][1]:steps_array[i][2]]
+    dfs[i] = dfs[i][steps_array[i][0]:steps_array[i][1]]
     dfs[i] = dfs[i].reset_index(drop=True)
 
 # Calculate error defined as the mean of absolute value of distances per df
@@ -64,7 +65,7 @@ for df in dfs:
     errors.append(df['distances'].abs().mean())
 
 # Add travelled_distances from df_2
-travelled_distances = [159.68, 163.73, 162.36, 159.86]
+travelled_distances = [164.33, 165.58, 168.00, 168.99, 169.73, 170.59]
 
 nrows = len(filenames)
 ncols = 2
