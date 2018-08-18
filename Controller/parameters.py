@@ -3,7 +3,7 @@
 session = "session_001"
 test_on = ""
 path = "../data/" + session        # Path for saving data
-comment = "train on scenario_2"
+comment = "train on scenario_2, max_poisson_freq = 512"
 
 # Other
 training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
@@ -14,23 +14,23 @@ reset_distance = 2.3                # Reset distance
 reset_steps = 500
 rate = 20.                          # ROS publication rate motor speed
 
-# Input image
-img_resolution = [128, 128]          # Original DVS frame resolution
+# SNN Input
+img_resolution = [128, 128]         # DVS Resolution
 dvs_resolution = img_resolution
-crop_top = 0                        # Crop at the top
-crop_bottom = 48                    # Crop at the bottom
+crop_top = 0                        # Crop Top
+crop_bottom = 48                    # Crop Bottom
 resolution = [img_resolution[0]/8,
-              (img_resolution[1]-crop_top-crop_bottom)/8]            # Resolution of reduced image
+              (img_resolution[1]-crop_top-crop_bottom)/8] # SNN Input Resolution
 
-# Network parameters
-sim_time = 50.0                     # Length of network simulation during each step in ms
+# Network
+sim_time = 50.0                     # Simulation Time per Step
 t_refrac = 2.                       # Refractory period
 time_resolution = 0.1               # Network simulation time resolution
 iaf_params = {}                     # IAF neuron parameters
 iaf_params_hidden = {}
 poisson_params = {}                 # Poisson neuron parameters
-max_poisson_freq = 300              # Maximum Poisson firing frequency for n_max
-max_spikes = 15.                    # number of events during each step for maximum poisson frequency
+max_poisson_freq = 512              # Maximum Poisson firing frequency for n_max
+max_spikes = 16.                    # number of events during each step for maximum poisson frequency
 
 # R-STDP parameters
 w_max = 5000.                       # Maximum weight value
