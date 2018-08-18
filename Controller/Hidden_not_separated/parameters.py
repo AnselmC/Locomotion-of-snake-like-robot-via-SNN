@@ -3,7 +3,7 @@
 import numpy as np
 import math
 
-session_no = '003'
+session_no = '001'
 path = "../../data_hidden_not_separated/session_" + session_no        # Path for saving data
 comment = ''
 

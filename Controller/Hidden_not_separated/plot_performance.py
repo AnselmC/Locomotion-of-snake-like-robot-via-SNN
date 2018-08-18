@@ -99,7 +99,7 @@ plt.hist(dist_to_middle3, bins=b, normed=True, color='y', linewidth=0, orientati
 # fig.tight_layout()
 plt.setp(ax1.get_xticklabels(), visible=False)
 plt.setp(ax3.get_xticklabels(), visible=False)
-filename = 'performance_regular.png'
-filepath = '../../plots/' + filename
+filename = 'performance.png'
+filepath = '../../plots/hidden_not_separated/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

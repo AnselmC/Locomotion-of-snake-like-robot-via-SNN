@@ -24,7 +24,7 @@ for i in range(hidden_neurons):
     if(i == 0):
         ax.set_title('Weights to hidden layer neurons', color='0.4')
     current_weights = weights_hidden[i,:,:]
-    plt.imshow(current_weights, alpha=0.75)
+    plt.imshow(current_weights, alpha=0.5)
     plt.axis('off')
     for (j,i),label in np.ndenumerate(current_weights):
     	ax.text(i,j,int(label),ha='center',va='center')

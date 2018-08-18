@@ -26,14 +26,14 @@ plt.title('Final left weights', color='0.4', fontsize='10')
 plt.imshow(weights_l, alpha=0.5)
 plt.axis('off')
 for (j,i),label in np.ndenumerate(weights_l):
-	ax1.text(i,j,int(label),ha='center',va='center')
+	ax1.text(i,j,int(label),ha='center',va='center', size='10')
 
 ax2 = plt.subplot(412)
 plt.title('Final right weights', color='0.4', fontsize='10')
 plt.imshow(weights_r, alpha=0.5)
 plt.axis('off')
 for (j,i),label in np.ndenumerate(weights_r):
-	ax2.text(i,j,int(label),ha='center',va='center')
+	ax2.text(i,j,int(label),ha='center',va='center', size='10')
 
 ax3 = plt.subplot(413)
 ax3.set_title('Weights to left neuron', color='0.4', size='10')
