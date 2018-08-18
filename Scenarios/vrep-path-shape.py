@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pylab as plt
 import pandas as pd
 
-height = 1.0
+height = 3.0
 height_strip = 0.25
 delta_height = height - 2*height_strip
 width = 2.5
