@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 
-session = "session_002"
-test_on = "3"
+session = "session_001"
+test_on = ""
 path = "../data/" + session        # Path for saving data
-comment = "Train on scenario_2, high resolution"
+comment = "train on scenario_2"
 
 # Other
 training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)

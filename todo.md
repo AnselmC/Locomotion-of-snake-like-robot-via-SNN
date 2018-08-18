@@ -1,8 +1,5 @@
 # TODO
-- session_001: Train on scenario_2
-- session_002: Train on scenario_2, high resolution
-- session_003: Train on scenario_2, high resolution, max_spikes=64
-
+- session_001: train on scenario_2
 
 
 - Code rework + comments
