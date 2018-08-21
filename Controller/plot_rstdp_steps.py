@@ -20,8 +20,11 @@ ncols = 1
 
 def plt_per_episode(index, xlabel, ylabel, data):
     ax = plt.subplot(nrows, ncols, index)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
+    ax.set_xlabel(xlabel, fontsize=32)
+    ax.set_ylabel(ylabel, fontsize=32)
+    plt.ylim((0,6000))
+    plt.xticks(fontsize=24)
+    plt.yticks(np.arange(0, 7000, 2000), fontsize=24)
     plt.grid(linestyle=':')
     plt.plot(data, linewidth=1.0)
 
@@ -32,7 +35,7 @@ for i in range(len(data)):
 
 fig.tight_layout()
 
-filename = params.session + "_steps.pdf"
-filepath = "../plots/" + filename
+filename = "steps_higher_resolution.pdf"
+filepath = "/home/christoph/Pictures/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)
