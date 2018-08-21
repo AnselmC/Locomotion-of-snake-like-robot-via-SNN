@@ -1,7 +1,7 @@
 {
     "A_minus": 1.0, 
     "A_plus": 1.0, 
-    "comment": "Train on scenario_2", 
+    "comment": "Initial configuration", 
     "crop_bottom": 48, 
     "crop_top": 0, 
     "dvs_resolution": [
@@ -14,19 +14,19 @@
         128, 
         128
     ], 
-    "max_poisson_freq": 300, 
+    "max_poisson_freq": 300.0, 
     "max_spikes": 15.0, 
     "maze_width": 5.0, 
     "modulo": 50, 
     "n_max": 25.0, 
     "poisson_params": {}, 
-    "r_min": 1, 
+    "r_min": 1.0, 
     "rate": 20.0, 
     "reset_distance": 2.3, 
     "reset_steps": 500, 
     "resolution": [
-        8, 
-        5
+        16, 
+        10
     ], 
     "reward_factor": 0.00025, 
     "session": "session_001", 
@@ -35,7 +35,7 @@
     "tau_c": 1000.0, 
     "tau_n": 200.0, 
     "test_on": "", 
-    "testing_length": 15000, 
+    "testing_length": 10000, 
     "time_resolution": 0.1, 
     "training_length": 30000, 
     "turn_pre": 0.0, 

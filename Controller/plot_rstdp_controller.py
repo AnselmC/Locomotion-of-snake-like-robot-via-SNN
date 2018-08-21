@@ -9,13 +9,13 @@ import pandas as pd
 import parameters as params
 
 # Select session and train on
-session = "session_002"
+session = "session_004"
 train_on = "_2"
 # Select succesful scenarios
 scenarios = [
-             '0_5',
-             '1',
-             '1_5',
+             # '0_5',
+             # '1',
+             # '1_5',
              '2',
              '2_5',
              '3',
@@ -65,7 +65,7 @@ for df in dfs:
     errors.append(df['distances'].abs().mean())
 
 # Add travelled_distances from df_2
-travelled_distances = [164.33, 165.58, 168.00, 168.99, 169.73, 170.59]
+travelled_distances = [169.65, 171.35, 173.39, 173.59, 175.64, 177.72]
 
 nrows = len(filenames)
 ncols = 2
@@ -94,7 +94,7 @@ for i in range(len(scenarios)):
                              color=colors[i],
                              sharex=axes[0],
                              sharey=axes[0])
-    axes[j].set_title(scenarios[i], fontsize=16)
+    axes[j].set_title("Test on scenario_" + scenarios[i], fontsize=16)
     axes[j].set_xlabel("Steps", fontsize=14)
     # axes[i,0].set_xlim(0,5000)
     axes[j].set_ylim(-2,2)
@@ -121,7 +121,7 @@ for i in range(len(scenarios)):
 plt.subplots_adjust(wspace=0.)
 # fig.tight_layout()
 
-filename_png = "controller" + train_on + "_performance.pdf"
+filename_png = "controller" + train_on + "_performance_2.pdf"
 filepath_png = "../plots/" + filename_png
 plt.savefig(filepath_png, bbox_inches='tight')
 plt.show(filepath_png)

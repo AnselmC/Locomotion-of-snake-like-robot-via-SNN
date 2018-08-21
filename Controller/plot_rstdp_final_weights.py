@@ -25,7 +25,7 @@ def plt_final_weights(index, title, data):
     plt.imshow(data, alpha=0.5)
     plt.axis('off')
     for (j,i),label in np.ndenumerate(data):
-    	ax.text(i,j,int(label),ha='center',va='center')
+    	ax.text(i,j,int(label),ha='center',va='center', fontsize=8)
 
 for i in range(len(data)):
     plt_final_weights(211+i, titles[i], data[i])
