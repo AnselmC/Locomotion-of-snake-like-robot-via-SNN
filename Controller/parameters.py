@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-session = "session_001"
-test_on = "3"
+session = "session_002"
+test_on = "2_smooth"
 path = "../data/" + session        # Path for saving data
 comment = "w_max = 10000., w_min = -w_max, w0_max = w_min/50, w0_min = w0_max-1, reward_factor = 0.00025"
 

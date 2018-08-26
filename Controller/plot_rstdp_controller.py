@@ -9,19 +9,21 @@ import pandas as pd
 import parameters as params
 
 # Select session and train on
-session = "session_004"
+session = "session_002"
 train_on = "_2"
 # Select succesful scenarios
 scenarios = [
              # '0_5',
              # '1',
              # '1_5',
-             '2',
-             '2_5',
-             '3',
+             # '2',
+             '2_smooth',
+             # '2_5',
+             # '3',
             ]
 
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+# colors = ['c', 'm', 'y', 'k', 'w']
 
 # Create filenames from scenarios
 filenames = []
@@ -65,7 +67,9 @@ for df in dfs:
     errors.append(df['distances'].abs().mean())
 
 # Add travelled_distances from df_2
-travelled_distances = [169.65, 171.35, 173.39, 173.59, 175.64, 177.72]
+# travelled_distances = [169.65, 171.35, 173.39, 173.59, 175.64, 177.72]
+# travelled_distances = [173.59, 175.64, 177.72]
+travelled_distances = [166.28]
 
 nrows = len(filenames)
 ncols = 2
@@ -121,7 +125,7 @@ for i in range(len(scenarios)):
 plt.subplots_adjust(wspace=0.)
 # fig.tight_layout()
 
-filename_png = "controller" + train_on + "_performance_2.pdf"
+filename_png = "controller" + train_on + "_performance_smooth.pdf"
 filepath_png = "../plots/" + filename_png
 plt.savefig(filepath_png, bbox_inches='tight')
 plt.show(filepath_png)
