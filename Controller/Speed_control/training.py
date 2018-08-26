@@ -16,6 +16,8 @@ env = VrepEnvironment()
 weights_r = []
 weights_l = []
 weights_i = []
+weights_faster = []
+weights_slower = []
 steps = []
 radius = []
 avg_dist_to_middle = []
@@ -40,17 +42,17 @@ def save_params(acc_dist_to_middle,n):
     print "Avg. distance to middle:\n", avg_dist_to_middle
 
 # Initialize environment, get initial state, initial reward, initial speed reward
-s,tdm = env.reset()
+s,tdm, sdm = env.reset()
 
 for i in range(p.training_length):
 
     # Simulate network for 50 ms
     # get number of output spikes and network weights
-    n_l, n_r, w_l, w_r = snn.simulate(s,tdm)
+    n_l, n_r, n_slower, n_faster, w_l, w_r, w_slower, w_faster = snn.simulate(s,tdm, sdm)
 
     # Feed output spikes in steering wheel model
     # Get state, motor reward, speed reward, termination, step, radius, dist_to_middle
-    s,tdm,t,n,r,d = env.step(n_l, n_r)
+    s,tdm,sdm,t,n,r,d = env.step(n_l, n_r, n_faster, n_slower)
     acc_dist_to_middle = acc_dist_to_middle + abs(d)
     # Save weights every 100 simulation steps
     if i % 100 == 0:
@@ -59,8 +61,12 @@ for i in range(p.training_length):
         print "--------------------------------"
         print "Left weights:\n", w_l
         print "Right weights:\n", w_r
+        print "Faster weights:\n", w_faster
+        print "Slower weights:\n", w_slower
         weights_l.append(w_l)
         weights_r.append(w_r)
+        weights_faster.append(w_faster)
+        weights_slower.append(w_slower)
         weights_i.append(i)
 
     # Save some params every step
@@ -96,6 +102,8 @@ except:
 h5f = h5py.File(p.path + '/training_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
+h5f.create_dataset('w_faster', data=weights_faster)
+h5f.create_dataset('w_slower', data=weights_slower)
 h5f.create_dataset('w_i', data=weights_i)
 h5f.create_dataset('steps', data = steps)
 h5f.create_dataset('vrep_steps', data=env.vrep_steps)

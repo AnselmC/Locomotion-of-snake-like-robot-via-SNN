@@ -26,21 +26,21 @@ ymin1 = w_l.min()*1.1
 ymax1 = w_l.max()*1.1
 
 ax1 = plt.subplot(411)
-plt.title('Final left weights', color='0.4', fontsize='10')
-plt.imshow(weights_l, alpha=0.5)
+plt.title('Final left weights', color='0.4')
+plt.imshow(weights_l, alpha=0.5, aspect='auto')
 plt.axis('off')
 for (j,i),label in np.ndenumerate(weights_l):
 	ax1.text(i,j,int(label),ha='center',va='center')
 
 ax2 = plt.subplot(412)
-plt.title('Final right weights', color='0.4', fontsize='10')
-plt.imshow(weights_r, alpha=0.5)
+plt.title('Final right weights', color='0.4')
+plt.imshow(weights_r, alpha=0.5, aspect='auto')
 plt.axis('off')
 for (j,i),label in np.ndenumerate(weights_r):
 	ax2.text(i,j,int(label),ha='center',va='center')
 
 ax3 = plt.subplot(413)
-ax3.set_title('Weights to left neuron', color='0.4', size='10')
+ax3.set_title('Weights to left neuron', color='0.4')
 ax3.set_ylabel('Weight')
 ax3.set_xlim((0,xlim))
 ax3.set_ylim((ymin1, ymax1))
@@ -53,7 +53,7 @@ for i in range(w_l.shape[1]):
 ymin2 = w_r.min()*1.1
 ymax2 = w_r.max()*1.1
 ax4 = plt.subplot(414, sharex=ax3)
-ax4.set_title('Weights to right neuron', color='0.4', size='10')
+ax4.set_title('Weights to right neuron', color='0.4')
 # ax5.set_ylabel('Weight')
 ax4.set_xlim((0,xlim))
 ax4.set_ylim((ymin2,ymax2))

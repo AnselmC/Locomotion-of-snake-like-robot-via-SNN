@@ -3,13 +3,13 @@
 import numpy as np
 import math
 
-session_no = '001'
-path = "../../data_hidden_separated/session_" + session_no        # Path for saving data
+session_no = '002'
+path = "../../data_speed_control/session_" + session_no        # Path for saving data
 comment = ''
 test = 2
 # Training parameters
 # Length of training (1 step ~50 ms)
-training_length = 25000
+training_length = 15000
 # Maximum amount of steps per episode before reset
 max_steps = training_length
 # ROS publication rate
