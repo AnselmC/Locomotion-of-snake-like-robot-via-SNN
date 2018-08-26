@@ -6,7 +6,7 @@ import math
 session_no = '001'
 path = "../../data/session_" + session_no        # Path for saving data
 comment = ''
-
+test = 2
 # Training parameters
 # Length of training (1 step ~50 ms)
 training_length = 25000
@@ -33,7 +33,9 @@ reward_slope = 25
 img_resolution = [64,64]            # Original DVS frame resolution
 crop_bottom = 28                       # Crop at the top
 crop_top = 28                       # Crop at the bottom
-pixels_per_neuron_per_axis = 8
+pixels_per_neuron_per_axis = 2
+if(session_no == '002'): pixels_per_neuron_per_axis = 4
+if(session_no == '003'): pixels_per_neuron_per_axis = 8
 resolution = [(img_resolution[1]-crop_top-crop_bottom)//pixels_per_neuron_per_axis, img_resolution[0]//pixels_per_neuron_per_axis]
 
 

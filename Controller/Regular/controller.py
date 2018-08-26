@@ -60,7 +60,7 @@ save_params(acc_dist_to_middle,n)
 avg_dist = acc_dist_to_middle/sum(env.vrep_steps)
 
 
-h5f = h5py.File(path + '/performance_data.h5', 'w')
+h5f = h5py.File(path + '/performance_data_'+str(test)+'.h5', 'w')
 h5f.create_dataset('vrep_steps', data=env.vrep_steps)
 h5f.create_dataset('steps', data = steps)
 h5f.create_dataset('average_distance_to_middle', data = avg_dist)

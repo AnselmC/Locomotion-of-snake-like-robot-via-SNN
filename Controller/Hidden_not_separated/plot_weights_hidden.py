@@ -29,7 +29,7 @@ for i in range(hidden_neurons):
     for (j,i),label in np.ndenumerate(current_weights):
     	ax.text(i,j,int(label),ha='center',va='center')
 
-filename = 'session_' + session_no + '_weights_hidden.png'
+filename = 'session_' + session_no + '_weights_hidden.pdf'
 filepath = '../../plots/hidden_not_separated/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

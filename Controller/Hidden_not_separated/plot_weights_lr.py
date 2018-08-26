@@ -68,7 +68,7 @@ ax4.set_xlabel('Simulation Time [1 step = 50 ms]')
 
 fig.tight_layout()
 
-filename = 'session_' + session_no + '_weights_lr.png'
+filename = 'session_' + session_no + '_weights_lr.pdf'
 filepath = '../../plots/hidden_not_separated/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

@@ -134,7 +134,7 @@ plt.grid(True)
 # fig.text(0.01, 0.5, 'Steps', va='center', rotation='vertical',size='15')
 fig.tight_layout()
 
-filename = 'training.png'
+filename = 'training.pdf'
 filepath = '../../plots/regular/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

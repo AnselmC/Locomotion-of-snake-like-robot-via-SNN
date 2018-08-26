@@ -31,7 +31,7 @@ for i in range(hidden_neurons_per_side):
     for (j,i),label in np.ndenumerate(current_weights):
     	ax.text(i,j,int(label),ha='center',va='center')
 
-filename = 'session_' + session_no + '_weights_hidden_left.png'
+filename = 'session_' + session_no + '_weights_hidden_left.pdf'
 filepath = '../../plots/hidden_separated/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 
@@ -46,7 +46,7 @@ for i in range(hidden_neurons_per_side):
     for (j,i),label in np.ndenumerate(current_weights):
     	ax.text(i,j,int(label),ha='center',va='center')
 
-filename2 = 'session_' + session_no + '_weights_hidden_right.png'
+filename2 = 'session_' + session_no + '_weights_hidden_right.pdf'
 filepath2 = '../../plots/hidden_separated/' + filename2
 plt.savefig(filepath2, bbox_inches='tight')
 

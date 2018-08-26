@@ -93,7 +93,7 @@ plt.grid(True)
 
 fig.tight_layout()
 
-filename = 'training.png'
+filename = 'training.pdf'
 filepath = '../../plots/hidden_separated/' + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)
