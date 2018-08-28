@@ -26,7 +26,7 @@ for i in range(hidden_neurons_per_side):
     if(i == 0):
         ax.set_title('Weights to left hidden layer neurons', color='0.4')
     current_weights = weights_hidden_l[i,:,:]
-    plt.imshow(current_weights, alpha=0.5)
+    plt.imshow(current_weights, interpolation='nearest', cmap='coolwarm', aspect='equal')
     plt.axis('off')
     for (j,i),label in np.ndenumerate(current_weights):
     	ax.text(i,j,int(label),ha='center',va='center')
@@ -41,7 +41,7 @@ for i in range(hidden_neurons_per_side):
     if(i == 0):
         ax.set_title('Weights to right hidden layer neurons', color='0.4')
     current_weights = weights_hidden_r[i,:,:]
-    plt.imshow(current_weights, alpha=0.5)
+    plt.imshow(current_weights, interpolation='nearest', cmap='coolwarm', aspect='equal')
     plt.axis('off')
     for (j,i),label in np.ndenumerate(current_weights):
     	ax.text(i,j,int(label),ha='center',va='center')

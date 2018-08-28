@@ -3,7 +3,7 @@
 import numpy as np
 import math
 
-session_no = '002'
+session_no = '001'
 path = "../../data_speed_control/session_" + session_no        # Path for saving data
 comment = ''
 test = 2
@@ -23,7 +23,7 @@ speed_change = 0.1
 # Maximum speed change the snake can undergo
 max_speed_change = 0.06
 # Starting speed of snake
-v_start = 1.65
+v_start = 1.5
 # Slope of ...
 reward_slope = 25
 

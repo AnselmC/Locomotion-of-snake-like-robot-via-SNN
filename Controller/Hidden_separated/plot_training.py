@@ -31,7 +31,7 @@ stepsize = 1
 fig = plt.figure(1)
 
 ax1 = plt.subplot(311)
-ax1.set_title('Simulation 1', color='0.4')
+ax1.set_title('Network size 1', color='0.4')
 #ax1.set_ylabel('Steps', color='b')
 #ax1.set_xlabel('Episode')
 if(len(nest_steps) > 15):
@@ -52,7 +52,7 @@ plt.xticks(x1)
 plt.grid(True)
 
 ax2 = plt.subplot(312)
-ax2.set_title('Simulation 2', color='0.4')
+ax2.set_title('Network size 2', color='0.4')
 ax2.set_ylabel('Steps', size='15')
 #ax2.set_xlabel('Episode')
 if(len(nest_steps2) > 15):
@@ -72,7 +72,7 @@ plt.xticks(x2)
 plt.grid(True)
 
 ax3 = plt.subplot(313)
-ax3.set_title('Simulation 3', color='0.4')
+ax3.set_title('Network size 3', color='0.4')
 #ax3.set_ylabel('Steps', color='b')
 ax3.set_xlabel('Episode', size='15')
 if(len(nest_steps3) > 15):

@@ -3,6 +3,7 @@
 import numpy as np
 import h5py
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 from parameters import *
 
 
@@ -15,27 +16,65 @@ print w_r.shape
 weights_l = np.flipud(w_l[-1])
 weights_r = np.flipud(w_r[-1])
 print weights_l.shape
+
+
+# Create separate final weights figure for last session
+if(session_no == '001'):
+	fig2 = plt.figure(figsize=(16,8))
+	ax12 = plt.subplot(211)
+	plt.title('Final left weights', color='0.4')
+	plt.imshow(weights_l, interpolation='nearest', cmap='coolwarm', aspect='equal')
+	plt.axis('off')
+	for (j,i),label in np.ndenumerate(weights_l):
+		ax12.text(i,j,int(label),ha='center',va='center')
+
+	ax22 = plt.subplot(212)
+	plt.title('Final left weights: right side', color='0.4')
+	plt.imshow(weights_r, interpolation='nearest', cmap='coolwarm', aspect='equal')
+	plt.axis('off')
+	for (j,i),label in np.ndenumerate(weights_r):
+		ax22.text(i,j,int(label),ha='center',va='center')
+
+	fig2.tight_layout()
+
+	filename2 = 'session_' + session_no + '_final_weights_lr.pdf'
+	filepath2 = '../../plots/regular/' + filename2
+	plt.savefig(filepath2, bbox_inches='tight')
+
+
 fig = plt.figure(figsize=(12,12))
 
 xlim = w_i.max(axis=0)
 ymin1 = w_l.min()*1.1
 ymax1 = w_l.max()*1.1
 
-ax1 = plt.subplot(411)
+
+gs = gridspec.GridSpec(6, 1)
+
+gs1 = gs[0,:]
+gs2 = gs[1,:]
+gs3 = gs[2:4,:]
+gs4 = gs[4:,:]
+#ax1 = plt.subplot(411)
+ax1 = plt.subplot(gs1)
 plt.title('Final left weights', color='0.4')
-plt.imshow(weights_l, alpha=0.5, aspect='auto')
+plt.imshow(weights_l, interpolation='nearest', cmap='coolwarm', aspect='equal')
 plt.axis('off')
-for (j,i),label in np.ndenumerate(weights_l):
-	ax1.text(i,j,int(label),ha='center',va='center', size='10')
+if (session_no != '001'):
+	for (j,i),label in np.ndenumerate(weights_l):
+		ax1.text(i,j,int(label),ha='center',va='center')
 
-ax2 = plt.subplot(412)
+#ax2 = plt.subplot(412)
+ax2 = plt.subplot(gs2)
 plt.title('Final right weights', color='0.4')
-plt.imshow(weights_r, alpha=0.5, aspect='auto')
+plt.imshow(weights_r, interpolation='nearest', cmap='coolwarm', aspect='equal')
 plt.axis('off')
-for (j,i),label in np.ndenumerate(weights_r):
-	ax2.text(i,j,int(label),ha='center',va='center', size='10')
+if (session_no != '001'):
+	for (j,i),label in np.ndenumerate(weights_r):
+		ax2.text(i,j,int(label),ha='center',va='center')
 
-ax3 = plt.subplot(413)
+#ax3 = plt.subplot(413)
+ax3 = plt.subplot(gs3)
 ax3.set_title('Weights to left neuron', color='0.4')
 ax3.set_ylabel('Weight')
 ax3.set_xlim((0,xlim))
@@ -49,9 +88,10 @@ for i in range(w_l.shape[1]):
 
 ymin2 = w_r.min()*1.1
 ymax2 = w_r.max()*1.1
-ax4 = plt.subplot(414, sharex=ax3)
+#ax4 = plt.subplot(414, sharex=ax3)
+ax4 = plt.subplot(gs4)
 ax4.set_title('Weights to right neuron', color='0.4')
-# ax5.set_ylabel('Weight')
+ax4.set_ylabel('Weight')
 ax4.set_xlim((0,xlim))
 ax4.set_ylim((ymin2,ymax2))
 plt.grid(True)
