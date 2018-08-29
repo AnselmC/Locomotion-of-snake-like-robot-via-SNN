@@ -92,97 +92,103 @@ def hardest(sim_steps):
 		s = int(round(0.95*s))
 	return x,y
 
-def func(sim_steps, path_no):
-	if(path_no == 1):
+def choosePath(sim_steps, no):
+	if(int(no) == 1):
 		return sine(sim_steps)
-	elif(path_no == 2):
+	elif(int(no) == 2):
 		return zigzag(sim_steps)
 	else:
 		return hardest(sim_steps)
 
 ###Get user input
+paths = []
+networks = []
 network_no = 0
 network_types = ['regular', 'hidden_separated', 'hidden_agnostic']
-while(int(network_no) not in range(1,4)):
-    msg = 'Please choose network type:\n (1)regular, (2)hidden_separated, (3)hidden_agnostic\n'
+while(int(network_no) not in range(1,5)):
+    msg = 'Please choose network type:\n (1)regular, (2)hidden_separated, (3)hidden_agnostic, (4)all\n'
     network_no = raw_input(msg)
 
-network_type = str(network_types[int(network_no)-1])
-print network_type
+if(int(network_no)==4):
+	networks = network_types
+else:
+	networks.append(str(network_types[int(network_no)-1]))
 test_no = 0
-while(int(test_no) not in range(1,4)):
-    test_no = raw_input("Please enter testing path number (1,2, or 3):\n ")
+while(int(test_no) not in range(1,5)):
+    test_no = raw_input("Please enter testing path number 1,2,or 3 or 4 for all paths:\n ")
+
+if(int(test_no)==4):
+	paths = ['1','2','3']
+else:
+	paths = [str(test_no)]
 
 
-filepath = '../data/' + network_type + '/session_'
-try:
-    h5f = h5py.File(filepath + '001' + '/performance_data_' + str(test_no) + '.h5', 'r')
-    h5f2 = h5py.File(filepath + '002' + '/performance_data_' + str(test_no) + '.h5', 'r')
-    h5f3 = h5py.File(filepath + '003' + '/performance_data_' + str(test_no) + '.h5', 'r')
-except:
-    print 'ERROR: One or more files not found'
-    sys.exit()
+for network in networks:
+	for path in paths:
+		filepath = '../data/' + network + '/session_'
+		try:
+		    h5f = h5py.File(filepath + '001' + '/performance_data_' + path + '.h5', 'r')
+		    h5f2 = h5py.File(filepath + '002' + '/performance_data_' + path + '.h5', 'r')
+		    h5f3 = h5py.File(filepath + '003' + '/performance_data_' + path + '.h5', 'r')
+		except:
+		    print 'ERROR: One or more files not found'
+		    sys.exit()
 
-x_pos = np.array(h5f['x_position'], dtype = float)
-y_pos = np.array(h5f['y_position'], dtype = float)
+		x_pos = np.array(h5f['x_position'], dtype = float)
+		y_pos = np.array(h5f['y_position'], dtype = float)
 
-x_pos2 = np.array(h5f2['x_position'], dtype = float)
-y_pos2 = np.array(h5f2['y_position'], dtype = float)
+		x_pos2 = np.array(h5f2['x_position'], dtype = float)
+		y_pos2 = np.array(h5f2['y_position'], dtype = float)
 
-x_pos3 = np.array(h5f3['x_position'], dtype = float)
-y_pos3 = np.array(h5f3['y_position'], dtype = float)
+		x_pos3 = np.array(h5f3['x_position'], dtype = float)
+		y_pos3 = np.array(h5f3['y_position'], dtype = float)
 
-x_pos, y_pos = removeLastSteps(x_pos,y_pos)
-x_pos2, y_pos2 = removeLastSteps(x_pos2,y_pos2)
-x_pos3, y_pos3 = removeLastSteps(x_pos3,y_pos3)
+		x_pos, y_pos = removeLastSteps(x_pos,y_pos)
+		x_pos2, y_pos2 = removeLastSteps(x_pos2,y_pos2)
+		x_pos3, y_pos3 = removeLastSteps(x_pos3,y_pos3)
 
-### PLOTTING ###
-fig = plt.figure(figsize=(6,6))
-x,y = func(len(x_pos), int(test_no))
-x2,y2 = func(len(x_pos2), int(test_no))
-x3,y3 = func(len(x_pos3), int(test_no))
-# y_min = min(y+y2+y3+y4)*1.1
-# y_max = max(y+y2+y3+y4)*1.1
-x_max = max(max(x_pos),max(x_pos2), max(x_pos3)) + 3.825
-# Training path
-ax1 = plt.subplot(311)
-ax1.set_title('Network size 1', color = '0.4')
-#ax1.set_ylim((y_min, y_max))
-ax1.set_xlim((0,x_max))
-ax1.set_xticks([])
-ax1.plot(x,y)
-ax1.plot(x_pos,y_pos, color='r')
-ax1.set_xticks([x_pos[-1]])
-ax1.set_xticklabels([len(x_pos)])
+		### PLOTTING ###
+		fig = plt.figure(figsize=(9,5))
+		x,y = choosePath(len(x_pos), path)
+		x2,y2 = choosePath(len(x_pos2), path)
+		x3,y3 = choosePath(len(x_pos3), path)
+		y_min = min(y+y2+y3)*1.1
+		y_max = max(y+y2+y3)*1.1
+		x_max = max(max(x_pos),max(x_pos2), max(x_pos3)) + 3.825
+		# Training path
+		ax1 = plt.subplot(311)
+		ax1.plot(x,y, linestyle=':', linewidth='1')
+		ax1.plot(x_pos,y_pos, color='r')
+		ax1.set_title('Network size 1', color = '0.4')
+		ax1.set_ylim((y_min, y_max))
+		ax1.set_xlim((0,x_max))
+		ax1.set_xticks([x_pos[-1]])
+		ax1.set_xticklabels([len(x_pos)])
 
-#steps = ax1.twiny()
-#steps.plot(range(5000, 100))
-ax2 = plt.subplot(312)
-ax2.set_title('Network size 2', color = '0.4')
-#ax1.set_ylim((y_min, y_max))
-ax2.set_xlim((0,x_max))
-ax2.set_xticks([])
-ax2.plot(x2,y2)
-ax2.plot(x_pos2,y_pos2, color='g')
-ax2.set_xticks([x_pos2[-1]])
-ax2.set_xticklabels([len(x_pos2)])
+		ax2 = plt.subplot(312, sharey=ax1)
+		#rotation=45
+		ax2.plot(x2,y2, linestyle=':', linewidth='1')
+		ax2.plot(x_pos2,y_pos2, color='g')
+		ax2.set_title('Network size 2', color = '0.4')
+		ax2.set_ylabel('y-position')
+		ax2.set_ylim((y_min, y_max))
+		ax2.set_xlim((0,x_max))
+		ax2.set_xticks([x_pos2[-1]])
+		ax2.set_xticklabels([len(x_pos2)])
 
-ax3 = plt.subplot(313)
-ax3.set_title('Network size 3', color = '0.4')
-#ax1.set_ylim((y_min, y_max))
-ax3.set_xlim((0,x_max))
-x_ticks = range(0,15000)
-ax3.plot(x3,y3)
-ax3.plot(x_pos3,y_pos3, color='y')
-#ax4 = ax3.twiny()
-ax3.set_xlabel('x-position/V-REP step')
-ax3.set_xticks([x_pos3[-1]])
-ax3.set_xticklabels([len(x_pos3)])
+		ax3 = plt.subplot(313, sharey=ax1)
+		ax3.plot(x3,y3, linestyle=':', linewidth='1')
+		ax3.plot(x_pos3,y_pos3, color='m')
+		ax3.set_title('Network size 3', color = '0.4')
+		ax3.set_ylim((y_min, y_max))
+		ax3.set_xlim((0,x_max))
+		ax3.set_xlabel('x-position/V-REP step')
+		ax3.set_xticks([x_pos3[-1]])
+		ax3.set_xticklabels([len(x_pos3)])
 
 
-
-fig.tight_layout()
-filename = 'path_comparison_' + str(test_no) + '.pdf'
-filepath = '../plots/' + network_type+ '/' + filename
-plt.savefig(filepath, bbox_inches='tight')
-plt.show(filepath)
+		fig.tight_layout()
+		filename = 'path_comparison_' + path + '.pdf'
+		filepath = '../plots/' + network+ '/' + filename
+		plt.savefig(filepath, bbox_inches='tight')
+		plt.show(filepath)

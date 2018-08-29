@@ -11,7 +11,7 @@ import numpy as np
 import cv2 as cv
 from cv_bridge import CvBridge, CvBridgeError
 
-from std_msgs.msg import Float32, Bool, String
+from std_msgs.msg import Float32, Bool, String, Float32MultiArray
 from sensor_msgs.msg import Image
 
 from parameters import *
@@ -20,8 +20,10 @@ class VrepEnvironment():
     def __init__(self):
         # Subscriber and publisher set up
         self.image_sub = rospy.Subscriber('redImage', Image, self.image_callback)
-        self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
         self.steps_sub = rospy.Subscriber('steps', Float32, self.steps_callback)
+        self.radius_pub = rospy.Publisher('turningRadius', Float32, queue_size=1)
+        self.position_sub = rospy.Subscriber('position', Float32MultiArray,
+                                              self.position_callback)
         self.speed_pub = rospy.Publisher('speed', Float32, queue_size=1)
         self.reset_pub = rospy.Publisher('resetRobot', Bool, queue_size=1)
         # Flags
@@ -44,7 +46,8 @@ class VrepEnvironment():
         self.speed_buffer = 0
         self.radius_buffer = 0
         self.vrep_steps = []
-
+        self.x_pos = []
+        self.y_pos = []
         # Open cv
         self.bridge = CvBridge()
 
@@ -53,10 +56,11 @@ class VrepEnvironment():
         self.rate = rospy.Rate(rate)
 
     def steps_callback(self, msg):
-            print "Getting steps"
-            self.vrep_steps.append(msg.data)
-
-
+        print "Getting steps"
+        self.vrep_steps.append(msg.data)
+    def position_callback(self,msg):
+        self.x_pos.append(msg.data[0])
+        self.y_pos.append(msg.data[1])
     def image_callback(self, msg):
     # Process incoming image data
         # Get an OpenCV image
@@ -128,7 +132,7 @@ class VrepEnvironment():
         self.rate.sleep()
 
         # Set dopamine signals
-        # Turning dopamine modulator (tdm)
+        # Speed dopamine modulator (sdm)
         tdm = self.getTurningDopamineModulator()
 
         # Get state and save stepno.
@@ -153,7 +157,7 @@ class VrepEnvironment():
         if self.steps%modulo == 0:
             self.printParameters(n_l, n_r, tdm)
 
-        # Return state, reward, speed reward, termination, steps, radius, dist_to_middle
+        # Return state, reward, speed reward, termination, steps, radius, dist_to_middle, vrep steps
         return s,tdm,t,n, self.radius, self.cx
 
     def printParameters(self, n_l, n_r, tdm):
@@ -166,7 +170,7 @@ class VrepEnvironment():
             # print "radius: \t", self.radius
             # print "speed: \t\t", self.speed
             # print "cx: \t\t", self.cx
-            # print "Turning dopamine modulator: \t", tdm
+            # print "Turning dopemine modulator: \t", tdm
 
     def getParams(self):
         return self.car_params
@@ -209,9 +213,9 @@ class VrepEnvironment():
         else:
             if(abs(self.speed_buffer/20) > 0.01*self.speed):
                 if(self.speed_buffer > 0):
-                    self.speed_buffer = self.speed
+                    self.speed_buffer = 0.2*self.speed
                 else:
-                    self.speed_buffer = -self.speed
+                    self.speed_buffer = -0.2*self.speed
             self.speed = self.speed + self.speed_buffer/20
             self.speed_buffer = 0
         # Snake speed v2

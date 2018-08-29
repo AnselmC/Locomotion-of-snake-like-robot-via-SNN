@@ -3,10 +3,10 @@
 import numpy as np
 import math
 
-session_no = '002'
-path = "../../data_hidden_not_separated/session_" + session_no        # Path for saving data
+session_no = '003'
+path = "../../data/hidden_agnostic/session_" + session_no        # Path for saving data
 comment = ''
-test = 2
+test = 3
 # Training parameters
 # Length of training (1 step ~50 ms)
 training_length = 25000
