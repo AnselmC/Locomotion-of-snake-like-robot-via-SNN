@@ -4,9 +4,10 @@ import numpy as np
 import math
 
 session_no = '001'
-path = "../../data_speed_control/session_" + session_no        # Path for saving data
+path = "../../data/speed/session_" + session_no        # Path for saving data
 comment = ''
 test = 2
+speed = False
 # Training parameters
 # Length of training (1 step ~50 ms)
 training_length = 15000
@@ -19,7 +20,7 @@ modulo = 10
 # Number of simulation steps the snake has no vision of car before reset
 blind_steps = 20
 # Speed change factor
-speed_change = 0.1
+#speed_change = 0.1
 # Maximum speed change the snake can undergo
 max_speed_change = 0.06
 # Starting speed of snake
@@ -74,7 +75,7 @@ tau_c = 1000.
 # Factor that dopamine modulator for turning is multiplied with
 max_turning_dopamine_factor = 0.0015
 # Factor that dopamine modulator for speed is multiplied with
-max_speed_dopamine_factor = 0.001
+max_speed_dopamine_factor = 0.0015
 # Constant scaling strength of potentiation
 A_plus = 1.
 # Constant scaling strength of depression

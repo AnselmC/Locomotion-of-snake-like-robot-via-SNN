@@ -33,6 +33,7 @@ class VrepEnvironment():
         self.img = None
         self.cx = 0.0
         self.speed = v_start
+        self.speed_change = 0.
         self.radius = 0.
         self.pixel_ratio = 0.
         self.ideal_pixel_ratio = 0.
@@ -116,7 +117,9 @@ class VrepEnvironment():
         self.steps += 1
         self.total_steps += 1
         # Set radius and set speed
-        self.setRadius(n_l,n_r)
+        if(speed != True):
+            self.setRadius(n_l,n_r)
+
         self.setSpeed(n_faster, n_slower)
 
         # Publish turning radius and speed
@@ -151,22 +154,22 @@ class VrepEnvironment():
             self.terminate = False
 
         if self.steps%modulo == 0:
-            self.printParameters(n_l, n_r, tdm)
+            self.printParameters(n_l, n_r, sdm)
 
         # Return state, reward, speed reward, termination, steps, radius, dist_to_middle, vrep steps
         return s,tdm,sdm,t,n, self.radius, self.cx
 
-    def printParameters(self, n_l, n_r, tdm):
+    def printParameters(self, n_l, n_r, sdm):
             print "--------------------------------"
             print "-----------step: ", self.steps, "-----------"
             print "--------------------------------"
-            # print "n_l: \t\t", n_l
-            # print "n_r: \t\t", n_r
+            print "n_l: \t\t", n_l
+            print "n_r: \t\t", n_r
             # print "turn_pre: \t", self.turn_pre
             # print "radius: \t", self.radius
-            # print "speed: \t\t", self.speed
+            print "speed: \t\t", self.speed
             # print "cx: \t\t", self.cx
-            # print "Turning dopemine modulator: \t", tdm
+            print "Speed dopamine modulator: \t", sdm
 
     def getParams(self):
         return self.car_params
@@ -187,8 +190,8 @@ class VrepEnvironment():
 
     def setRadius(self, n_l, n_r):
         # Snake turning model
-        m_l = n_l/n_max
-        m_r = n_r/n_max
+        m_l = float(n_l)/n_max
+        m_r = float(n_r)/n_max
         a = m_l - m_r
         c = math.sqrt((m_l**2 + m_r**2)/2.0)
         self.turn_pre = c*a*0.5 + (1-c)*self.turn_pre
@@ -206,15 +209,19 @@ class VrepEnvironment():
             self.radius_buffer = 0
 
     def setSpeed(self, n_faster, n_slower):
-        m_slower = n_slower/n_max
-        m_faster = n_faster/n_max
-        # # Snake speed v1
-        if(self.steps%20 != 0):
-            self.speed_buffer = self.speed_buffer + (m_faster-m_slower)*speed_change
+        m_slower = float(n_slower)/n_max
+        m_faster = float(n_faster)/n_max
+        a_speed = m_faster - m_slower
+        c_speed = math.sqrt((m_faster**2 + m_slower**2)/2.0)
+        self.speed_change = c_speed*a_speed*0.5 + (1-c_speed)*self.speed_change
+
+        # Snake speed v1
+        if(self.steps%5 != 0):
+            self.speed_buffer = self.speed_buffer + self.speed_change
         else:
             if(abs(self.speed_buffer/20) > 0.01*self.speed):
                 if(self.speed_buffer > 0):
-                    self.speed_buffer = self.speed
+                    self.speed_buffer = 0.2*self.speed
                 else:
                     self.speed_buffer = -self.speed
             self.speed = self.speed + self.speed_buffer/20
