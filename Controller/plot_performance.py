@@ -7,6 +7,18 @@ import sys
 import matplotlib.pyplot as plt
 from matplotlib import gridspec
 
+def setTitle(network, path):
+    title = 'Performance for network '
+    network_appendix = ''
+    path_appendix = 'for testing path ' + path
+    if(network == 'regular'):
+        network_appendix = 'without hidden layer '
+    elif(network == 'hidden_separated'):
+        network_appendix = 'with separated hidden layer '
+    else:
+        network_appendix = 'with agnostic hidden layer '
+    return title + network_appendix + path_appendix
+
 ###Get user input
 paths = []
 networks = []
@@ -123,6 +135,10 @@ for network in networks:
         ax6.set_title('Network Size 3\ne = '+str('{:4.3f}'.format(s3)), loc='left', size='medium', position=(1.1,0.2))
         plt.axhline(y=0, linewidth=0.5, color='0.')
         plt.hist(dist_to_middle3, bins=b, normed=True, color='m', linewidth=0, orientation=u'horizontal')
+
+        fig.suptitle(setTitle(network, path), fontsize=16)
+        #fig.tight_layout()
+        #fig.subplots_adjust(top=0.88)
         filename = 'performance_' + path + '.pdf'
         filepath = '../plots/' + network+ '/' + filename
         plt.savefig(filepath, bbox_inches='tight')

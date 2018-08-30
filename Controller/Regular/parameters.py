@@ -3,7 +3,7 @@
 import numpy as np
 import math
 
-session_no = '003'
+session_no = '002'
 path = "../../data/regular/session_" + session_no        # Path for saving data
 comment = ''
 test = 3

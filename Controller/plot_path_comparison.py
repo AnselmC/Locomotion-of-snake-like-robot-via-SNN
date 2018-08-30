@@ -7,6 +7,18 @@ import math
 import sys
 from matplotlib import gridspec
 
+def setTitle(network, path):
+    title = 'Path comparison for network '
+    network_appendix = ''
+    path_appendix = 'for testing path ' + path
+    if(network == 'regular'):
+        network_appendix = 'without hidden layer '
+    elif(network == 'hidden_separated'):
+        network_appendix = 'with separated hidden layer '
+    else:
+        network_appendix = 'with agnostic hidden layer '
+    return title + network_appendix + path_appendix
+
 def removeLastSteps(x_pos,y_pos):
 	old_elem = x_pos[0]
 	index = 0
@@ -187,7 +199,9 @@ for network in networks:
 		ax3.set_xticklabels([len(x_pos3)])
 
 
+		fig.suptitle(setTitle(network, path), fontsize=16)
 		fig.tight_layout()
+		fig.subplots_adjust(top=0.88)
 		filename = 'path_comparison_' + path + '.pdf'
 		filepath = '../plots/' + network+ '/' + filename
 		plt.savefig(filepath, bbox_inches='tight')

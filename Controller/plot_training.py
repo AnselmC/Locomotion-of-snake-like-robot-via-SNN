@@ -7,6 +7,17 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as mticker
 from matplotlib import gridspec
 
+def setTitle(network):
+    title = 'Training for network '
+    appendix = ''
+    if(network == 'regular'):
+        appendix = 'without hidden layer'
+    elif(network == 'hidden_separated'):
+        appendix = 'with separated hidden layer'
+    else:
+        appendix = 'with agnostic hidden layer'
+    return title + appendix
+
 def getTicks(x):
     if(len(x) > 20):
         return np.linspace(0, len(x)-1, 20, dtype=int)
@@ -46,6 +57,7 @@ for network in networks:
     x3 = getTicks(nest_steps3)
     fig = plt.figure(figsize=(9,6))
 
+
     ax1 = plt.subplot(311)
     cumsum1 = ax1.twinx()
     ax1.plot(nest_steps, linewidth=1.0, color='b', label='NEST')
@@ -80,14 +92,16 @@ for network in networks:
     cumsum3.plot(nest_steps3.cumsum(axis=0), linewidth=1.0, color='b', linestyle=':')
     cumsum3.plot(vrep_steps3.cumsum(axis=0), linewidth=1.0, color='r', linestyle=':')
     ax3.set_title('Network size 3', color='0.4')
-    ax3.set_xlabel('Episode', size='15')
+    ax3.set_xlabel('Episode')
     ax3.set_xlim((0,nest_steps3.size-1))
     ax3.set_ylim((0, max(nest_steps3.max(axis=0), vrep_steps3.max(axis=0))*1.1))
     ax3.set_xticks(x3)
     ax3.set_xticklabels(x3+1)
     plt.grid(True)
 
+    fig.suptitle(setTitle(network), fontsize=16)
     fig.tight_layout()
+    fig.subplots_adjust(top=0.88)
     filename = 'training.pdf'
     filepath = '../plots/' + network + '/' + filename
     plt.savefig(filepath, bbox_inches='tight')
