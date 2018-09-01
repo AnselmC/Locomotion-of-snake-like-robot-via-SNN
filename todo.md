@@ -9,23 +9,39 @@
 - Code rework + comments
   - Snake Lua script remove comments
   - Remove debug comments
-  - Remove pos_data Subscriber in environment
   - Clean Repository
+  - Move plot modules into plots, scenario modules into scenario, ...
+- Ask TUM about title change
 - In Latex
   - (!) Write Abstract
-  - (!) Write Introduction
+  - Revise Introduction
   - Chapter 2
-    - Plot LIF Figure (Figure 2.3)
-    - Plot rstdp Figure (Figure 2.5)
+    - Caption LIF Figure (Figure 2.3)
+    - Caption rstdp Figure (Figure 2.5)
   - Chapter 3 Methodology
-    - Revise explanation for low reward around the middle
+    - Nicer floor in maze_perspective Figure
+    - Change Network Weights in Network Architecture Figure
+    - Replace 45 deg with 135 deg
   - Chapter 4 Discussion
-    - Reward factor explanation
+    - Right Weights more influence explanation
+    - Add vertical lines to mark section in distance over steps plots
+    - For the different wall heights test: plot paths in dimensions figure
+    - For the zig_zag maze: add to discussion
+    - For the cross mazes:
+      - plot paths in dimensions figure
   - (!) Write Conclusion and Outlook
   - For all:
     - If two headings are directly beneath each other, an introduction paragraph is missing
     - make subsubsection to subsubsection*
     - Check Acronyms (First acrfull, then acrshort)
+    - Make text of figures as big as description
+    - Check sharelatex warnings
 
 # Questions
 - Turning model
+
+2. Zig zag test
+3. Wall heights test
+4. Cross plots
+3. Wall heights in dimensions plot
+4. Vertical lines in distance plots

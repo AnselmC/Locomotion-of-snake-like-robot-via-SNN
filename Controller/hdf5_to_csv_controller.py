@@ -10,13 +10,16 @@ filename = '/rstdp_performance_data_' + params.test_on + '.h5'
 h5f = h5py.File(params.path + filename, 'r')
 
 distances = np.array(h5f['distances'], dtype=float)
+positions = np.array(h5f['positions'], dtype=float)
 rewards = np.array(h5f['rewards'], dtype=float)
 steps = np.array(h5f['steps'], dtype=float)
 vrep_steps = np.array(h5f['vrep_steps'], dtype=float)
 travelled_distances = np.array(h5f['travelled_distances'], dtype=float)
 
-df_1 = pd.DataFrame(data=np.array([distances, rewards, steps]).T,
-                    columns=['distances', 'rewards', 'steps'])
+print positions[:,0].shape
+
+df_1 = pd.DataFrame(data=np.array([distances, positions[:,0], positions[:,1], rewards, steps]).T,
+                    columns=['distances', 'positions[0]', 'positions[1]','rewards', 'steps'])
 
 df_2 = pd.DataFrame(data=np.array([vrep_steps, travelled_distances]).T,
                     columns=['vrep_steps', 'travelled_distances'])
