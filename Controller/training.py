@@ -12,6 +12,9 @@ import parameters as params
 weights_r = []
 weights_l = []
 weights_i = []
+distances = []
+positions = []
+rewards = []
 steps = []
 parameters = {}
 terminate_early = False
@@ -43,28 +46,21 @@ for i in range(params.training_length):
     (state, distance, pos_data, reward, t, step,
      travelled_distances, vrep_steps) = env.step(n_l, n_r)
 
-    # if (i % modulo == 0):
-    #     print "----------training.py----------"
-    #     print "-----------step: ", i, "-----------"
-    #     print "n_l: \t\t", n_l
-    #     print "n_r: \t\t", n_r
-    #     print "w_l: \n", w_l
-    #     print "w_r: \n", w_r
-    #     for j in range(len(weights[2])):
-    #         print "weight_hidden[", j,"]: \n", weights[2][j]
-    #     print "--------------------------------"
-
-    # Save weights every 100 simulation steps
-    if i % 100 == 0:
+    # Save weights every 10 simulation steps
+    if i % 10 == 0:
         weights_l.append(w_l)
         weights_r.append(w_r)
         weights_i.append(i)
 
+    distances.append(distance)
+    positions.append(pos_data)
+    rewards.append(reward)
+    steps.append(step)
+
     # Save # steps every episode
     if t:
-        steps.append(step)
         print "step:\t", i
-        print "steps:\n", steps
+        # print "steps:\n", steps
         print "vrep_steps:\n", vrep_steps
         print "travelled_distances:\n", travelled_distances
 
@@ -90,6 +86,9 @@ h5f = h5py.File(params.path + '/rstdp_data.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)
+h5f.create_dataset('distances', data=distances)
+h5f.create_dataset('positions', data=positions)
+h5f.create_dataset('rewards', data=rewards)
 h5f.create_dataset('steps', data=steps)
 h5f.create_dataset('vrep_steps', data=vrep_steps)
 h5f.create_dataset('travelled_distances', data=travelled_distances)

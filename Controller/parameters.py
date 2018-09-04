@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-session = "session_002"
-test_on = "3"
+session = "session_005"
+test_on = ""
 path = "../data/" + session        # Path for saving data
-comment = ""
+comment = "train on scenario_2, 0.000125"
 
 # Other
-training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
 testing_length = 10000
 modulo = 50
 maze_width = 5.0
@@ -35,11 +35,11 @@ max_spikes = 15.                    # # DVS Events for Max. Poisson Neuron Firin
 # R-STDP parameters
 w_max = 10000.                       # Maximum Synapse Value
 w_min = -w_max                      # Minimum Synapse Value
-w0_max = w_max/50                       # Maximum Initial Random Synapse Value
-w0_min = w0_max-1                       # Minimum Initial Random Synapse Value
+w0_max = 201.0                       # Maximum Initial Random Synapse Value
+w0_min = 200.0                       # Minimum Initial Random Synapse Value
 tau_n = 200.                        # Time Constant of Reward Signal
 tau_c = 1000.                       # Time Constant of Eligibility Trace
-reward_factor = 0.00025             # Reward Factor scaling the Reward Signal
+reward_factor = 0.000125             # Reward Factor scaling the Reward Signal
 A_plus = 1.                         # Constant scaling Strength of Potentiation
 A_minus = 1.                        # Constant scaling Strength of Depression
 

@@ -10,7 +10,7 @@ import pandas as pd
 length = 10.0
 width = 5.0
 
-alpha_deg = 110
+alpha_deg = 95
 
 # ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 color = 'c'
@@ -80,7 +80,7 @@ def create_patch_from_points(points, linestyle='dotted'):
 
     path = Path(verts, codes)
 
-    patch = patches.PathPatch(path, linestyle=linestyle, facecolor='none', lw=2)
+    patch = patches.PathPatch(path, linestyle=linestyle, facecolor='none', lw=8)
 
     return patch
 
@@ -115,12 +115,12 @@ def plot_df(df, patch, xlims, ylims):
     ax = fig.add_subplot(111)
     ax.set_xlim(xlims[0], xlims[1])
     ax.set_ylim(ylims[0], ylims[1])
-
+    ax.tick_params(labelsize=48)
     ax.add_patch(patch)
     plt.plot(df['positions[0]'],
              df['positions[1]'],
              color=color,
-             linewidth=2)
+             linewidth=8)
 
     filename = "controller_2_positions_cross_" + str(alpha_deg) + ".pdf"
     filepath = "./testing/" + filename
@@ -150,4 +150,4 @@ patches = [patch_middle]
 
 # Plot snake pos_data
 df = csv_to_df(alpha_deg)
-plot_df(df, patch_middle, [-20, 20], [-5, 40])
+plot_df(df, patch_middle, [-19, 19], [-1, 36])

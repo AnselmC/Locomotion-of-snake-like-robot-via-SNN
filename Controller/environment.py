@@ -155,7 +155,8 @@ class VrepEnvironment():
         self.calculate_and_publish_radius(n_l, n_r)
 
         # Calculate distance to center
-        self.distance = (self.distances[0] + self.distances[1])/2 - self.distances[0]
+        # self.distance = (self.distances[0] + self.distances[1])/2 - self.distances[0]
+        self.distance = params.maze_width/2 - self.distances[0]
 
         # Set reward
         if self.positive_direction is True:

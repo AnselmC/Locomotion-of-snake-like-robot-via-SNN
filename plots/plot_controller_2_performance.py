@@ -8,27 +8,41 @@ import pandas as pd
 
 # Parameters for snake pos_data plot
 
-# scenarios = ['2_cross_110', '2_cross_105', '2_cross_100', '2_cross_95']
-# number_of_segments = 12
-# axvline_factor = 0.5
-# filename = "controller_2_performance_cross.pdf"
-
 # scenarios = ['0_5', '1', '1_5', '2', '2_5', '3']
 # number_of_segments = 16
 # axvline_factor = 0.5
 # filename = "controller_2_performance_eight_shaped.pdf"
+# colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 
-# scenarios = ['2_zig_zag']
+# scenarios = ['0_5', '1', '1_5']
 # number_of_segments = 16
-# axvline_factor = 1.0
-# filename = "controller_2_performance_zig_zag.pdf"
+# axvline_factor = 0.5
+# filename = "controller_2_performance_eight_shaped_1.pdf"
+# colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 
-scenarios = ['2_zig_zag_smooth']
-number_of_segments = 21
+# scenarios = ['2', '2_5', '3']
+# number_of_segments = 16
+# axvline_factor = 0.5
+# filename = "controller_2_performance_eight_shaped_2.pdf"
+# colors = ['c', 'm', 'y', 'k', 'w']
+
+# scenarios = ['2_cross_110', '2_cross_105', '2_cross_100', '2_cross_95']
+# number_of_segments = 12
+# axvline_factor = 0.5
+# filename = "controller_2_performance_cross.pdf"
+# colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+
+scenarios = ['2_zig_zag']
+number_of_segments = 16
 axvline_factor = 1.0
-filename = "controller_2_performance_zig_zag_smooth.pdf"
-
+filename = "controller_2_performance_zig_zag.pdf"
 colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+
+# scenarios = ['2_zig_zag_smooth']
+# number_of_segments = 21
+# axvline_factor = 1.0
+# filename = "controller_2_performance_zig_zag_smooth.pdf"
+# colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
 
 # Create dfs from csv files with snake testing data
 def csv_to_dfs(scenarios):
@@ -74,17 +88,17 @@ def plot_controller_performance(dfs):
     nrows = len(scenarios)
     ncols = 2
     # Create figure
-    fig = plt.figure(figsize=(15, 5*nrows))
+    fig = plt.figure(figsize=(20, 4*nrows))
 
-    fig.text(0.08, 0.5,
+    fig.text(0.06, 0.5,
              'Distance to middle [m]',
-             fontsize=20,
+             fontsize=32,
              va='center',
              rotation='vertical')
 
     gs = gridspec.GridSpec(nrows=nrows,
                            ncols=ncols,
-                           width_ratios=[3,1])
+                           width_ratios=[5,1])
 
     axes = []
     for i in range(nrows*ncols):
@@ -99,12 +113,13 @@ def plot_controller_performance(dfs):
                     color=colors[i],
                     sharex=axes[0],
                     sharey=axes[0],
-                    legend=False)
-        axes[j].set_title("Test on scenario_" + scenarios[i], fontsize=20)
-        axes[j].set_xlabel("Travelled distance [m]", fontsize=20)
+                    legend=False,
+                    lw=2)
+        axes[j].set_title("Test on scenario_" + scenarios[i], fontsize=32)
+        axes[j].set_xlabel("Traveled distance [m]", fontsize=32)
         axes[j].set_ylim(-2,2)
         # axes[j].set_xticks(np.arange(0, dfs[i]['distances'].iloc[-1], 10))
-        axes[j].tick_params(labelsize=16)
+        axes[j].tick_params(labelsize=28)
         axes[j].set_yticks(np.arange(-2, 3, 1))
         for axvline in axvlines_array[i]:
             axes[j].axvline(x=axvline, color='k', linestyle='dashed')
@@ -114,17 +129,17 @@ def plot_controller_performance(dfs):
                                       color=colors[i],
                                       orientation="horizontal",
                                       sharey=axes[j])
-        axes[j+1].set_xlabel("Histogram", fontsize=20)
+        axes[j+1].set_xlabel("Histogram", fontsize=32)
         axes[j+1].set_ylim(-2,2)
-        axes[j+1].tick_params(labelsize=16)
+        axes[j+1].tick_params(labelsize=28)
         axes[j+1].set_xticks(np.arange(0, 1500, 500))
         axes[j+1].set_yticks(np.arange(-2, 3, 1))
         axes[j+1].set_title(('mean = ' + str('{:4.3f}'.format(means[i])) + 'm \n'
                              'e = ' + str('{:4.3f}'.format(errors[i])) + 'm \n'
-                             + 'Length = ' + str('{:4.3f}'.format(travelled_distances[i])) + 'm'),
+                             + 'Length = ' + str('{:4.2f}'.format(travelled_distances[i])) + 'm'),
                             loc='left',
-                            position=(1.1,0.5),
-                            fontsize=20)
+                            position=(1.1,0.33),
+                            fontsize=28)
         axes[j+1].grid()
 
     plt.subplots_adjust(wspace=0.)

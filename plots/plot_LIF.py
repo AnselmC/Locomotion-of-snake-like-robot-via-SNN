@@ -1,5 +1,3 @@
-# This python script is used to plot Fig. 2.4 in Claus's Thesis
-
 import matplotlib.pyplot as plt
 import math
 import numpy as np
@@ -36,7 +34,6 @@ def cal_external_input(t):
 
     return ext_i
 
-
 def cal_lif_output(t, i):
     global time_ref
     dvdt = -0.05*LIF_output[t-1] + i*0.1
@@ -49,14 +46,12 @@ def cal_lif_output(t, i):
         res = 0
     return res
 
-
 def calcResult(t):
     res = 0.000
     for s in spikes_in:
         if s<=t:
             res += 0.3 * math.exp(beta*(s-t))
     return res
-
 
 for t in range(0, t_end):
     synaptic_current[t] = calcResult(t)

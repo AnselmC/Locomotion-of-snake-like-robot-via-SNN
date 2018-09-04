@@ -50,7 +50,7 @@ def create_patch_from_points(points, linestyle='dotted'):
 
     path = Path(verts, codes)
 
-    patch = patches.PathPatch(path, linestyle=linestyle, facecolor='none', lw=2)
+    patch = patches.PathPatch(path, linestyle=linestyle, facecolor='none', lw=3)
 
     return patch
 
@@ -82,13 +82,14 @@ def csv_to_df(filename):
 def plot_df(df, patch, xlim, ylim):
     fig = plt.figure(figsize=(20, 20))
     ax = fig.add_subplot(111)
-    ax.set_xlim(-5, xlim)
-    ax.set_ylim(-5, ylim)
+    ax.set_xlim(-1, xlim)
+    ax.set_ylim(-1, ylim)
+    ax.tick_params(labelsize=20)
 
     ax.add_patch(patch)
     plt.plot(df['positions[0]'],
              df['positions[1]'],
-             linewidth=2)
+             linewidth=3)
 
     filename = "controller_2_positions_zig_zag.pdf"
     filepath = "./testing/" + filename
@@ -115,4 +116,4 @@ patches = [patch_middle]
 
 # Plot snake pos_data
 df = csv_to_df(filename)
-plot_df(df, patch_middle, points_middle[-1][0]*1.1, points_middle[-1][1]*1.1)
+plot_df(df, patch_middle, points_middle[-1][0]*1.01, points_middle[-1][1]*1.01)

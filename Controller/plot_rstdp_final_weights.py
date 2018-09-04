@@ -17,15 +17,15 @@ titles = ['Left Weights','Right Weights']
 
 data = [weights_l, weights_r]
 
-fig = plt.figure(figsize=(10, 5*len(data)))
+fig = plt.figure(figsize=(20, 10*len(data)))
 
 def plt_final_weights(index, title, data):
     ax = plt.subplot(index)
-    plt.title(title)
-    plt.imshow(data, alpha=0.5)
+    plt.title(title, fontsize=24)
+    plt.imshow(data, alpha=0.5, interpolation='nearest')
     plt.axis('off')
     for (j,i),label in np.ndenumerate(data):
-    	ax.text(i,j,int(label),ha='center',va='center', fontsize=8)
+    	ax.text(i,j,int(label),ha='center',va='center', fontsize=20)
 
 for i in range(len(data)):
     plt_final_weights(211+i, titles[i], data[i])
@@ -33,6 +33,6 @@ for i in range(len(data)):
 fig.tight_layout()
 
 filename = params.session + "_final_weights.pdf"
-filepath = "../plots/" + filename
+filepath = "../plots/training/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

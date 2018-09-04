@@ -66,7 +66,7 @@ def create_patch_from_points(points, linestyle='dashed'):
 
     path = Path(verts, codes)
 
-    patch = patches.PathPatch(path, linestyle=linestyle, facecolor='none', lw=2)
+    patch = patches.PathPatch(path, linestyle=linestyle, facecolor='none', lw=3)
 
     return patch
 
@@ -116,6 +116,7 @@ def plot_df(dfs, patches, xlim, ylim):
     # ax.set_axis_off()
     ax.set_xlim(-xlim, xlim)
     ax.set_ylim(-ylim, ylim)
+    ax.tick_params(labelsize=20)
 
     for patch in patches:
         ax.add_patch(patch)
@@ -124,9 +125,9 @@ def plot_df(dfs, patches, xlim, ylim):
         plt.plot(dfs[i]['positions[0]'],
                  dfs[i]['positions[1]'],
                  color=colors[i],
-                 linewidth=2,
+                 linewidth=3,
                  label=scenarios[i])
-    plt.legend()
+    plt.legend(fontsize=20)
 
     filename = "controller_2_positions_eight_shaped.pdf"
     filepath = "./testing/" + filename
@@ -179,4 +180,4 @@ patches = [patch_middle, patch_outer, patch_inner]
 
 # Plot snake pos_data
 dfs = csv_to_dfs(scenarios)
-plot_df(dfs, patches, p19[0]*1.01, p18[1]*1.01)
+plot_df(dfs, patches, p19[0]*1.1, p18[1]*1.1)

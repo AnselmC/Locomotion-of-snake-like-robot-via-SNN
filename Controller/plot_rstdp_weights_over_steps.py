@@ -27,18 +27,20 @@ data = [w_l, w_r]
 
 def plt_weights_over_steps(index, xlabel, ylabel, data):
     ax = plt.subplot(index)
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
+    ax.set_xlabel(xlabel, fontsize=32)
+    ax.set_ylabel(ylabel, fontsize=32)
+    ax.set_ylim(-8000, 10500)
     ax.tick_params(axis='both', which='both',
                    direction='in', bottom=True,
-                   top=True, left=True, right=True)
+                   top=True, left=True, right=True,
+                   labelsize=28)
     for i in range(data.shape[1]):
         for j in range(data.shape[2]):
-            plt.plot(w_i, data[:,i,j])
+            plt.plot(w_i, data[:,i,j], lw=2)
     for k in range(steps_cumulative.size):
-        plt.axvline(x=steps_cumulative[k])
+        plt.axvline(x=steps_cumulative[k], ls='dashed', color='k', lw=2)
 
-fig = plt.figure(figsize=(10, 5*len(data)))
+fig = plt.figure(figsize=(20, 12*len(data)))
 
 for i in range(len(data)):
     plt_weights_over_steps(211+i, xlabels[i], ylabels[i], data[i])
@@ -46,6 +48,6 @@ for i in range(len(data)):
 fig.tight_layout()
 
 filename = params.session + "_weights_over_steps.pdf"
-filepath = "../plots/" + filename
+filepath = "../plots/training/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)
