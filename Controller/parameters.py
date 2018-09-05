@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-session = "session_005"
+session = "session_006"
 test_on = ""
 path = "../data/" + session        # Path for saving data
-comment = "train on scenario_2, 0.000125"
+comment = "w_max = 10000., reward_factor = 0.00025, r_min = 2.0"
 
 # Other
-training_length = 30000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 15000             # Lenth of training procedure (1 step ~ 50 ms)
 testing_length = 10000
 modulo = 50
 maze_width = 5.0
@@ -39,14 +39,14 @@ w0_max = 201.0                       # Maximum Initial Random Synapse Value
 w0_min = 200.0                       # Minimum Initial Random Synapse Value
 tau_n = 200.                        # Time Constant of Reward Signal
 tau_c = 1000.                       # Time Constant of Eligibility Trace
-reward_factor = 0.000125             # Reward Factor scaling the Reward Signal
+reward_factor = 0.00025             # Reward Factor scaling the Reward Signal
 A_plus = 1.                         # Constant scaling Strength of Potentiation
 A_minus = 1.                        # Constant scaling Strength of Depression
 
 # Snake Turning Model
 turn_pre = 0.0                      # Initial Radius ?
 n_max = sim_time//t_refrac          # Maximum Input Activity
-r_min = 1.                           # Minimum Turning Radius
+r_min = 2.                           # Minimum Turning Radius
 
 params_dict = {}
 params_dict.update({k:v for k,v in locals().copy().iteritems()
