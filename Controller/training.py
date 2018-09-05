@@ -16,6 +16,7 @@ distances = []
 positions = []
 rewards = []
 steps = []
+python_steps = []
 parameters = {}
 terminate_early = False
 
@@ -59,8 +60,9 @@ for i in range(params.training_length):
 
     # Save # steps every episode
     if t:
+        python_steps.append(step)
         print "step:\t", i
-        # print "steps:\n", steps
+        print "python_steps:\n", python_steps
         print "vrep_steps:\n", vrep_steps
         print "travelled_distances:\n", travelled_distances
 

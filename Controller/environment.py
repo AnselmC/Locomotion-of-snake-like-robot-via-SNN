@@ -223,16 +223,16 @@ class VrepEnvironment():
             print "-----------step: ", self.steps, "-----------"
             # print "dvs_data: \n", self.dvs_data
             print "state: \n", self.state
-            print "pos_data[0]: \t", abs(self.pos_data[0])
-            print "pos_data[1]: \t", self.pos_data[1]
+            # print "pos_data[0]: \t", abs(self.pos_data[0])
+            # print "pos_data[1]: \t", self.pos_data[1]
             print "n_l: \t\t", n_l
             print "n_r: \t\t", n_r
-            print "a: \t\t", a
-            print "c: \t\t", c
-            print "turn_pre: \t", self.turn_pre
+            # print "a: \t\t", a
+            # print "c: \t\t", c
+            # print "turn_pre: \t", self.turn_pre
             print "radius: \t", self.radius
-            print "distances[0]: \t", self.distances[0]
-            print "distances[1]: \t", self.distances[1]
+            # print "distances[0]: \t", self.distances[0]
+            # print "distances[1]: \t", self.distances[1]
             print "distance: \t", self.distance
             print "reward: \t", self.reward
             print "--------------------------------"
