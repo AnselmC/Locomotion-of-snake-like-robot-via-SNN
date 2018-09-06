@@ -72,7 +72,6 @@ class VrepEnvironment():
         self.state = []
 
         self.positive_direction = False
-        # self.positive_direction = True
 
         self.terminate = False
 
@@ -157,7 +156,6 @@ class VrepEnvironment():
         a, c = self.calculate_and_publish_radius(n_l, n_r)
 
         # Calculate distance to center
-        # self.distance = (self.distances[0] + self.distances[1])/2 - self.distances[0]
         self.distance = params.maze_width/2 - self.distances[0]
 
         # Set reward
@@ -218,24 +216,24 @@ class VrepEnvironment():
             self.reset()
             self.terminate = False
 
-        if (self.steps % 20 == 0):
-            print "---------environment.py---------"
-            print "-----------step: ", self.steps, "-----------"
-            # print "dvs_data: \n", self.dvs_data
-            print "state: \n", self.state
-            # print "pos_data[0]: \t", abs(self.pos_data[0])
-            # print "pos_data[1]: \t", self.pos_data[1]
-            print "n_l: \t\t", n_l
-            print "n_r: \t\t", n_r
-            # print "a: \t\t", a
-            # print "c: \t\t", c
-            # print "turn_pre: \t", self.turn_pre
-            print "radius: \t", self.radius
-            # print "distances[0]: \t", self.distances[0]
-            # print "distances[1]: \t", self.distances[1]
-            print "distance: \t", self.distance
-            print "reward: \t", self.reward
-            print "--------------------------------"
+        # if (self.steps % 20 == 0):
+        #     print "---------environment.py---------"
+        #     print "-----------step: ", self.steps, "-----------"
+        #     # print "dvs_data: \n", self.dvs_data
+        #     print "state: \n", self.state
+        #     # print "pos_data[0]: \t", abs(self.pos_data[0])
+        #     # print "pos_data[1]: \t", self.pos_data[1]
+        #     print "n_l: \t\t", n_l
+        #     print "n_r: \t\t", n_r
+        #     # print "a: \t\t", a
+        #     # print "c: \t\t", c
+        #     # print "turn_pre: \t", self.turn_pre
+        #     print "radius: \t", self.radius
+        #     # print "distances[0]: \t", self.distances[0]
+        #     # print "distances[1]: \t", self.distances[1]
+        #     print "distance: \t", self.distance
+        #     print "reward: \t", self.reward
+        #     print "--------------------------------"
 
         # Return state, distance, pos_data, reward, terminate, steps,
         # travelled_distances, vrep_steps

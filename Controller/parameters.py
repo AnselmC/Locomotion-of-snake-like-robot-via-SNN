@@ -3,10 +3,10 @@
 session = "session_006"
 test_on = ""
 path = "../data/" + session        # Path for saving data
-comment = "w_max = 10000., reward_factor = 0.00025, r_min = 2.0"
+comment = ""
 
 # Other
-training_length = 15000             # Lenth of training procedure (1 step ~ 50 ms)
+training_length = 20000             # Lenth of training procedure (1 step ~ 50 ms)
 testing_length = 10000
 modulo = 50
 maze_width = 5.0
@@ -46,7 +46,7 @@ A_minus = 1.                        # Constant scaling Strength of Depression
 # Snake Turning Model
 turn_pre = 0.0                      # Initial Radius ?
 n_max = sim_time//t_refrac          # Maximum Input Activity
-r_min = 2.                           # Minimum Turning Radius
+r_min = 1.                           # Minimum Turning Radius
 
 params_dict = {}
 params_dict.update({k:v for k,v in locals().copy().iteritems()
