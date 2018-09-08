@@ -1,5 +1,0 @@
-travelled_distances
-F6285
-=F2+SQRT((B3-B2)^2+(C3-C2)^2)
-
-

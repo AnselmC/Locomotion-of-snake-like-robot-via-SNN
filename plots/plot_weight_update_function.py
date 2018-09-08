@@ -1,8 +1,12 @@
-#!/usr/bin/env python
+"""Plot the weight update function Figure."""
 
-import numpy as np
-import matplotlib.pyplot as plt
 import math
+import matplotlib.pyplot as plt
+import numpy as np
+
+fontsize_large = 32
+fontsize_small = 28
+line_width = 1
 
 def stdp(t):
     t = float(t)
@@ -19,17 +23,18 @@ for t in time:
 	dw.append(stdp(t))
 
 fig = plt.figure(figsize=(10, 5))
-ax = fig.add_subplot(111)
-ax.set_xlabel(r'$\Delta t$ [ms]', fontsize=20)
-ax.set_ylabel(r'$\Delta w$', fontsize=20)
-ax.set_xlim([-100,100])
 
-plt.setp(ax.get_xticklabels(), fontsize=16)
-plt.setp(ax.get_yticklabels(), fontsize=16)
+ax1 = plt.subplot(111)
+ax1.set_xlabel(r'$\Delta t$ [ms]', fontsize=fontsize_large)
+ax1.set_ylabel(r'$\Delta w$', fontsize=fontsize_large)
+ax1.set_xlim([-100,100])
 
-plt.axhline(y=0., linewidth=0.5, color='0.')
-plt.axvline(x=0., linewidth=0.5, color='0.')
-plt.plot(time, dw, lw=1, color='k')
+plt.setp(ax1.get_xticklabels(), fontsize=fontsize_small)
+plt.setp(ax1.get_yticklabels(), fontsize=fontsize_small)
+plt.grid(linestyle=':')
+plt.plot(time, dw, lw=line_width, color='k')
+
+fig.tight_layout()
 
 filename = "weight_update_function.pdf"
 filepath = "/home/christoph/Pictures/" + filename

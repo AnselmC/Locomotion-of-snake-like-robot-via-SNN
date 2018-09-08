@@ -1,10 +1,7 @@
-#!/usr/bin/env python
+"""Plot the snn input sample Figure."""
 
 import numpy as np
 import matplotlib.pyplot as plt
-
-# Input sample
-# Fig.4.14
 
 im = np.flipud(np.array([[15, 65, 0, 0,  7],
                          [9, 40, 0, 7,  0],
@@ -18,5 +15,10 @@ im = np.flipud(np.array([[15, 65, 0, 0,  7],
 fig = plt.figure(figsize=(20, 10))
 plt.imshow(im, alpha=0.5, interpolation='nearest')
 plt.axis('off')
+
 fig.tight_layout()
-plt.show()
+
+filename = "snn_input_sample.pdf"
+filepath = "/home/christoph/Pictures/" + filename
+plt.savefig(filepath, bbox_inches='tight')
+plt.show(filepath)

@@ -1,6 +1,13 @@
-import matplotlib.pyplot as plt
+#!/usr/bin/env python
+
 import math
+import matplotlib.pyplot as plt
 import numpy as np
+
+fontsize_large = 24
+fontsize_small = 20
+line_width_thick = 2
+line_width_thin = 2
 
 # First, plot the external input current
 t_end = 2000
@@ -64,35 +71,35 @@ for t in range(0, t_end):
     LIF_output[t] = LIF_output[t] - 1.5
 
 fig, ax = plt.subplots(figsize=(20, 10))
-plt.plot(time_step, ext_current, lw=3)
-plt.plot(time_step, LIF_output, lw=3)
-plt.plot(time_step, synaptic_current, lw=3)
+plt.plot(time_step, ext_current, lw=line_width_thick)
+plt.plot(time_step, LIF_output, lw=line_width_thick)
+plt.plot(time_step, synaptic_current, lw=line_width_thick)
 
-plt.eventplot(spikes_in, color='k', linelengths=0.2, lineoffsets=1, linewidths=3)
-plt.eventplot(spikes_out, color='k', linelengths=0.3, lineoffsets=-2, linewidths=3)
+plt.eventplot(spikes_in, color='k', linelengths=0.2, lineoffsets=1, lw=line_width_thick)
+plt.eventplot(spikes_out, color='k', linelengths=0.3, lineoffsets=-2, lw=line_width_thick)
 
 ax.arrow(0, -2.15, 1960, 0, head_width=0.1, head_length=40, fc='k', ec='k')
 # ax.arrow(0, -1.6, 1940, 0, head_width=0.1, head_length=60, fc='k', ec='k')
 ax.arrow(900, 0.9, 900, 0, head_width=0.1, head_length=40, fc='k', ec='k')
-plt.axhline(-0.5, ls='--', c='grey', lw=1)
-plt.axhline(0, ls='-', c='k', lw=3)
-plt.axhline(-1.6, ls='-', c='k', lw=1)
+plt.axhline(-0.5, ls='--', c='grey', lw=line_width_thin)
+plt.axhline(0, ls='-', c='k', lw=line_width_thick)
+plt.axhline(-1.6, ls='-', c='k', lw=line_width_thin)
 
 for s in spikes_in:
-    plt.axvline(s, ymin=0.25, ymax=0.9, ls='--', c='grey', lw=1)
+    plt.axvline(s, ymin=0.25, ymax=0.9, ls='--', c='grey', lw=line_width_thin)
 
-plt.gcf().text(0.18, 0.85, "external injected current $i_0(t)$", rotation=0, multialignment='center', fontsize=24)
-plt.gcf().text(0.48, 0.85, "presynaptic spike train & synaptic current $i_j(t)$", rotation=0, multialignment='center', fontsize=24)
-plt.gcf().text(0.2, 0.52, "LIF membrane potential $u(t)$", rotation=0, multialignment='center', fontsize=24)
-plt.gcf().text(0.1, 0.5, "$V_{th}$", rotation=0, multialignment='center', fontsize=24)
-plt.gcf().text(0.085, 0.27, "$V_{reset}$", rotation=0, multialignment='center', fontsize=24)
-plt.gcf().text(0.42, 0.23, "output spike train", rotation=0, multialignment='center', fontsize=24)
-plt.gcf().text(0.85, 0.13, "time", rotation=0, multialignment='center', fontsize=24)
-plt.gcf().text(0.85, 0.13, "time", rotation=0, multialignment='center', fontsize=24)
-plt.gcf().text(0.15, 0.85, "A.", rotation=0, multialignment='center', fontsize=24, fontweight='bold')
-plt.gcf().text(0.45, 0.85, "B.", rotation=0, multialignment='center', fontsize=24, fontweight='bold')
-plt.gcf().text(0.15, 0.52, "C.", rotation=0, multialignment='center', fontsize=24, fontweight='bold')
-plt.gcf().text(0.15, 0.23, "D.", rotation=0, multialignment='center', fontsize=24, fontweight='bold')
+plt.gcf().text(0.18, 0.85, "external injected current $i_0(t)$", rotation=0, multialignment='center', fontsize=fontsize_large)
+plt.gcf().text(0.48, 0.85, "presynaptic spike train & synaptic current $i_j(t)$", rotation=0, multialignment='center', fontsize=fontsize_large)
+plt.gcf().text(0.2, 0.52, "LIF membrane potential $u(t)$", rotation=0, multialignment='center', fontsize=fontsize_large)
+plt.gcf().text(0.1, 0.5, "$V_{th}$", rotation=0, multialignment='center', fontsize=fontsize_large)
+plt.gcf().text(0.085, 0.27, "$V_{reset}$", rotation=0, multialignment='center', fontsize=fontsize_large)
+plt.gcf().text(0.42, 0.23, "output spike train", rotation=0, multialignment='center', fontsize=fontsize_large)
+plt.gcf().text(0.85, 0.13, "time", rotation=0, multialignment='center', fontsize=fontsize_large)
+plt.gcf().text(0.85, 0.13, "time", rotation=0, multialignment='center', fontsize=fontsize_large)
+plt.gcf().text(0.15, 0.85, "A.", rotation=0, multialignment='center', fontsize=fontsize_large, fontweight='bold')
+plt.gcf().text(0.45, 0.85, "B.", rotation=0, multialignment='center', fontsize=fontsize_large, fontweight='bold')
+plt.gcf().text(0.15, 0.52, "C.", rotation=0, multialignment='center', fontsize=fontsize_large, fontweight='bold')
+plt.gcf().text(0.15, 0.23, "D.", rotation=0, multialignment='center', fontsize=fontsize_large, fontweight='bold')
 
 plt.setp(ax.get_yticklabels(), visible=False)
 plt.setp(ax.get_xticklabels(), visible=False)
