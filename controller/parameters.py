@@ -1,18 +1,18 @@
 """Saves all simulation parameters at one place."""
 
 # Session to store/ load weights in case of training/ testing
-session = "session_009"
-# Select maze to train/ test on: eight_shaped, zig_zag, cross
-maze = 'eight_shaped'
+session = "session_010"
+# Select maze to train/ test on: eight, zig_zag, cross
+maze = 'cross'
 # Add the scenario the controller is tested on
 test_on = ""
 # Path for saving data
 path = "../data/" + session
 # Arbitrary comment
-comment = "comment"
+comment = "train on scenario_eight_2_0"
 
 # Other
-training_length = 15000
+training_length = 2000
 testing_length = 10000
 maze_width = 5.0
 reset_distance = 2.3
@@ -25,8 +25,8 @@ dvs_resolution = [128, 128]
 crop_top = 0
 crop_bottom = 48
 # SNN Input Resolution = # input neurons
-resolution = [img_resolution[0]/8,
-              (img_resolution[1]-crop_top-crop_bottom)/8]
+resolution = [dvs_resolution[0]/8,
+              (dvs_resolution[1]-crop_top-crop_bottom)/8]
 
 # Network Simulation (time values in ms)
 sim_time = 50.0

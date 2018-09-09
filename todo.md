@@ -7,6 +7,5 @@
 
 ## Code
 - Test if everything still works
-- Revise Snake.lua and update it in every scenario
-- Write README.md
+- Add License
 - Move current branch to own repository

@@ -185,7 +185,7 @@ class VrepEnvironment():
             self.terminate = True
 
         # Condition 2: Starting area/ End of maze reached
-        if params.maze == 'eight_shaped':
+        if params.maze == 'eight':
             # Condition 2 for eight-shaped maze
             # Boundaries of starting area
             top_condition = self.pos_data[1] < 7.5
