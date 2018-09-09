@@ -1,4 +1,7 @@
+-- Childscript of the snake that implements the slithering gait equation.
+
 function calculate_travelled_distance(travelled_distance, position_old, position)
+  -- Calculate the traveled distance of the snake.
   delta_x = position[1] - position_old[1]
   delta_y = position[2] - position_old[2]
   delta_z = position[3] - position_old[3]
@@ -12,6 +15,7 @@ function setTurningRadius_cb(msg)
   -- Turning Radius subscriber callback
   radius = msg.data
 
+  -- Update the body shape offset C with the radius
   C = 0
   if (radius >= 1 or radius <= -1) then
     C = l/(N*radius)
@@ -30,7 +34,7 @@ function resetRobot_cb(msg)
 
   simSetThreadAutomaticSwitch(false)
 
-  -- Reset all objects in the model
+  -- Reset all objects in the model to their initial position
   for i=1,#allModelObjects,1 do
     simResetDynamicObject(allModelObjects[i])
   end
@@ -40,7 +44,7 @@ function resetRobot_cb(msg)
     simSetJointTargetPosition(joints_v[i], 0)
   end
 
-  -- Set orientation
+  -- Set travel direction
   if (msg.data == true) then
     ori = {0.0, 0.0, math.pi}
   else
@@ -52,13 +56,14 @@ function resetRobot_cb(msg)
 
   simSetThreadAutomaticSwitch(true)
 
-  -- reset t, step, travelled_distance
+  -- reset t, step, position, travelled_distance
   t = 0
   step = 0
   position_old = simGetObjectPosition(robotHandle,-1)
   position = simGetObjectPosition(robotHandle,-1)
   travelled_distance = 0
 
+  -- Debug comments for the console from which V-REP is started
   if (comments == true) then
     print("----------Reset Snake-----------")
     for i=1,#init_pos,1 do
@@ -103,7 +108,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     index=index+1
   end
 
-  -- Prepare Camera handle
+  -- Prepare DVS handle
   cameraHandle=simGetObjectHandle('DVS_128')
 
   showConsole=simGetScriptSimulationParameter(sim_handle_self,'showConsole')
@@ -118,7 +123,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
   end
 
   if (not pluginNotFound) then
-    -- Prepare the sensor publisher and the motor speed subscribers:
+    -- Set up the ROS Publisher and Subscriber
     dvsPub=simExtRosInterface_advertise('/dvsData', 'std_msgs/Int8MultiArray')
     transformPub=simExtRosInterface_advertise('/transformData', 'geometry_msgs/Transform')
     turnRadiusSub=simExtRosInterface_subscribe('/turningRadius','std_msgs/Float32','setTurningRadius_cb')
@@ -141,43 +146,44 @@ if (sim_call_type==sim_childscriptcall_initialization) then
   position = simGetObjectPosition(robotHandle,-1)
   travelled_distance = 0
 
+  -- Number of segments of the snake minus the head
   N = 8
 
+  -- Length of a segment of the snake
   local l0 = simGetScriptSimulationParameter(sim_handle_self, "l0")
 
-  -- linear reduction parameters (set y = 0 and z = 1 for disabling)
+  -- Linear reduction parameters (set y = 0 and z = 1 for disabling)
   y = simGetScriptSimulationParameter(sim_handle_self, "y")
   z = 1 - y
 
-  -- set of control Parameters:
+  -- Set of control Parameters
   -- w: temporal frequency: traveling speed of the wave
   w = math.pi*simGetScriptSimulationParameter(sim_handle_self, "w")
   -- A: Amplitude
   A = math.pi*simGetScriptSimulationParameter(sim_handle_self, "A")/180
   -- Omega: spatial frequency: cycle number of the wave
   Omega = math.pi*simGetScriptSimulationParameter(sim_handle_self, "Omega")/180
-  -- for damping
+  -- For damping
   p = -1
 
-  -- theta k: joint angle --> theta[i]
+  -- Theta k: joint angle --> theta[i]
   local theta = {0,-1,-1,-1,-1,-1,-1,-1,-1}
-  -- theta snake: global angle of the snake robot --> head_dir
+  -- Theta snake: global angle of the snake robot --> head_dir
   local head_dir = 0
 
   -- Snake locomotion
   for i=1, N, 1 do
     -- Linear reduction equation P = ((n/N)*z+y) e [0,1], for all n e [0,N]
     P = ((i-1)/N)*y + z
-
+    -- Gait equation
     theta[i+1] = theta[i] + P*A*math.sin(Omega * (i-1))
 
     head_dir = head_dir + theta[i+1]
   end
 
-  -- [Question] What is going on here?
-  -- Possible answer: head_dir is the average value of the joint angles
   head_dir = head_dir/(N+1)
 
+  -- Calculate effective segment length
   l = 0;
   for i=1,N+1,1 do
     l = l + math.cos(theta[i] - head_dir)
@@ -190,6 +196,7 @@ if (sim_call_type==sim_childscriptcall_initialization) then
     C = 0
   end
 
+  -- Debug comments
   if (comments == true) then
     print("------Snake initialization------")
     for i=1,#init_pos,1 do
@@ -210,8 +217,6 @@ end
 
 if (sim_call_type==sim_childscriptcall_cleanup) then
   if not pluginNotFound then
-    -- Following not really needed in a simulation script
-    -- (i.e. automatically shut down at simulation end):
     simExtRosInterface_shutdownPublisher(dvsPub)
     simExtRosInterface_shutdownPublisher(transformPub)
     simExtRosInterface_shutdownSubscriber(turnRadiusSub)
@@ -228,7 +233,6 @@ if (sim_call_type==sim_childscriptcall_actuation) then
   t=t+simGetSimulationTimeStep()
 
   -- Snake locomotion
-  -- [Question] Why is theta not an array any more?
   local theta = 0
 
   local head_dir = theta
@@ -236,7 +240,6 @@ if (sim_call_type==sim_childscriptcall_actuation) then
   for i=2,N,1 do
     P = ((i-1)/N)*y + z
 
-    -- phi = C + P*A*math.cos(w*t - Omega*(i-1))
     phi = C + P*A*math.sin(Omega*(i-1) - w*t)
 
     simSetJointTargetPosition(joints_v[i], -phi*(1-math.exp(p*t)))
@@ -288,8 +291,6 @@ if (sim_call_type==sim_childscriptcall_sensing) then
       for i=0,(#t1/3)-1,1 do
         newData[1+i*2]=math.floor(t1[3*i+2])
         newData[2+i*2]=math.floor(t1[3*i+3])
-        --newData=newData..string.char(timeStampByte1)
-        --newData=newData..string.char(timeStampByte2)
 
         if (showConsole) then
           if (t1[3*i+1]>0) then
