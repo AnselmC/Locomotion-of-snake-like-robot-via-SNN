@@ -7,6 +7,8 @@ import matplotlib.patches as patches
 import numpy as np
 import pandas as pd
 
+import parameters as params
+
 fontsize_large = 34
 fontsize_small = 30
 line_width = 4
@@ -23,8 +25,15 @@ sin_length = length*math.sin(alpha_rad)
 x = (width/2.0)/math.tan(((180-alpha_deg)/2)*math.pi/180.0)
 
 # Parameters for snake pos_data plot
-scenarios = ['0_5', '1', '1_5', '2', '2_5', '3']
-colors = ['b', 'g', 'r', 'c', 'm', 'y', 'k', 'w']
+scenarios = [
+             'scenario_eight_0_5',
+             'scenario_eight_1_0',
+             'scenario_eight_1_5',
+             'scenario_eight_2_0',
+             'scenario_eight_2_5',
+             'scenario_eight_3_0'
+            ]
+colors = ['b', 'g', 'r', 'c', 'm', 'y']
 
 # Functions for path point calculation
 def mirror_x(points):
@@ -100,17 +109,31 @@ def csv_to_dfs(scenarios):
     # Create filenames from scenarios
     filenames = []
     for scenario in scenarios:
-        filenames.append("session_002_" + scenario + ".csv")
+        filenames.append("testing_" + scenario + "_df_1.csv")
 
     # Create filepaths from filenames
     filepaths = []
     for filename in filenames:
-        filepaths.append('../csv/' + filename)
+        filepaths.append('../data/' + params.session + '/' + filename)
 
     # Create DataFrames from filepaths
     dfs = []
     for filepath in filepaths:
         dfs.append(pd.DataFrame.from_csv(filepath))
+
+    # Create steps_array containing indices that mark the beginning of an episode for each df
+    steps_array = []
+    for df in dfs:
+        steps = []
+        for index, row in df.iterrows():
+            if (row['steps'] == 1.0):
+                steps.append(index)
+        steps_array.append(steps)
+
+    # Select one succesful episode per df
+    for i in range(len(scenarios)):
+        dfs[i] = dfs[i][steps_array[i][0]:steps_array[i][1]]
+        dfs[i] = dfs[i].reset_index(drop=True)
 
     return dfs
 
@@ -132,14 +155,14 @@ def plot_df(dfs, patches, xlim, ylim):
                  color=colors[i],
                  linewidth=line_width*scaling_factor,
                  label=scenarios[i])
-    plt.legend(fontsize=fontsize_large*scaling_factor)
+    plt.legend(fontsize=fontsize_large*scaling_factor, loc=(0.685, 0.385))
 
     fig.tight_layout()
 
-    filename = "controller_2_positions_eight_shaped.pdf"
-    filepath = "./testing/" + filename
-    plt.savefig(filepath, bbox_inches='tight')
-    plt.show(filepath)
+    filename_pdf = params.session + "_testing_positions_scenario_eight.pdf"
+    filepath_pdf = "../plots/testing/" + filename_pdf
+    plt.savefig(filepath_pdf, bbox_inches='tight')
+    plt.show(filepath_pdf)
 
 # Path points calculation
 p00 = [0.5*length,
@@ -187,4 +210,4 @@ patches = [patch_middle, patch_outer, patch_inner]
 
 # Plot snake pos_data
 dfs = csv_to_dfs(scenarios)
-plot_df(dfs, patches, p19[0]*1.1, p18[1]*1.1)
+plot_df(dfs, patches, p19[0]*1.01, p18[1]*1.01)

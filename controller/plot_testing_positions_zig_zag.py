@@ -7,6 +7,8 @@ import matplotlib.patches as patches
 import numpy as np
 import pandas as pd
 
+import parameters as params
+
 fontsize_large = 32
 fontsize_small = 28
 line_width = 2
@@ -17,8 +19,6 @@ width = 5.0
 
 alpha_deg = 45.0
 delta_alpha_deg = 5.0
-
-filename = 'session_002_2_zig_zag.csv'
 
 # Functions for path point calculation
 def deg_to_rad(angle_deg):
@@ -78,9 +78,18 @@ def plot_patches(patches, xlim, ylim):
 
 # Functions for plotting snake pos_data
 # Create dfs from csv files with snake testing data
-def csv_to_df(filename):
-    filepath = '../csv/' + filename
+def csv_to_df():
+    filename = "testing_scenario_zig_zag_df_1.csv"
+    filepath = '../data/' + params.session + '/' + filename
     df = pd.DataFrame.from_csv(filepath)
+
+    steps = []
+    for index, row in df.iterrows():
+        if (row['steps'] == 1.0):
+            steps.append(index)
+
+    df = df[steps[0]:(steps[1]-1)]
+    df = df.reset_index(drop=True)
 
     return df
 
@@ -98,10 +107,10 @@ def plot_df(df, patch, xlim, ylim):
 
     fig.tight_layout()
 
-    filename = "controller_2_positions_zig_zag.pdf"
-    filepath = "./testing/" + filename
-    plt.savefig(filepath, bbox_inches='tight')
-    plt.show(filepath)
+    filename_pdf = params.session + "_testing_positions_scenario_zig_zag.pdf"
+    filepath_pdf = "../plots/testing/" + filename_pdf
+    plt.savefig(filepath_pdf, bbox_inches='tight')
+    plt.show(filepath_pdf)
 
 # Path points calculation
 points_middle = []
@@ -122,5 +131,5 @@ patches = [patch_middle]
 # plot_patches(patches, points_middle[-1][0]*1.1, points_middle[-1][1]*1.1)
 
 # Plot snake pos_data
-df = csv_to_df(filename)
+df = csv_to_df()
 plot_df(df, patch_middle, points_middle[-1][0]*1.01, points_middle[-1][1]*1.01)

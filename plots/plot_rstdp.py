@@ -108,6 +108,6 @@ plt.xlabel('time (ms)', fontsize=fontsize_large)
 plt.grid(linestyle=':')
 
 filename = "rstdp.pdf"
-filepath = "/home/christoph/Pictures/" + filename
+filepath = "./figures/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show()

@@ -19,6 +19,6 @@ plt.axis('off')
 fig.tight_layout()
 
 filename = "snn_input_sample.pdf"
-filepath = "/home/christoph/Pictures/" + filename
+filepath = "./figures/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

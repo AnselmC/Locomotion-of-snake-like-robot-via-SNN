@@ -10,7 +10,10 @@ fontsize_large = 32
 fontsize_small = 28
 line_width = 2
 
-h5f = h5py.File(params.path + '/rstdp_data.h5', 'r')
+# Load the training data
+filename = "training_" + params.train_on
+filepath_h5f = "../data/" + params.session + '/' + filename + '.h5'
+h5f = h5py.File(filepath_h5f, 'r')
 
 vrep_steps = np.array(h5f['vrep_steps'], dtype = float)
 
@@ -26,7 +29,7 @@ plt.plot(vrep_steps, lw=line_width)
 
 fig.tight_layout()
 
-filename = params.session + "_steps.pdf"
-filepath = "../plots/training/" + filename
-plt.savefig(filepath, bbox_inches='tight')
-plt.show(filepath)
+filename_pdf = params.session + '_' + filename + '_steps'
+filepath_pdf = "../plots/training/" + filename_pdf + ".pdf"
+plt.savefig(filepath_pdf, bbox_inches='tight')
+plt.show(filepath_pdf)

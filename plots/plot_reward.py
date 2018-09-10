@@ -35,6 +35,6 @@ plt.legend(loc='upper center', fontsize=fontsize_large)
 fig.tight_layout()
 
 filename = "reward.pdf"
-filepath = "/home/christoph/Pictures/" + filename
+filepath = "./figures/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

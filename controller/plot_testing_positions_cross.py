@@ -7,10 +7,12 @@ import matplotlib.patches as patches
 import numpy as np
 import pandas as pd
 
+import parameters as params
+
 # Select the angle: 110, 105, 100, 95
-alpha_deg = 110
+alpha_deg_array = [110, 105, 100, 95]
 # Select the color for the plot: 110 b, 105 g, 100 r, 95 c
-color = 'b'
+colors = ['b', 'g', 'r', 'c']
 
 fontsize_large = 32
 fontsize_small = 28
@@ -109,13 +111,21 @@ def plot_patches(patches, xlims, ylims):
 # Functions for plotting snake pos_data
 # Create dfs from csv files with snake testing data
 def csv_to_df(alpha_deg):
-    filename = "session_002_2_cross_" + str(alpha_deg) + ".csv"
-    filepath = '../csv/' + filename
+    filename = "testing_scenario_cross_" + str(alpha_deg) + "_df_1.csv"
+    filepath = '../data/' + params.session + '/' + filename
     df = pd.DataFrame.from_csv(filepath)
+
+    steps = []
+    for index, row in df.iterrows():
+        if (row['steps'] == 1.0):
+            steps.append(index)
+
+    df = df[steps[0]:steps[1]]
+    df = df.reset_index(drop=True)
 
     return df
 
-def plot_df(df, patch, xlims, ylims):
+def plot_df(df, patch, xlims, ylims, color, alpha_deg):
     fig = plt.figure(figsize=(20, 20))
     ax = fig.add_subplot(111)
     ax.set_xlim(xlims[0], xlims[1])
@@ -130,32 +140,33 @@ def plot_df(df, patch, xlims, ylims):
 
     fig.tight_layout()
 
-    filename = "controller_2_positions_cross_" + str(alpha_deg) + ".pdf"
-    filepath = "./testing/" + filename
-    plt.savefig(filepath, bbox_inches='tight')
-    plt.show(filepath)
+    filename_pdf = params.session + "_testing_positions_scenario_cross_" + str(alpha_deg) + ".pdf"
+    filepath_pdf = "../plots/testing/" + filename_pdf
+    plt.savefig(filepath_pdf, bbox_inches='tight')
+    plt.show(filepath_pdf)
 
-# Path points calculation
-p01 = [length/2 + cos_length(length, (180-alpha_deg)),
-       length/2 + cos_length(length, (180-alpha_deg))]
+for i in range(len(alpha_deg_array)):
+    # Path points calculation
+    p01 = [length/2 + cos_length(length, (180-alpha_deg_array[i])),
+           length/2 + cos_length(length, (180-alpha_deg_array[i]))]
 
-p00 = [length/2,
-       p01[1] + sin_length(length, (180-alpha_deg))]
+    p00 = [length/2,
+           p01[1] + sin_length(length, (180-alpha_deg_array[i]))]
 
-p02 = [p01[0] + sin_length(length, (180-alpha_deg)),
-       length/2]
+    p02 = [p01[0] + sin_length(length, (180-alpha_deg_array[i])),
+           length/2]
 
-points_00_02 = [p00, p01, p02]
-points_00_11 = mirror_x_y(points_00_02)
-points_00_11 = shift_y(points_00_11, p00[1])
+    points_00_02 = [p00, p01, p02]
+    points_00_11 = mirror_x_y(points_00_02)
+    points_00_11 = shift_y(points_00_11, p00[1])
 
-# print_points(points_00_11)
+    # print_points(points_00_11)
 
-# Plot path points
-patch_middle = create_patch_from_points(points_00_11)
-patches = [patch_middle]
-# plot_patches(patches, [-20, 20], [-5, 40])
+    # Plot path points
+    patch_middle = create_patch_from_points(points_00_11)
+    # patches = [patch_middle]
+    # plot_patches(patches, [-20, 20], [-5, 40])
 
-# Plot snake pos_data
-df = csv_to_df(alpha_deg)
-plot_df(df, patch_middle, [-19, 19], [-1, 36])
+    # Plot snake pos_data
+    df = csv_to_df(alpha_deg_array[i])
+    plot_df(df, patch_middle, [-19, 19], [-1, 36], colors[i], alpha_deg_array[i])

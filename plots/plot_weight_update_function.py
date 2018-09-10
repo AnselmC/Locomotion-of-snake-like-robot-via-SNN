@@ -37,6 +37,6 @@ plt.plot(time, dw, lw=line_width, color='k')
 fig.tight_layout()
 
 filename = "weight_update_function.pdf"
-filepath = "/home/christoph/Pictures/" + filename
+filepath = "./figures/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

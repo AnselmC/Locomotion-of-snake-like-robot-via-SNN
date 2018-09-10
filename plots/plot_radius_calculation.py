@@ -97,6 +97,6 @@ for ax in axes:
 fig.tight_layout()
 
 filename = "radius_calculation.pdf"
-filepath = "/home/christoph/Pictures/" + filename
+filepath = "./figures/" + filename
 plt.savefig(filepath, bbox_inches='tight')
 plt.show(filepath)

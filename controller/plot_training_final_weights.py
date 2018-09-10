@@ -10,7 +10,9 @@ fontsize_large = 24
 fontsize_small = 20
 
 # Load the training data
-h5f = h5py.File(params.path + '/rstdp_data.h5', 'r')
+filename = "training_" + params.train_on
+filepath_h5f = "../data/" + params.session + '/' + filename + '.h5'
+h5f = h5py.File(filepath_h5f, 'r')
 
 w_l = np.array(h5f['w_l'], dtype=float)
 w_r = np.array(h5f['w_r'], dtype=float)
@@ -36,7 +38,7 @@ for i in range(len(data)):
 
 fig.tight_layout()
 
-filename = params.session + "_final_weights.pdf"
-filepath = "../plots/training/" + filename
-plt.savefig(filepath, bbox_inches='tight')
-plt.show(filepath)
+filename_pdf = params.session + '_' + filename + '_final_weights'
+filepath_pdf = "../plots/training/" + filename_pdf + ".pdf"
+plt.savefig(filepath_pdf, bbox_inches='tight')
+plt.show(filepath_pdf)

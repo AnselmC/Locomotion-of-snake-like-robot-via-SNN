@@ -4,9 +4,13 @@ import h5py
 import json
 import signal
 
-import network as net
 import environment as env
+import network as net
 import parameters as params
+
+# Filepaths for storing data
+filename = "training_" + params.train_on
+filepath = "../data/" + params.session + '/' + filename
 
 # Arrays for storing the training data
 weights_l = []
@@ -81,14 +85,14 @@ try:
     # Save to single json file
     json_data = json.dumps(parameters, indent=4, sort_keys=True)
     print "converted to json"
-    with open(params.path+'/training_parameters.json','w') as file:
+    with open(filepath + '.json', 'w') as file:
         file.write(json_data)
 except:
     print "saving parameters failed"
     pass
 
-# Save training data
-h5f = h5py.File(params.path + '/rstdp_data.h5', 'w')
+# Save training data as h5f
+h5f = h5py.File(filepath + '.h5', 'w')
 h5f.create_dataset('w_l', data=weights_l)
 h5f.create_dataset('w_r', data=weights_r)
 h5f.create_dataset('w_i', data=weights_i)

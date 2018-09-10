@@ -10,7 +10,10 @@ fontsize_large = 32
 fontsize_small = 28
 line_width = 2
 
-h5f = h5py.File(params.path + '/rstdp_data.h5', 'r')
+# Load the training data
+filename = "training_" + params.train_on
+filepath_h5f = "../data/" + params.session + '/' + filename + '.h5'
+h5f = h5py.File(filepath_h5f, 'r')
 
 w_l = np.array(h5f['w_l'], dtype=float)
 w_r = np.array(h5f['w_r'], dtype=float)
@@ -32,8 +35,8 @@ data = [w_l, w_r]
 def plt_weights_over_steps(index, ylabel, data):
     ax = plt.subplot(index)
     ax.set_ylabel(ylabel, fontsize=fontsize_large)
-    ax.set_xlim(0, 10830)
-    ax.set_ylim(-5000, 10000)
+    ax.set_xlim(0, steps_cumulative[2])
+    ax.set_ylim(-2000, 3500)
     ax.tick_params(axis='both', which='both',
                    direction='in', bottom=True,
                    top=True, left=True, right=True,
@@ -53,7 +56,7 @@ for i in range(len(data)):
 ax1 = plt.subplot(313)
 ax1.set_xlabel('Simulation Time [1 step = 50 ms]', fontsize=fontsize_large)
 ax1.set_ylabel('Reward', fontsize=fontsize_large)
-ax1.set_xlim(0, 10830)
+ax1.set_xlim(0, steps_cumulative[2])
 plt.xticks(fontsize=fontsize_small)
 plt.yticks(fontsize=fontsize_small)
 plt.grid(linestyle=':')
@@ -63,7 +66,7 @@ for step_cumulative in steps_cumulative:
 
 fig.tight_layout()
 
-filename = params.session + "_weights_over_steps.pdf"
-filepath = "../plots/training/" + filename
-plt.savefig(filepath, bbox_inches='tight')
-plt.show(filepath)
+filename_pdf = params.session + '_' + filename + '_weights_reward_over_steps'
+filepath_pdf = "../plots/training/" + filename_pdf + ".pdf"
+plt.savefig(filepath_pdf, bbox_inches='tight')
+plt.show(filepath_pdf)

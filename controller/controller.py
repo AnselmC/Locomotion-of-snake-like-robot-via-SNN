@@ -9,6 +9,10 @@ import environment as env
 import network as net
 import parameters as params
 
+# Filepaths for storing data
+filename_test_data = "testing_" + params.test_on
+filepath_test_data = "../data/" + params.session + '/' + filename_test_data
+
 # Arrays for storing the performance data
 distances = []
 positions = []
@@ -32,7 +36,10 @@ snn = net.SpikingNeuralNetwork()
 env = env.VrepEnvironment()
 
 # Read network weights
-h5f = h5py.File(params.path + '/rstdp_data.h5', 'r')
+# Filepaths for storing data
+filename_train_data = "training_" + params.train_on
+filepath_train_data = "../data/" + params.session + '/' + filename_train_data
+h5f = h5py.File(filepath_train_data + '.h5', 'r')
 w_l = np.array(h5f['w_l'], dtype=float)[-1]
 w_r = np.array(h5f['w_r'], dtype=float)[-1]
 
@@ -65,8 +72,7 @@ for i in range(params.testing_length):
         break
 
 # Save performance data
-filename = '/rstdp_performance_data_' + params.test_on + '.h5'
-h5f = h5py.File(params.path + filename, 'w')
+h5f = h5py.File(filepath_test_data + '.h5', 'w')
 h5f.create_dataset('distances', data=distances)
 h5f.create_dataset('positions', data=positions)
 h5f.create_dataset('rewards', data=rewards)

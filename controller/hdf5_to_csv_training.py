@@ -6,7 +6,10 @@ import pandas as pd
 
 import parameters as params
 
-h5f = h5py.File(params.path + '/rstdp_data.h5', 'r')
+# Load the training data
+filename = "training_" + params.train_on
+filepath = "../data/" + params.session + '/' + filename
+h5f = h5py.File(filepath + '.h5', 'r')
 
 distances = np.array(h5f['distances'], dtype=float)
 rewards = np.array(h5f['rewards'], dtype=float)
@@ -20,9 +23,5 @@ df_1 = pd.DataFrame(data=np.array([distances, rewards, steps]).T,
 df_2 = pd.DataFrame(data=np.array([vrep_steps, travelled_distances]).T,
                     columns=['vrep_steps', 'travelled_distances'])
 
-filename_1 = "params.session + "_"training_df_1.csv"
-filename_2 = "params.session + "_"training_df_2.csv"
-filepath_1 = params.path + filename_1
-filepath_2 = params.path + filename_2
-df_1.to_csv(path_or_buf=filepath_1)
-df_2.to_csv(path_or_buf=filepath_2)
+df_1.to_csv(path_or_buf=filepath + "_df_1.csv")
+df_2.to_csv(path_or_buf=filepath + "_df_2.csv")
